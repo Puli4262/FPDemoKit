@@ -1,0 +1,34 @@
+{
+  "name": "FPDevKit",
+  "version": "1.0.1",
+  "summary": "A short description of DemoFramework.",
+  "description": "A short description of DemoFramework",
+  "homepage": "https://github.com/Puli4262/FPDemoKit.git",
+  "license": "MIT",
+  "authors": {
+    "Pullaiah C": "puli@artdexandcognoscis.com"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/Puli4262/FPDemoKit.git",
+    "tag": "1.0.1"
+  },
+  "swift_version": "4.0",
+  "source_files": "FPDevKit/**/*.{h,m,swift}",
+  "resources": [
+    "FPDevKit/**/*.{xcassets,storyboard,png,jpg}"
+  ],
+  "dependencies": {
+    "Alamofire": [
+      "~> 4.7"
+    ],
+    "SwiftyJSON": [
+      "~> 4.2"
+    ],
+    "SkyFloatingLabelTextField": [
+      "~> 3.0"
+    ]
+  }
+}

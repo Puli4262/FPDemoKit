@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A1582A8216B8FBC00E0E1BE /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1582A7216B8FBC00E0E1BE /* TestViewController.swift */; };
 		9A9514F2216B2946001BCA9C /* FPDevKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A9514F0216B2946001BCA9C /* FPDevKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9A9514FC216B2C20001BCA9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A9514FB216B2C20001BCA9C /* Assets.xcassets */; };
 		9A9514FE216B2C4C001BCA9C /* FPApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A9514FD216B2C4C001BCA9C /* FPApp.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9A1582A7216B8FBC00E0E1BE /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		9A9514ED216B2945001BCA9C /* FPDevKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FPDevKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A9514F0216B2946001BCA9C /* FPDevKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPDevKit.h; sourceTree = "<group>"; };
 		9A9514F1216B2946001BCA9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		9A9514F9216B2BC2001BCA9C /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				9A1582A7216B8FBC00E0E1BE /* TestViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -109,6 +112,7 @@
 				TargetAttributes = {
 					9A9514EC216B2945001BCA9C = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -147,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A1582A8216B8FBC00E0E1BE /* TestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +274,7 @@
 		9A9514F6216B2946001BCA9C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -283,6 +289,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anc.FPDevKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -291,6 +298,7 @@
 		9A9514F7216B2946001BCA9C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;

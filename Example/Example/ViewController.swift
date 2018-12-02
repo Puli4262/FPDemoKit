@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FuturePay
+import SdkKhata
 import AVFoundation
 
 

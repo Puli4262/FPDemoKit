@@ -923,7 +923,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         
         let year =  components.year
-        print((year! - Int(dateOfBirthTextField.text!.suffix(4))! < 18))
+       
         
         if(firstNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the first name.", showToastFrom: 350.0)
@@ -1141,6 +1141,16 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.lastNameTextField.text = userData["lastName"].stringValue
         self.dateOfBirthTextField.text = userData["dob"].stringValue
         self.emailIdTextField.text = userData["emailid"].stringValue
+        let emailID = UserDefaults.standard.string(forKey: "emailID")
+        
+        if(emailID != ""){
+            self.emailIdTextField.text = emailID
+        }
+        let DOB = UserDefaults.standard.string(forKey: "DOB")
+        if(emailID != ""){
+           self.dateOfBirthTextField.text = DOB
+        }
+        
         self.fatherNameTextField.text = userData["fatherName"].stringValue
         self.motherNameTextField.text = userData["motherName"].stringValue
         self.permanentAddressLine1TextField.text = userData["permanentAddLine1"].stringValue

@@ -25,10 +25,10 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //self.present(viewController, animated: true, completion: nil)
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = ""
-            viewController.emailID = "saurav@gmail.com"
+            viewController.emailID = " Anil@gmail.com "
             viewController.zipcode = ""
             viewController.tokenId = ""
-            viewController.DOB = "20/01/1989"
+            viewController.DOB = "01/01/1990"
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }

@@ -182,7 +182,5 @@ extension UITapGestureRecognizer {
     
 }
 
-protocol KhataSDKResponseDelegate {
-    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String)
-}
+
 

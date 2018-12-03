@@ -141,7 +141,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }else{
             let height = handleTextFeilds[textField.tag-1]["height"].intValue
             print("height \(height)")
-            //self.scrollView.setContentOffset(CGPoint(x: 0,y : height), animated: false)
+            self.scrollView.setContentOffset(CGPoint(x: 0,y : height), animated: false)
         }
         
         if(textField == dateOfBirthTextField){

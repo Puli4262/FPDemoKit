@@ -337,7 +337,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             
             let token = UserDefaults.standard.string(forKey: "token")
             utils.postWithImageApi(strURL: "/upload/upLoadOCRDetail", headers: ["accessToken":token!], params: postData, forntImage: frontImage.image!,backImage: backImage.image!, viewController: self, isFromDocument: true, success: { res in
-                
+                print(res)
                 let refreshToken = res["token"].stringValue
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
                     print("handle this situation")

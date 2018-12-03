@@ -17,7 +17,10 @@ class Utils {
     //Test Server
     //let hostURL = "http://13.126.20.61:8080/KhataBackEnd"
     
-    //Production Server
+    //SIT Server
+    //let hostURL = "http://10.0.77.244:8080/KhataBackEnd"
+    
+    //AWS Server
     let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server

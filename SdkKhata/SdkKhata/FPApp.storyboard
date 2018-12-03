@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iTx-Wf-fz2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iTx-Wf-fz2">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -130,7 +129,7 @@
                                 <color key="textColor" red="0.17254901959999999" green="0.17254901959999999" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clik a snap of your ID &amp; Share with us" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4F-Sm-pJQ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click a snap of your ID &amp; Share with us" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4F-Sm-pJQ">
                                 <rect key="frame" x="16" y="150" width="343" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="K7q-rC-gv6"/>
@@ -514,7 +513,7 @@
             <objects>
                 <viewController storyboardIdentifier="CustomerDetailsVC" id="xPr-ID-4gL" customClass="CustomerDetailsViewController" customModule="SdkKhata" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vtC-lh-OSL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greycircle_progress" translatesAutoresizingMaskIntoConstraints="NO" id="J9Y-2X-LXO">
@@ -737,7 +736,7 @@
                                                     <constraint firstAttribute="height" constant="46" id="Zbq-0X-93T"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="15"/>
-                                                <state key="normal" title="Validate">
+                                                <state key="normal" title="Continue">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
@@ -1214,7 +1213,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Communication address same as perminant address?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHm-cb-zFu">
+                                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Communication address same as permanent address?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHm-cb-zFu">
                                                         <rect key="frame" x="8" y="310" width="203" height="40"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="Qcq-sO-7j7"/>
@@ -1550,7 +1549,7 @@
                         <outlet property="personalDetailsBtn" destination="onq-7V-Mbf" id="4kR-8c-412"/>
                         <outlet property="personalDetailsTextField" destination="A6x-Rf-3iy" id="dc8-1A-qUO"/>
                         <outlet property="personalDetailsView" destination="3sn-AW-1c7" id="ge8-9l-d1a"/>
-                        <outlet property="scrollView" destination="bGg-6l-uqh" id="mnQ-YA-gfn"/>
+                        <outlet property="scrollView" destination="bGg-6l-uqh" id="Y4C-hn-VqA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zae-To-b3z" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1696,7 +1695,7 @@
                                         <rect key="frame" x="8" y="8" width="323" height="68"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <attributedString key="attributedText">
-                                            <fragment content="Please remenber to carry your Passport for verification at for your next shopping visit at our stores.">
+                                            <fragment content="Please remember to carry your Passport for verification at for your next shopping visit at our stores.">
                                                 <attributes>
                                                     <color key="NSColor" red="0.5468310700034078" green="0.55224523901334255" blue="0.55224523901334255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <font key="NSFont" metaFont="system"/>

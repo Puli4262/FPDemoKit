@@ -9,6 +9,7 @@ import UIKit
 import FirebaseCore
 import SwiftyJSON
 
+
 open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     

@@ -14,19 +14,17 @@ class AgreeViewController: UIViewController {
     @IBOutlet weak var khataAcoountLabel: UILabel!
     public static var docType:String = ""
     
+    @IBOutlet weak var termsAndConditionsLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
         self.hideKeyboardWhenTappedAround()
-        var dataString = "Your Khata limit of ₹ 5000 is setup and will be activated once you agree to the Terms and Conditions"
+        var dataString = "Your ₹ 5000 Khaata"
         
         
         
-        let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: dataString)
+        let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: dataString,attributes: [ NSAttributedStringKey.font: UIFont.systemFont(ofSize: 25)])
         attributedString.setColorForText(textForAttribute: "₹ 5000", withColor: Utils().hexStringToUIColor(hex: "#FF6803"))
-        attributedString.setColorForText(textForAttribute: "Terms and Conditions", withColor: Utils().hexStringToUIColor(hex: "#002C78"))
-        
-        
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
@@ -35,7 +33,7 @@ class AgreeViewController: UIViewController {
         khataAcoountLabel.textAlignment = NSTextAlignment.center
         khataAcoountLabel.isUserInteractionEnabled = true
         
-        self.khataAcoountLabel.font = UIFont(name: "OpenSans", size: 15)
+        //self.khataAcoountLabel.font = UIFont(name: "OpenSans", size: 25)
         
         print(AgreeViewController.docType)
         let docType = UserDefaults.standard.string(forKey: "docType")
@@ -44,7 +42,8 @@ class AgreeViewController: UIViewController {
         
         let carryDocumentAttributedString: NSMutableAttributedString = NSMutableAttributedString(string: carryDocument)
         carryDocumentAttributedString.setColorForText(textForAttribute: "Please remember to carry your", withColor: UIColor.lightGray)
-        carryDocumentAttributedString.setColorForText(textForAttribute: "\(docType!)", withColor: UIColor.darkGray)
+        carryDocumentAttributedString.setColorForText(textForAttribute: "\(docType!)", withColor: Utils().hexStringToUIColor(hex: "#2C2C2D"))
+        
         carryDocumentAttributedString.setColorForText(textForAttribute: "for verification at for your next shopping visit at our stores.", withColor: UIColor.lightGray)
         
         let carryDocumentParagraphStyle = NSMutableParagraphStyle()
@@ -57,6 +56,32 @@ class AgreeViewController: UIViewController {
         carryIDView.layer.cornerRadius = 5
         self.carryIDLabel.font = UIFont(name: "OpenSans", size: 18)
         carryIDView.layer.borderColor = Utils().hexStringToUIColor(hex: "#002C78").cgColor
+        
+        
+
+        let FormattedText = NSMutableAttributedString()
+        FormattedText
+            .normal("I have read & agree to the ")
+            .bold("Terms & Conditions").normal("and").bold("Privacy Policy").normal("for Khaata")
+        
+
+        let string              = "I have read & agree to the Terms & Conditions and Privacy Policy for Khaata"
+        let terms               = (string as NSString).range(of: "Terms & Conditions")
+        let privacy               = (string as NSString).range(of: "Privacy Policy")
+        let attributedStrings    = NSMutableAttributedString(string: string)
+        
+        
+        attributedStrings.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
+        
+        attributedStrings.addAttribute(NSAttributedStringKey.underlineStyle, value: NSNumber(value: 1), range: terms)
+        attributedStrings.addAttribute(NSAttributedStringKey.underlineStyle, value: NSNumber(value: 1), range: privacy)
+        termsAndConditionsLabel.attributedText = attributedStrings
+        termsAndConditionsLabel.textAlignment = NSTextAlignment.center
+        termsAndConditionsLabel.isUserInteractionEnabled = true
+        
+        //termsAndConditionsLabel.attributedText = FormattedText
+        
+        
         
     }
     
@@ -144,6 +169,25 @@ extension NSMutableAttributedString {
         
         self.addAttribute(NSAttributedStringKey.foregroundColor, value: color, range: range)
         self.addAttribute(NSAttributedStringKey.paragraphStyle, value: style, range: range)
+    }
+    
+    @discardableResult func bold(_ text:String) -> NSMutableAttributedString {
+        
+        let attrs : [NSAttributedStringKey : Any] = [
+            NSAttributedStringKey.foregroundColor : UIColor.black,
+            NSAttributedStringKey.underlineStyle : NSUnderlineStyle.styleSingle.rawValue]
+        let boldString = NSMutableAttributedString(string: text, attributes: attrs)
+        self.append(boldString)
+        return self
+    }
+    
+    @discardableResult func normal(_ text:String)->NSMutableAttributedString {
+        let attrs : [NSAttributedStringKey : Any] = [
+            NSAttributedStringKey.foregroundColor : UIColor.black
+        ]
+        let normal =  NSAttributedString(string: text,  attributes:attrs)
+        self.append(normal)
+        return self
     }
     
 }

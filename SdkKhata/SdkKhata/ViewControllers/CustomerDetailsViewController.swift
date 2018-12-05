@@ -132,6 +132,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     }
     
     
+    @IBAction func handleDateOfBirth(_ sender: Any) {
+        
+        dateOfBirthTextField.resignFirstResponder()
+        self.openDateVC()
+    }
+    
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("tag is ",textField.tag)
@@ -302,21 +308,21 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
             }
             
-            if(self.customerPostData["pan"].stringValue == "absent"){
-                self.pancardBtn.isHidden = true
-                self.firstNameTextField.isUserInteractionEnabled = true
-                self.lastNameTextField.isUserInteractionEnabled = true
-                self.pancardTextField.text = ""
-                self.pancardTextField.isUserInteractionEnabled = false
-
-                self.checkboxImg.isHidden = false
-                self.dontHavePanLabel.isHidden = false
-                self.pancardTextField.isUserInteractionEnabled = false
-                self.pancardBtnConstraint.constant = 0
-                self.pancardViewHeightConstraint.constant = 150
-                self.greenTick.isHidden = true
-
-            }
+//            if(self.customerPostData["pan"].stringValue == "absent"){
+//                self.pancardBtn.isHidden = true
+//                self.firstNameTextField.isUserInteractionEnabled = true
+//                self.lastNameTextField.isUserInteractionEnabled = true
+//                self.pancardTextField.text = ""
+//                self.pancardTextField.isUserInteractionEnabled = false
+//
+//                self.checkboxImg.isHidden = false
+//                self.dontHavePanLabel.isHidden = false
+//                self.pancardTextField.isUserInteractionEnabled = false
+//                self.pancardBtnConstraint.constant = 0
+//                self.pancardViewHeightConstraint.constant = 150
+//                self.greenTick.isHidden = true
+//
+//            }
             
         }else{
             self.pancardViewHeightConstraint.constant = 40
@@ -1212,7 +1218,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.pancardTextField.delegate = self
         self.firstNameTextField.delegate = self
         self.lastNameTextField.delegate = self
-        self.dateOfBirthTextField.delegate = self
+        //self.dateOfBirthTextField.delegate = self
         self.emailIdTextField.delegate = self
         self.fatherNameTextField.delegate = self
         self.motherNameTextField.delegate = self

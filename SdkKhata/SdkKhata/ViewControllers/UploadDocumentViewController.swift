@@ -34,6 +34,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var backImage: UIImageView!
     @IBOutlet weak var lastPageImg: UIImageView!
     
+    let dropDown = DropDown()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,6 +47,18 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         continueBtn.isUserInteractionEnabled = false
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         ocrPostData["mobileNumber"].stringValue = mobileNumber!
+        
+        dropDown.dataSource = ["Aadhaar", "Passport", "Driving License","Voter ID"]
+        dropDown.anchorView = selectDoumemtTextFeild
+        dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
+        dropDown.backgroundColor = .white
+        dropDown.direction = .bottom
+        
+        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            print("Selected item: \(item) at index: \(index)")
+            self.dropDown.hide()
+            self.handleDocument(documentType: item)
+        }
         
         
     }
@@ -92,6 +106,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         self.backView.isHidden  = false
         self.selectDoumemtTextFeild.text = documentType
         AgreeViewController.docType = documentType
+        self.ocrPostData["docType"].stringValue = documentType
+        UserDefaults.standard.set(documentType, forKey: "docType")
         if(documentType == "Aadhaar"){
             self.isOCRScannerCanceled = true
             self.openQRCodeScanner()
@@ -101,7 +117,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBAction func handleSlectDocumentTap(_ sender: Any) {
         
         self.selectDoumemtTextFeild.resignFirstResponder()
-        self.showAlertDailog()
+        //self.showAlertDailog()
+        self.dropDown.show()
         
     }
     
@@ -523,42 +540,66 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                 
             }
             
-        }else if(self.selectDoumemtTextFeild.text == "Aadhaargag"){
+        }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
             
-            let vision = Vision.vision()
-            let options = VisionCloudDocumentTextRecognizerOptions()
-            options.languageHints = ["en"]
             
-            let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
-            let image = VisionImage(image: croppedImage)
-            
-            textRecognizer.process(image) { ocrResult, error in
-                guard error == nil, let ocrResult = ocrResult else {
-                    print(error)
-                    return
-                }
-                let resultText = ocrResult.text
-                print(resultText)
-                if(self.clicked == "front"){
+            if(self.clicked == "front"){
+                let vision = Vision.vision()
+                let options = VisionCloudDocumentTextRecognizerOptions()
+                options.languageHints = ["en"]
+                let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
+                let image = VisionImage(image: croppedImage)
+                
+                textRecognizer.process(image) { ocrResult, error in
+                    guard error == nil, let ocrResult = ocrResult else {
+                        print(error)
+                        return
+                    }
+                    let resultText = ocrResult.text
+                    print(resultText)
+                    
                     let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
                     print(isValidAadhaarFront)
                     if(isValidAadhaarFront){
                         self.setFrontImage(croppedImage: croppedImage)
-                        //self.ocrPostData["raw_front"].stringValue = resultText
+                        self.ocrPostData["raw_front"].stringValue = resultText
                     }else{
-                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 300.0)
+                        Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
                     }
-                }else{
-                    //                    let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
-                    //                    if(isValidPassportBack){
-                    //                        self.setBackImage(croppedImage: croppedImage)
-                    //                        self.ocrPostData["rawBack"].stringValue = resultText
-                    //                    }else{
-                    //                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 300.0)
-                    //                    }
+                    
+                    
+                }
+            }else{
+                
+                let vision = Vision.vision()
+                let options = VisionCloudDocumentTextRecognizerOptions()
+                options.languageHints = ["en"]
+                let textRecognizer = vision.onDeviceTextRecognizer()
+                let image = VisionImage(image: croppedImage)
+                
+                textRecognizer.process(image) { ocrResult, error in
+                    guard error == nil, let ocrResult = ocrResult else {
+                        print(error)
+                        return
+                    }
+                    let resultText = ocrResult.text
+                    print(resultText)
+                    
+                    let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
+                    print(isValidAadhaarBack)
+                    if(isValidAadhaarBack){
+                        self.setBackImage(croppedImage: croppedImage)
+                        self.ocrPostData["rawBack"].stringValue = resultText
+                    }else{
+                        Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                    }
+                    
+                    
                 }
                 
             }
+            
+            
             
         }else{
             
@@ -808,6 +849,8 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
     private func checkAadhaarFront(rawText:String) -> Bool {
         var rawStrings:[String] = [String]()
         let rawString = rawText.split(separator: "\n")
+        print("=====Aadhar data ======")
+        print(rawString)
         for line in rawString {
             rawStrings.append(String(line))
         }
@@ -815,25 +858,32 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
         var i = 0
         var flag = false
         
-        while (i < rawStrings.count) {
-            if(self.aadhaarValidator(line: rawStrings[i])){
-                let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
-                if(ocrPostData["doc_number"].stringValue == aadharNumber){
-                    flag = true
-                }else{
-                    ocrPostData["doc_number"].stringValue = aadharNumber
-                    
-                    if(i > (rawStrings.count/2)){
-                        
+        if(rawText.containsIgnoringCase(find: "address")){
+            flag = false
+        }else{
+            while (i < rawStrings.count) {
+                if(self.aadhaarValidator(line: rawStrings[i])){
+                    let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
+                    print("aadharNumber is: \(aadharNumber)")
+                    if(ocrPostData["doc_number"].stringValue == aadharNumber){
+                        flag = true
                     }else{
-                        
+                        ocrPostData["doc_number"].stringValue = aadharNumber
+                        print(aadharNumber)
+                        if(i > (rawStrings.count/2)){
+                            extractAadhaarData(name: rawStrings[i - 3], dob: rawStrings[i - 2], gender: rawStrings[i - 1]);
+                        }else{
+                            extractAadhaarData(name: rawStrings[i - 3], dob: rawStrings[i - 2], gender: rawStrings[i - 1]);
+                        }
+                        flag = true
                     }
-                    flag = true
+                    break
                 }
-                break
+                i = i+1
             }
-            i = i+1
         }
+        
+        
         
         return flag
     }
@@ -857,7 +907,7 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
     }
     
     func extractAadhaarData(name:String,dob:String,gender:String){
-        
+        print(name,dob,gender)
         self.extractName(name: name)
         
         if(gender.containsIgnoringCase(find: "female")){
@@ -865,18 +915,29 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
         }else {
             ocrPostData["gender"].stringValue = "M"
         }
-        
+        print("Gender is: \(ocrPostData["gender"].stringValue)")
         if(dob.containsIgnoringCase(find: "DOB")){
             print(dob)
+            let birthYear = dob.suffix(4)
+            let birthMonth = dob[dob.count-7 ..< dob.count-5]
+            let birthDay = dob[dob.count-10 ..< dob.count-8]
+            ocrPostData["dob"].stringValue = "\(birthDay)/\(birthMonth)/\(birthYear)"
+            print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
             
         }else{
             print(dob)
+            let birthYear = dob.suffix(4)
+            let birthMonth = "01"
+            let birthDay = "01"
+            ocrPostData["dob"].stringValue = "\(birthDay)/\(birthMonth)/\(birthYear)"
+             print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
+            
         }
     }
     
     func extractName(name:String){
         let nameArray = name.split(separator: " ")
-        print(nameArray)
+        
         
         switch(nameArray.count){
             
@@ -905,6 +966,84 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
             ocrPostData["lastname"].stringValue = name.replacingOccurrences(of: String(nameArray[0]), with: "")
             break
         }
+        print("firstname is: \(ocrPostData["firstname"].stringValue)")
+        print("lastname is: \(ocrPostData["lastname"].stringValue)")
+        print("midelName is: \(ocrPostData["midelName"].stringValue)")
+    }
+    
+    
+    private func checkAadhaarBack(rawText:String) -> Bool {
+        
+        var rawStrings:[String] = [String]()
+        let rawString = rawText.split(separator: "\n")
+        print("=====Aadhar data Back ======")
+        print(rawString)
+        for line in rawString {
+            rawStrings.append(String(line))
+        }
+        var i = 0
+        var flag = false
+        
+        while (i < rawStrings.count) {
+            if(rawStrings[i].containsIgnoringCase(find: "address")){
+                print("Address is: \(rawStrings[i])")
+                print(rawStrings[i].split(separator: ","))
+                let addressArray = rawStrings[i].split(separator: ",")
+                print("pincode is: \(addressArray[addressArray.count-1].suffix(6))")
+                
+                if(ocrPostData["pincode"].stringValue == addressArray[addressArray.count-1].replacingOccurrences(of: " ", with: "")){
+                    flag = true
+                }else{
+                    ocrPostData["pincode"].stringValue = String(addressArray[addressArray.count-1])
+                    extractAadhaarAddress(addressText: rawStrings[i])
+                    flag = true
+                }
+                
+                print(i)
+                break
+            }
+            i = i+1
+        }
+    
+        return flag;
+    }
+    
+    func extractAadhaarAddress(addressText:String){
+        let addressArray = addressText.replacingOccurrences(of: "Address: ", with: "").split(separator: ",")
+        var i = addressArray.count/2
+        var j = 0
+        var address1 = ""
+        var address2 = ""
+        while (j < addressArray.count){
+            
+            if(j<i){
+                if(String(address1 + String(",") + String(addressArray[j])).count < 50){
+                    if(address1 == ""){
+                        address1 = address1 + String(addressArray[j])
+                    }else{
+                        address1 = address1 + String(",") + String(addressArray[j])
+                    }
+                    
+                }
+                
+            }else{
+                if(String(address2 + String(",") + String(addressArray[j])).count < 50){
+                    if(address2 == ""){
+                        address2 = address2 + String(addressArray[j])
+                    }else{
+                        address2 = address2 + String(",") + String(addressArray[j])
+                    }
+                    
+                }
+                
+            }
+            j = j+1
+        }
+        ocrPostData["address1"].stringValue = address1
+        ocrPostData["address2"].stringValue = address2
+        print("Address1: \(address1)")
+        print("Address2: \(address2)")
+        
     }
     
     

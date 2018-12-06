@@ -115,9 +115,9 @@
 				9A3319E3218736C500A2521C /* Sources */,
 				9A3319E4218736C500A2521C /* Frameworks */,
 				9A3319E5218736C500A2521C /* Resources */,
-				5C981CC476D24662F60A8883 /* [CP] Embed Pods Frameworks */,
 				9A50C29A2199C63A0066B767 /* Embed Frameworks */,
-				932666359C7A31D195F154D6 /* [CP] Copy Pods Resources */,
+				CE24D326D1E673BCC2588795 /* [CP] Embed Pods Frameworks */,
+				D377270F95A137650DFA142C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -177,10 +177,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5C981CC476D24662F60A8883 /* [CP] Embed Pods Frameworks */ = {
+		9ACB19884C001BBDE8D1AD68 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Example-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CE24D326D1E673BCC2588795 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
@@ -198,6 +218,8 @@
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
@@ -217,10 +239,12 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		932666359C7A31D195F154D6 /* [CP] Copy Pods Resources */ = {
+		D377270F95A137650DFA142C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-resources.sh",
@@ -230,6 +254,10 @@
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/addmoneyicon.imageset/addmoneyicon.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/Applyicon.imageset/Applyicon.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/arrow_drop_down.imageset/arrow_drop_down.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/axis_icon.imageset/axis_icon.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/axis_icon.imageset/axis_icon@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/axis_icon.imageset/axis_icon@3x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/back.imageset/back.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/backarrow.imageset/backarrow.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/BB English Making Line logo.imageset/BB English Making Line logo.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/bb logo.imageset/bb logo.png",
@@ -246,13 +274,27 @@
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/easydayclub.imageset/easydayclub.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/eZone-smarter-living.imageset/eZone-smarter-living.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/firstpage.imageset/firstpage.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/front.imageset/front.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/front.imageset/front@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/front.imageset/front@3x.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/futurepay-logo-bird.imageset/futurepay-logo-bird.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/greentick.imageset/greentick.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/greycircle_progress.imageset/greycircle_progress.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/Group 429.imageset/Group 429.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/hdfc_icon.imageset/hdfc_icon.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/hdfc_icon.imageset/hdfc_icon@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/hdfc_icon.imageset/hdfc_icon@3x.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/history icon.imageset/history icon.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/home_banner.imageset/home_banner.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/how_to_aadhar.imageset/how_to_aadhar.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/how_to_pan.imageset/how_to_pan.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/how_to_passport.imageset/how_to_passport.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/how_to_take_picture_example.imageset/how_to_take_picture_example.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/how_to_voter.imageset/how_to_voter.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/HyperCITY logo.imageset/HyperCITY logo.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/icici_icon.imageset/icici_icon.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/icici_icon.imageset/icici_icon@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/icici_icon.imageset/icici_icon@3x.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/khata logo.imageset/khata logo.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/lastpage.imageset/lastpage.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/notifications.imageset/notifications.png",
@@ -263,17 +305,41 @@
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/profitclublogo.imageset/profitclublogo.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/provideID_progress.imageset/provideID_progress.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/qr_code.imageset/qr_code.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked-1.imageset/radio_button_checked.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked-1.imageset/radio_button_checked@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked-1.imageset/radio_button_checked@3x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked.imageset/radio_button_checked.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked.imageset/radio_button_checked@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_checked.imageset/radio_button_checked@3x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked-1.imageset/radio_button_unchecked.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked-1.imageset/radio_button_unchecked@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked-1.imageset/radio_button_unchecked@3x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked.imageset/radio_button_unchecked.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked.imageset/radio_button_unchecked@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/radio_button_unchecked.imageset/radio_button_unchecked@3x.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/selfieicon.imageset/selfieicon.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/Shopicon.imageset/Shopicon.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_accept_terms.imageset/stepper_accept_terms.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_man_accept_terms.imageset/stepper_man_accept_terms.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_man_auto_pay.imageset/stepper_man_auto_pay.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_man_share_details.imageset/stepper_man_share_details.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_man_submit_id.imageset/stepper_man_submit_id.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_share_details.imageset/stepper_share_details.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/stepper_submit_id.imageset/stepper_submit_id.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/tick.imageset/tick.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/Vector Smart Object-1.imageset/Vector Smart Object-1.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/Vector Smart Object.imageset/Vector Smart Object.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/view.imageset/view.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/warning.imageset/warning.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/warning.imageset/warning@2x.png",
+				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/warning.imageset/warning@3x.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/FPApp.storyboard",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/OpenSans-Regular.ttf",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVTextDetectorResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/accordian_downarrow.png",
@@ -281,6 +347,10 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/addmoneyicon.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Applyicon.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/arrow_drop_down.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/axis_icon.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/axis_icon@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/axis_icon@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/backarrow.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BB English Making Line logo.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bb logo.png",
@@ -296,13 +366,27 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/easydayclub.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/eZone-smarter-living.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/firstpage.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/front.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/front@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/front@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/futurepay-logo-bird.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/greentick.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/greycircle_progress.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Group 429.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/hdfc_icon.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/hdfc_icon@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/hdfc_icon@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/history icon.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home_banner.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/how_to_aadhar.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/how_to_pan.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/how_to_passport.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/how_to_take_picture_example.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/how_to_voter.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HyperCITY logo.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icici_icon.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icici_icon@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icici_icon@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/khata logo.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lastpage.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/notifications.png",
@@ -313,12 +397,28 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/profitclublogo.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/provideID_progress.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/qr_code.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_checked.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_checked@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_checked@3x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_unchecked.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_unchecked@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/radio_button_unchecked@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/selfieicon.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Shopicon.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_accept_terms.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_man_accept_terms.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_man_auto_pay.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_man_share_details.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_man_submit_id.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_share_details.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/stepper_submit_id.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/tick.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Vector Smart Object-1.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Vector Smart Object.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/view.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/warning.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/warning@2x.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/warning@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FPApp.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/OpenSans-Regular.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
@@ -326,24 +426,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9ACB19884C001BBDE8D1AD68 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Example-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

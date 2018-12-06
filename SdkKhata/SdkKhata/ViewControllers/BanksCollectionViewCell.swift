@@ -2,7 +2,7 @@
 //  BanksCollectionViewCell.swift
 //  SdkKhata
 //
-//  Created by Puli Chakali on 05/12/18.
+//  Created by Artdex & Cognoscis Tech on 06/12/18.
 //
 
 import UIKit

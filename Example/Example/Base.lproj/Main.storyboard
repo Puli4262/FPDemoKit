@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NxM-BL-vcY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NxM-BL-vcY">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XBn-Xh-eU5">
-                                <rect key="frame" x="16" y="308" width="343" height="50"/>
+                                <rect key="frame" x="16" y="308.5" width="343" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="1jK-go-mco"/>
                                 </constraints>
@@ -38,13 +38,26 @@
                                     <action selector="openQRCodeScanner:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jS-Sz-Fkj"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B48-Yu-sjG">
+                                <rect key="frame" x="16" y="374.5" width="343" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Rmz-44-MMZ"/>
+                                </constraints>
+                                <state key="normal" title="PayNow"/>
+                                <connections>
+                                    <action selector="handlePaynow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XVv-Le-JSh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="B48-Yu-sjG" firstAttribute="top" secondItem="XBn-Xh-eU5" secondAttribute="bottom" constant="16" id="5Zu-J8-p4G"/>
                             <constraint firstItem="5H3-AY-Yn0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6Aj-JV-t6Z"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PJz-iK-6eW"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PRe-Xq-cG6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5H3-AY-Yn0" secondAttribute="bottom" constant="20" id="YCR-hS-qsg"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="B48-Yu-sjG" secondAttribute="trailing" constant="16" id="Ym9-5a-3no"/>
+                            <constraint firstItem="B48-Yu-sjG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="iRG-nK-KgF"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5H3-AY-Yn0" secondAttribute="trailing" constant="16" id="v1E-VS-0cQ"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="vCB-w6-XWc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XBn-Xh-eU5" secondAttribute="trailing" constant="16" id="zol-tZ-K1M"/>
@@ -113,11 +126,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zce-OF-sUP">
-                                <rect key="frame" x="313" y="613" width="46" height="30"/>
+                                <rect key="frame" x="313.5" y="613.5" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                             </button>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="21x-ur-Asw">
-                                <rect key="frame" x="134" y="610" width="106" height="37"/>
+                                <rect key="frame" x="134.5" y="610" width="106" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="37" id="GzI-bQ-6sE"/>
                                     <constraint firstAttribute="width" constant="106" id="fkf-AU-f7u"/>

@@ -52,7 +52,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
             
-            //self.openAutopayVC()
+            //self.openUploadDocumentsVC()
         })
         
     }

@@ -12,7 +12,7 @@ class AutoPayViewController: UIViewController,UICollectionViewDataSource,UIColle
     @IBOutlet weak var banksCollectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.hideKeyboardWhenTappedAround()
         self.banksCollectionView.delegate = self
         self.banksCollectionView.dataSource = self
         

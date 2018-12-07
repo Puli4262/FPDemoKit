@@ -12,6 +12,8 @@ import FirebaseMLVision
 import SWXMLHash
 import SwiftyJSON
 import DropDown
+import CropViewController
+
 
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
@@ -69,6 +71,10 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
         
     }
+    
+    
+    
+    
     
     func hideImageView(){
         
@@ -207,16 +213,9 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         self.dismiss(animated: true, completion: {
             
             
-            
-            
-            let exampleCropViewController = self.storyboard?.instantiateViewController(withIdentifier: "ExCropVC") as! CropViewControllerWithAspectRatio
-            exampleCropViewController.delegate = self
-            exampleCropViewController.aspectRatio = "1:1"
-            exampleCropViewController.image = image
-            
-            
-            let navController = UINavigationController(rootViewController: exampleCropViewController)
-            self.present(navController, animated: true, completion: nil)
+            let cropViewController = CropViewController(image: image)
+            cropViewController.delegate = self
+            self.present(cropViewController, animated: true, completion: nil)
             
         })
     }
@@ -525,88 +524,23 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
     }
 }
 
-extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
+extension UploadDocumentViewController: CropViewControllerDelegate {
     
-    func photoTweaksController(_ controller: IGRPhotoTweakViewController, didFinishWithCroppedImage croppedImage: UIImage) {
-        
-        if(self.selectDoumemtTextFeild.text == "Passport"){
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage croppedImage: UIImage, withRect cropRect: CGRect, angle: Int) {
+        print("handle image")
+        self.dismiss(animated: true, completion: {
             
-            let alertController = Utils().loadingAlert(viewController: self)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                self.present(alertController, animated: false, completion: nil)
-            })
-            
-            let vision = Vision.vision()
-            let options = VisionCloudDocumentTextRecognizerOptions()
-            options.languageHints = ["en"]
-            
-            let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
-            let image = VisionImage(image: croppedImage)
-            
-            
-            
-            textRecognizer.process(image) { ocrResult, error in
-                guard error == nil, let ocrResult = ocrResult else {
-                    print(error)
-                    print(error.debugDescription)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                        alertController.dismiss(animated: true, completion: nil)
-                    })
-                    return
-                }
-                let resultText = ocrResult.text
-                print(resultText)
+            if(self.selectDoumemtTextFeild.text == "Passport"){
                 
-                if(self.clicked == "front"){
-                    let isValidPassportFront = self.checkPassportFront(rawText: resultText)
-                    print(isValidPassportFront)
-                    if(isValidPassportFront){
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
-                        })
-                        self.setFrontImage(croppedImage: croppedImage)
-                        self.ocrPostData["raw_front"].stringValue = resultText
-                    }else{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: {
-                                self.openRetakeVC()
-                            })
-                        })
-                        //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
-                    }
-                }else{
-                    let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
-                    if(isValidPassportBack){
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
-                        })
-                        self.setBackImage(croppedImage: croppedImage)
-                        self.ocrPostData["rawBack"].stringValue = resultText
-                    }else{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: {
-                                self.openRetakeVC()
-                            })
-                        })
-                        //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
-                    }
-                }
-                
-                
-            }
-            
-        }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
-            let alertController = Utils().loadingAlert(viewController: self)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                self.present(alertController, animated: false, completion: nil)
-            })
-            
-            
-            if(self.clicked == "front"){
+                let alertController = Utils().loadingAlert(viewController: self)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                    self.present(alertController, animated: false, completion: nil)
+                })
                 
                 let vision = Vision.vision()
                 let options = VisionCloudDocumentTextRecognizerOptions()
                 options.languageHints = ["en"]
+                
                 let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
                 let image = VisionImage(image: croppedImage)
                 
@@ -614,103 +548,178 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                 
                 textRecognizer.process(image) { ocrResult, error in
                     guard error == nil, let ocrResult = ocrResult else {
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
-                        })
-                        return
-                    }
-                   
-                    let resultText = ocrResult.text
-                    print(resultText)
-                    
-                    let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
-                    print(isValidAadhaarFront)
-                    
-                    if(isValidAadhaarFront){
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
-                        })
-                        self.setFrontImage(croppedImage: croppedImage)
-                        self.ocrPostData["raw_front"].stringValue = resultText
-                    }else{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: {
-                                self.openRetakeVC()
-                            })
-                        })
-                        //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
-                    }
-                    
-                }
-            }else{
-                
-                let vision = Vision.vision()
-                let options = VisionCloudDocumentTextRecognizerOptions()
-                options.languageHints = ["en"]
-                let textRecognizer = vision.onDeviceTextRecognizer()
-                let image = VisionImage(image: croppedImage)
-                
-                textRecognizer.process(image) { ocrResult, error in
-                    guard error == nil, let ocrResult = ocrResult else {
                         print(error)
+                        print(error.debugDescription)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                             alertController.dismiss(animated: true, completion: nil)
                         })
                         return
                     }
-                    
                     let resultText = ocrResult.text
                     print(resultText)
                     
-                    let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
-                    print(isValidAadhaarBack)
-                    if(isValidAadhaarBack){
-                        
-                        DispatchQueue.main.async {
-                            
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
-                        })
-                        self.setBackImage(croppedImage: croppedImage)
-                        self.ocrPostData["rawBack"].stringValue = resultText
-                    }else{
-                        
-                        DispatchQueue.main.async {
-                            alertController.dismiss(animated: true, completion: {
-                                self.openRetakeVC()
+                    if(self.clicked == "front"){
+                        let isValidPassportFront = self.checkPassportFront(rawText: resultText)
+                        print(isValidPassportFront)
+                        if(isValidPassportFront){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
                             })
+                            self.setFrontImage(croppedImage: croppedImage)
+                            self.ocrPostData["raw_front"].stringValue = resultText
+                        }else{
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
+                            })
+                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                        }
+                    }else{
+                        let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
+                        if(isValidPassportBack){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
+                            })
+                            self.setBackImage(croppedImage: croppedImage)
+                            self.ocrPostData["rawBack"].stringValue = resultText
+                        }else{
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
+                            })
+                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                        }
+                    }
+                    
+                    
+                }
+                
+            }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
+                let alertController = Utils().loadingAlert(viewController: self)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                    self.present(alertController, animated: false, completion: nil)
+                })
+                
+                
+                if(self.clicked == "front"){
+                    
+                    let vision = Vision.vision()
+                    let options = VisionCloudDocumentTextRecognizerOptions()
+                    options.languageHints = ["en"]
+                    let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
+                    let image = VisionImage(image: croppedImage)
+                    
+                    
+                    
+                    textRecognizer.process(image) { ocrResult, error in
+                        guard error == nil, let ocrResult = ocrResult else {
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
+                            })
+                            return
                         }
                         
+                        let resultText = ocrResult.text
+                        print(resultText)
                         
-                        //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                        let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
+                        print(isValidAadhaarFront)
+                        
+                        if(isValidAadhaarFront){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
+                            })
+                            self.setFrontImage(croppedImage: croppedImage)
+                            self.ocrPostData["raw_front"].stringValue = resultText
+                        }else{
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
+                            })
+                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                        }
+                        
                     }
-
+                }else{
+                    
+                    let vision = Vision.vision()
+                    let options = VisionCloudDocumentTextRecognizerOptions()
+                    options.languageHints = ["en"]
+                    let textRecognizer = vision.onDeviceTextRecognizer()
+                    let image = VisionImage(image: croppedImage)
+                    
+                    textRecognizer.process(image) { ocrResult, error in
+                        guard error == nil, let ocrResult = ocrResult else {
+                            print(error)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
+                            })
+                            return
+                        }
+                        
+                        let resultText = ocrResult.text
+                        print(resultText)
+                        
+                        let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
+                        print(isValidAadhaarBack)
+                        if(isValidAadhaarBack){
+                            
+                            DispatchQueue.main.async {
+                                
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                alertController.dismiss(animated: true, completion: nil)
+                            })
+                            self.setBackImage(croppedImage: croppedImage)
+                            self.ocrPostData["rawBack"].stringValue = resultText
+                        }else{
+                            
+                            DispatchQueue.main.async {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
+                            }
+                            
+                            
+                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                        }
+                        
+                    }
+                    
                 }
+                
+                
+                
+            }else{
+                
+                if(self.clicked == "front"){
+                    self.isFrontPictureUploaded = true
+                    self.firstPageImg.isHidden = true
+                    self.frontImage.image = croppedImage
+                }else{
+                    self.lastPageImg.isHidden = true
+                    self.backImage.image = croppedImage
+                    self.isBackPictureUploaded = true
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                    self.continueBtn.isUserInteractionEnabled = true
+                }
+                
                 
             }
             
-            
-            
-        }else{
-            
-            if(clicked == "front"){
-                isFrontPictureUploaded = true
-                self.firstPageImg.isHidden = true
-                self.frontImage.image = croppedImage
-            }else{
-                self.lastPageImg.isHidden = true
-                self.backImage.image = croppedImage
-                isBackPictureUploaded = true
-                continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-                continueBtn.isUserInteractionEnabled = true
-            }
-            
-            
-        }
+        })
+    }
+    
+    func cropViewController(_ cropViewController: CropViewController, didFinishCancelled cancelled: Bool) {
+        
         self.dismiss(animated: true, completion: nil)
     }
+    
+    
     
     func setFrontImage(croppedImage:UIImage){
         self.isFrontPictureUploaded = true

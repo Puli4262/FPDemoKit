@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (4.8.0)
+  - CropViewController (2.3.8)
   - DropDown (2.3.2)
   - Firebase/Core (5.13.0):
     - Firebase/CoreOnly
@@ -87,6 +88,7 @@ PODS:
   - Protobuf (3.6.1)
   - SdkKhata (0.0.2):
     - Alamofire (~> 4.7)
+    - CropViewController
     - DropDown (= 2.3.2)
     - Firebase/Core
     - Firebase/MLVision
@@ -105,6 +107,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - CropViewController
     - DropDown
     - Firebase
     - FirebaseAnalytics
@@ -131,6 +134,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  CropViewController: 7be882b7d3fb3faef48a41924e80f689e9df2514
   DropDown: 7f87abecc28f9b4edad810fe1211c5c018c257e5
   Firebase: 6df9a6114bc9f106a98fe83d5438d4d9833c2019
   FirebaseAnalytics: 63202d2665de4e6adcbdce189135255d8b5962ba
@@ -147,7 +151,7 @@ SPEC CHECKSUMS:
   IGRPhotoTweaks: 8fe6b62c6599238d860b19b46a85a454e202f502
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SdkKhata: 015b2179306bf741da6e788ffcbf8d8e76c96667
+  SdkKhata: 2d3cdda0cfa83a9b65031fe4dccb610c600f9768
   SkyFloatingLabelTextField: 38164979b79512f9ff9288ad8acfc4bbf5d843e3
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f

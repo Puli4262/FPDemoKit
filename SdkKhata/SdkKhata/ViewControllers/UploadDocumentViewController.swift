@@ -29,7 +29,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     var QRCodeResult = ""
     var isFrontPictureUploaded = false
     var isBackPictureUploaded = false
-    var clicked = "first"
+    var clicked = "front"
     
     @IBOutlet weak var frontImage: UIImageView!
     @IBOutlet weak var firstPageImg: UIImageView!
@@ -614,7 +614,7 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                 
                 textRecognizer.process(image) { ocrResult, error in
                     guard error == nil, let ocrResult = ocrResult else {
-                        print(error)
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                             alertController.dismiss(animated: true, completion: nil)
                         })
@@ -626,10 +626,11 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                     
                     let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
                     print(isValidAadhaarFront)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                        alertController.dismiss(animated: true, completion: nil)
-                    })
+                    
                     if(isValidAadhaarFront){
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                            alertController.dismiss(animated: true, completion: nil)
+                        })
                         self.setFrontImage(croppedImage: croppedImage)
                         self.ocrPostData["raw_front"].stringValue = resultText
                     }else{
@@ -665,6 +666,10 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                     let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
                     print(isValidAadhaarBack)
                     if(isValidAadhaarBack){
+                        
+                        DispatchQueue.main.async {
+                            
+                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                             alertController.dismiss(animated: true, completion: nil)
                         })
@@ -672,16 +677,16 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
                         self.ocrPostData["rawBack"].stringValue = resultText
                     }else{
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                        DispatchQueue.main.async {
                             alertController.dismiss(animated: true, completion: {
                                 self.openRetakeVC()
                             })
-                        })
+                        }
+                        
+                        
                         //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
                     }
-                    
-                    
-                    
+
                 }
                 
             }
@@ -1137,13 +1142,23 @@ extension UploadDocumentViewController: IGRPhotoTweakViewControllerDelegate {
         
         let bundel = Bundle(for: RetakeViewController.self)
         
+        print(ocrPostData["docType"],clicked)
+        
         if let retakeVC = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RetakeVC") as? RetakeViewController {
             retakeVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             retakeVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             retakeVC.retakeDelegate = self
             self.present(retakeVC, animated: true, completion: nil)
+            
         }
         
+    }
+    
+    func getDocumentString(docType:String, imageSide:String) -> String {
+        
+        let imageName = ""
+        
+        return imageName
     }
     
     

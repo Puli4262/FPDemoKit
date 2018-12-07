@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1BC256FEE207E37B13511042 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A63DEA8A9CE8F685F11B82A7 /* Pods_Example.framework */; };
+		9A2C727321B930B100FEB2ED /* PayU_coreSDK_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A2C727221B930B000FEB2ED /* PayU_coreSDK_Swift.framework */; };
+		9A2C727421B930C200FEB2ED /* PayU_coreSDK_Swift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9A2C727221B930B000FEB2ED /* PayU_coreSDK_Swift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9A3319EB218736C500A2521C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3319EA218736C500A2521C /* AppDelegate.swift */; };
 		9A3319ED218736C500A2521C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3319EC218736C500A2521C /* ViewController.swift */; };
 		9A3319F0218736C500A2521C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A3319EE218736C500A2521C /* Main.storyboard */; };
@@ -23,6 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9A2C727421B930C200FEB2ED /* PayU_coreSDK_Swift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -31,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		061EEF0673A450495942C3B6 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
+		9A2C727221B930B000FEB2ED /* PayU_coreSDK_Swift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PayU_coreSDK_Swift.framework; sourceTree = "<group>"; };
 		9A3319E7218736C500A2521C /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A3319EA218736C500A2521C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9A3319EC218736C500A2521C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BC256FEE207E37B13511042 /* Pods_Example.framework in Frameworks */,
+				9A2C727321B930B100FEB2ED /* PayU_coreSDK_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +98,7 @@
 		9A3319E9218736C500A2521C /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				9A2C727221B930B000FEB2ED /* PayU_coreSDK_Swift.framework */,
 				9A3CADEE21B2B1F6001D45DF /* GoogleService-Info.plist */,
 				9A3319EA218736C500A2521C /* AppDelegate.swift */,
 				9A3319EC218736C500A2521C /* ViewController.swift */,

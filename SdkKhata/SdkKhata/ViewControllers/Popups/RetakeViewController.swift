@@ -9,10 +9,14 @@ import UIKit
 
 class RetakeViewController: UIViewController {
     var retakeDelegate:RetakeDelegate?
+    
+    @IBOutlet weak var imageView: UIImageView!
+    let imageNameString = "how_to_aadhar"
+    //"how_to_aadhar", "how_to_pan","how_to_passport","how_to_take_picture_example","how_to_voter"
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        
     }
 
     @IBAction func handleRetakeID(_ sender: Any) {

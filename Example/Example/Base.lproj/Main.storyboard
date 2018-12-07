@@ -38,13 +38,26 @@
                                     <action selector="openQRCodeScanner:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4jS-Sz-Fkj"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ynj-Hb-YBk">
+                                <rect key="frame" x="16" y="379" width="343" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Rhb-Od-U4e"/>
+                                </constraints>
+                                <state key="normal" title="Pay now"/>
+                                <connections>
+                                    <action selector="handlePayUrequset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fX5-3i-nPk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="5H3-AY-Yn0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6Aj-JV-t6Z"/>
+                            <constraint firstItem="ynj-Hb-YBk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="78c-St-eEb"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PJz-iK-6eW"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PRe-Xq-cG6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5H3-AY-Yn0" secondAttribute="bottom" constant="20" id="YCR-hS-qsg"/>
+                            <constraint firstItem="ynj-Hb-YBk" firstAttribute="top" secondItem="XBn-Xh-eU5" secondAttribute="bottom" constant="21" id="d2N-ET-U4z"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ynj-Hb-YBk" secondAttribute="trailing" constant="16" id="u5k-MF-s6Q"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5H3-AY-Yn0" secondAttribute="trailing" constant="16" id="v1E-VS-0cQ"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="vCB-w6-XWc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XBn-Xh-eU5" secondAttribute="trailing" constant="16" id="zol-tZ-K1M"/>

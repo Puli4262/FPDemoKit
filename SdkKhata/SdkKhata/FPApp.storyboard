@@ -1894,7 +1894,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFb-CW-fFr" customClass="Cardview" customModule="SdkKhata" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFb-CW-fFr">
                                 <rect key="frame" x="16" y="84" width="288" height="400"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="warning" translatesAutoresizingMaskIntoConstraints="NO" id="A3H-KD-yXN">
@@ -2002,6 +2002,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0c5-ft-foD"/>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="Iaf-pR-n0a" id="LKq-qz-wKf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PBE-c0-Ygp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2015,7 +2018,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F2J-4w-1HS" customClass="Cardview" customModule="SdkKhata" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F2J-4w-1HS">
                                 <rect key="frame" x="16" y="134" width="288" height="301"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="warning" translatesAutoresizingMaskIntoConstraints="NO" id="KdM-UC-o5p">

@@ -7,17 +7,22 @@
 //
 
 import UIKit
-import SdkKhata
 import AVFoundation
+import SdkKhata
 
 
 class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
+        
     @IBOutlet weak var applyBtn: UIButton!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        
     }
 
     @IBAction func openKhataApp(_ sender: Any) {
@@ -47,8 +52,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
 
     
     
-    
-    
+
 }
 
 

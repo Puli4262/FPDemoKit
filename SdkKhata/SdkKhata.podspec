@@ -15,11 +15,12 @@ Pod::Spec.new do |s|
 
 
  s.source        = { :git => 'https://github.com/hpatni/fg-lending.git',:tag => "0.0.2", :branch => "ios_development" }
- s.swift_version = "4.0"
+ s.swift_version = "4"
  s.source_files = 'SdkKhata/**/*.{h,m,swift,plist}'
  
  s.resources = ['SdkKhata/**/*.{xcassets,storyboard,png,jpg,ttf}']
  s.static_framework = true
+ 
  
  s.dependency 'Alamofire', '~> 4.7'
  s.dependency 'SwiftyJSON', '~> 4.2'

@@ -8,11 +8,11 @@
 import UIKit
 
 class AutoPayViewController: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
-
+    
     @IBOutlet weak var banksCollectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.banksCollectionView.delegate = self
         self.banksCollectionView.dataSource = self
         
@@ -41,9 +41,9 @@ class AutoPayViewController: UIViewController,UICollectionViewDataSource,UIColle
             + flowLayout.sectionInset.right
             + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsPerRow - 1))
         let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(numberOfItemsPerRow))
-        return CGSize(width: size, height: 70)
+        return CGSize(width: size, height: 60)
     }
-
     
-
+    
+    
 }

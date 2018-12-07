@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iTx-Wf-fz2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iTx-Wf-fz2">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1608,7 +1607,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="We2-ue-NRL">
-                                        <rect key="frame" x="8" y="64" width="272" height="182"/>
+                                        <rect key="frame" x="4" y="64" width="284" height="210"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="OTb-rs-7bf">
                                             <size key="itemSize" width="272" height="96"/>
@@ -1618,72 +1617,74 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="BanksCell" reuseIdentifier="BanksCell" id="dY1-Cn-WVW" customClass="BanksCollectionViewCell" customModule="SdkKhata" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="272" height="96"/>
+                                                <rect key="frame" x="6" y="0.0" width="272" height="96"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                     <rect key="frame" x="0.0" y="0.0" width="272" height="96"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FFR-tN-4CR">
-                                                            <rect key="frame" x="8" y="8" width="256" height="80"/>
+                                                            <rect key="frame" x="2" y="3" width="268" height="90"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radio_button_checked" translatesAutoresizingMaskIntoConstraints="NO" id="4VS-dB-gVt">
-                                                                    <rect key="frame" x="8" y="25" width="30" height="30"/>
+                                                                    <rect key="frame" x="8" y="35" width="20" height="20"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="30" id="59Q-0N-Lrw"/>
-                                                                        <constraint firstAttribute="width" constant="30" id="HsZ-Cl-nfp"/>
+                                                                        <constraint firstAttribute="height" constant="20" id="59Q-0N-Lrw"/>
+                                                                        <constraint firstAttribute="width" constant="20" id="HsZ-Cl-nfp"/>
                                                                     </constraints>
                                                                 </imageView>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hdfc_icon" translatesAutoresizingMaskIntoConstraints="NO" id="S9w-69-DJW">
-                                                                    <rect key="frame" x="46" y="20" width="40" height="40"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDFC Bank " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="NlN-hf-aVm">
+                                                                    <rect key="frame" x="69" y="30" width="191" height="30"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="width" constant="40" id="071-RV-i20"/>
-                                                                        <constraint firstAttribute="height" constant="40" id="DH3-Z5-uSU"/>
+                                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="MGx-by-xef"/>
                                                                     </constraints>
-                                                                </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDFC Bank" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="NlN-hf-aVm">
-                                                                    <rect key="frame" x="94" y="8" width="154" height="64"/>
-                                                                    <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="17"/>
+                                                                    <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="15"/>
                                                                     <color key="textColor" red="0.17254901960784313" green="0.17254901960784313" blue="0.17254901960784313" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hdfc_icon" translatesAutoresizingMaskIntoConstraints="NO" id="S9w-69-DJW">
+                                                                    <rect key="frame" x="36" y="32.5" width="25" height="25"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="25" id="071-RV-i20"/>
+                                                                        <constraint firstAttribute="height" constant="25" id="DH3-Z5-uSU"/>
+                                                                    </constraints>
+                                                                </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.87450980392156863" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
+                                                                <constraint firstItem="NlN-hf-aVm" firstAttribute="leading" secondItem="S9w-69-DJW" secondAttribute="trailing" constant="8" id="0IP-Ot-3Ks"/>
                                                                 <constraint firstItem="4VS-dB-gVt" firstAttribute="leading" secondItem="FFR-tN-4CR" secondAttribute="leading" constant="8" id="4Lq-X2-VUo"/>
                                                                 <constraint firstItem="S9w-69-DJW" firstAttribute="centerY" secondItem="FFR-tN-4CR" secondAttribute="centerY" id="Dlm-0z-x22"/>
-                                                                <constraint firstAttribute="trailing" secondItem="NlN-hf-aVm" secondAttribute="trailing" constant="8" id="HSO-eI-GOe"/>
-                                                                <constraint firstAttribute="bottom" secondItem="NlN-hf-aVm" secondAttribute="bottom" constant="8" id="QUm-dR-cSK"/>
+                                                                <constraint firstItem="NlN-hf-aVm" firstAttribute="centerY" secondItem="FFR-tN-4CR" secondAttribute="centerY" id="XB0-zn-Y7k"/>
+                                                                <constraint firstAttribute="trailing" secondItem="NlN-hf-aVm" secondAttribute="trailing" constant="8" id="XoU-re-WgR"/>
                                                                 <constraint firstItem="S9w-69-DJW" firstAttribute="leading" secondItem="4VS-dB-gVt" secondAttribute="trailing" constant="8" id="aEL-PC-Ye4"/>
-                                                                <constraint firstItem="NlN-hf-aVm" firstAttribute="leading" secondItem="S9w-69-DJW" secondAttribute="trailing" constant="8" id="izO-CL-jnC"/>
                                                                 <constraint firstItem="4VS-dB-gVt" firstAttribute="centerY" secondItem="FFR-tN-4CR" secondAttribute="centerY" id="jjC-R8-ORh"/>
-                                                                <constraint firstItem="NlN-hf-aVm" firstAttribute="top" secondItem="FFR-tN-4CR" secondAttribute="top" constant="8" id="zV0-T8-A0l"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
                                                 </view>
                                                 <constraints>
-                                                    <constraint firstItem="FFR-tN-4CR" firstAttribute="top" secondItem="dY1-Cn-WVW" secondAttribute="top" constant="8" id="CC9-8N-aR7"/>
-                                                    <constraint firstAttribute="trailing" secondItem="FFR-tN-4CR" secondAttribute="trailing" constant="8" id="apo-Nt-s19"/>
-                                                    <constraint firstItem="FFR-tN-4CR" firstAttribute="leading" secondItem="dY1-Cn-WVW" secondAttribute="leading" constant="8" id="kKG-Jf-LpQ"/>
-                                                    <constraint firstAttribute="bottom" secondItem="FFR-tN-4CR" secondAttribute="bottom" constant="8" id="w5E-zv-M8D"/>
+                                                    <constraint firstItem="FFR-tN-4CR" firstAttribute="top" secondItem="dY1-Cn-WVW" secondAttribute="top" constant="3" id="CC9-8N-aR7"/>
+                                                    <constraint firstAttribute="trailing" secondItem="FFR-tN-4CR" secondAttribute="trailing" constant="2" id="apo-Nt-s19"/>
+                                                    <constraint firstItem="FFR-tN-4CR" firstAttribute="leading" secondItem="dY1-Cn-WVW" secondAttribute="leading" constant="2" id="kKG-Jf-LpQ"/>
+                                                    <constraint firstAttribute="bottom" secondItem="FFR-tN-4CR" secondAttribute="bottom" constant="3" id="w5E-zv-M8D"/>
                                                 </constraints>
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kuo-Wp-eoB">
-                                        <rect key="frame" x="8" y="312" width="272" height="50"/>
+                                        <rect key="frame" x="8" y="330" width="272" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="FLF-Kp-6fC"/>
+                                            <constraint firstAttribute="height" constant="40" id="rgH-7z-m2l"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Zk-yc-kbI">
-                                        <rect key="frame" x="8" y="254" width="272" height="50"/>
+                                        <rect key="frame" x="8" y="282" width="272" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="cmJ-0M-RcQ"/>
+                                            <constraint firstAttribute="height" constant="40" id="eSG-QE-CC3"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1693,20 +1694,20 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="We2-ue-NRL" firstAttribute="top" secondItem="mv4-ig-dli" secondAttribute="bottom" constant="8" id="5DB-xN-vu0"/>
-                                    <constraint firstAttribute="trailing" secondItem="kuo-Wp-eoB" secondAttribute="trailing" constant="8" id="5f3-YE-TWl"/>
-                                    <constraint firstItem="3Zk-yc-kbI" firstAttribute="top" secondItem="We2-ue-NRL" secondAttribute="bottom" constant="8" id="7d3-p0-QdW"/>
-                                    <constraint firstItem="kuo-Wp-eoB" firstAttribute="top" secondItem="3Zk-yc-kbI" secondAttribute="bottom" constant="8" id="C7M-kp-RS3"/>
+                                    <constraint firstAttribute="bottom" secondItem="kuo-Wp-eoB" secondAttribute="bottom" constant="8" id="BzE-42-g7P"/>
+                                    <constraint firstAttribute="trailing" secondItem="3Zk-yc-kbI" secondAttribute="trailing" constant="8" id="CZw-Y9-QEn"/>
+                                    <constraint firstItem="kuo-Wp-eoB" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="FiY-Q3-39R"/>
                                     <constraint firstItem="mv4-ig-dli" firstAttribute="top" secondItem="u4z-Yz-k7n" secondAttribute="bottom" constant="8" id="GPf-kD-79E"/>
-                                    <constraint firstAttribute="trailing" secondItem="We2-ue-NRL" secondAttribute="trailing" constant="8" id="IoZ-KX-Gvk"/>
-                                    <constraint firstAttribute="trailing" secondItem="3Zk-yc-kbI" secondAttribute="trailing" constant="8" id="Kgp-Yo-eIH"/>
+                                    <constraint firstAttribute="trailing" secondItem="We2-ue-NRL" secondAttribute="trailing" id="IoZ-KX-Gvk"/>
                                     <constraint firstAttribute="trailing" secondItem="mv4-ig-dli" secondAttribute="trailing" constant="8" id="LGd-px-gTS"/>
+                                    <constraint firstAttribute="trailing" secondItem="kuo-Wp-eoB" secondAttribute="trailing" constant="8" id="MCQ-5e-DYc"/>
                                     <constraint firstItem="mv4-ig-dli" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="T72-zE-quy"/>
-                                    <constraint firstItem="kuo-Wp-eoB" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="YfC-vr-fsv"/>
-                                    <constraint firstItem="3Zk-yc-kbI" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="dkU-9D-Ucn"/>
-                                    <constraint firstAttribute="bottom" secondItem="kuo-Wp-eoB" secondAttribute="bottom" constant="16" id="i9L-2h-k3i"/>
+                                    <constraint firstItem="3Zk-yc-kbI" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="Z3X-Hk-MsG"/>
+                                    <constraint firstItem="kuo-Wp-eoB" firstAttribute="top" secondItem="3Zk-yc-kbI" secondAttribute="bottom" constant="8" id="kQr-qb-G1V"/>
                                     <constraint firstItem="u4z-Yz-k7n" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="t6S-lg-1BX"/>
+                                    <constraint firstItem="3Zk-yc-kbI" firstAttribute="top" secondItem="We2-ue-NRL" secondAttribute="bottom" constant="8" id="tIJ-qG-aiw"/>
                                     <constraint firstItem="u4z-Yz-k7n" firstAttribute="top" secondItem="j8s-kH-jnu" secondAttribute="top" constant="8" id="vsq-hV-OOV"/>
-                                    <constraint firstItem="We2-ue-NRL" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="8" id="y5h-u7-5bv"/>
+                                    <constraint firstItem="We2-ue-NRL" firstAttribute="leading" secondItem="j8s-kH-jnu" secondAttribute="leading" constant="4" id="y5h-u7-5bv"/>
                                     <constraint firstAttribute="trailing" secondItem="u4z-Yz-k7n" secondAttribute="trailing" constant="8" id="zZD-fV-AUE"/>
                                 </constraints>
                             </view>
@@ -1751,7 +1752,7 @@
                                     <fragment content="Your $ 5000 Khaata ">
                                         <attributes>
                                             <color key="NSColor" red="0.17254901960784313" green="0.17254901960784313" blue="0.1764705882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <font key="NSFont" size="25" name="OpenSans-Regular"/>
+                                            <font key="NSFont" metaFont="system" size="25"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -1825,7 +1826,7 @@
                                 <attributedString key="attributedText">
                                     <fragment content="I have read &amp; agree to the Terms &amp; Conditions and Privacy Policy for Khaata">
                                         <attributes>
-                                            <font key="NSFont" size="12" name="OpenSans-Regular"/>
+                                            <font key="NSFont" metaFont="cellTitle"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="2" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -1841,8 +1842,8 @@
                                     <fragment content=" limit is one step away">
                                         <attributes>
                                             <color key="NSColor" red="0.17254901960784313" green="0.17254901960784313" blue="0.1764705882352941" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <font key="NSFont" size="25" name="OpenSans-Regular"/>
-                                            <font key="NSOriginalFont" size="28" name="OpenSans-Regular"/>
+                                            <font key="NSFont" metaFont="system" size="25"/>
+                                            <font key="NSOriginalFont" metaFont="system" size="28"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -2116,7 +2117,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uDg-CO-1JA" customClass="Cardview" customModule="SdkKhata" customModuleProvider="target">
-                                <rect key="frame" x="16" y="167" width="288" height="235"/>
+                                <rect key="frame" x="16" y="166.5" width="288" height="235"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="warning" translatesAutoresizingMaskIntoConstraints="NO" id="Pm6-Ao-JcC">
                                         <rect key="frame" x="114" y="16" width="60" height="60"/>

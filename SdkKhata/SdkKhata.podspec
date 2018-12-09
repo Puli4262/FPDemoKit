@@ -26,7 +26,6 @@ Pod::Spec.new do |s|
  s.dependency 'SwiftyJSON', '~> 4.2'
  s.dependency 'SkyFloatingLabelTextField', '~> 3.0'
  s.dependency 'IGRPhotoTweaks', '~> 1.0.0'
- s.dependency 'GoogleMobileVision/TextDetector', '~> 1.4.1'
  s.dependency 'Firebase/Core'
  s.dependency 'Firebase/MLVision'
  s.dependency 'SWXMLHash', '~> 4.7.0'

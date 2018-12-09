@@ -596,7 +596,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                 }
                 
-            }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
+            }else if(self.selectDoumemtTextFeild.text == "Aadhaarxxg"){
                 let alertController = Utils().loadingAlert(viewController: self)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                     self.present(alertController, animated: false, completion: nil)
@@ -647,14 +647,14 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 }else{
                     
                     let vision = Vision.vision()
-                    let options = VisionCloudDocumentTextRecognizerOptions()
+                    let options = VisionCloudTextRecognizerOptions()
                     options.languageHints = ["en"]
-                    let textRecognizer = vision.onDeviceTextRecognizer()
+                    let textRecognizer = vision.cloudTextRecognizer(options:options)
                     let image = VisionImage(image: croppedImage)
                     
                     textRecognizer.process(image) { ocrResult, error in
                         guard error == nil, let ocrResult = ocrResult else {
-                            print(error)
+                            print("error is :\(error)")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                                 alertController.dismiss(animated: true, completion: nil)
                             })
@@ -1074,44 +1074,25 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
     
     
     private func checkAadhaarBack(rawText:String) -> Bool {
+        print(rawText)
+        //let aadharAddressRegex = "((Addres?s).*(,?\n\\d{6}))"
+        let aadharAddressRegex = "((Address).*(,?\\d{6}))"
         
-        var rawStrings:[String] = [String]()
-        let rawString = rawText.split(separator: "\n")
-        print("=====Aadhar data Back ======")
-        print(rawString)
-        for line in rawString {
-            rawStrings.append(String(line))
+        let allAadharAddressMatches = self.matches(for: aadharAddressRegex, in: rawText.replacingOccurrences(of: "\n", with: " "))
+        print(allAadharAddressMatches)
+        print(allAadharAddressMatches.count >= 2)
+        if(allAadharAddressMatches.count >= 2){
+            extractAadhaarAddress(addressText: allAadharAddressMatches[0])
+            self.ocrPostData["pincode"].stringValue = allAadharAddressMatches[2]
+            return true
+        }else{
+            return false
         }
-        var i = 0
-        var flag = false
-        
-        while (i < rawStrings.count) {
-            if(rawStrings[i].containsIgnoringCase(find: "address")){
-                print("Address is: \(rawStrings[i])")
-                print(rawStrings[i].split(separator: ","))
-                let addressArray = rawStrings[i].split(separator: ",")
-                print("pincode is: \(addressArray[addressArray.count-1].suffix(6))")
-                
-                if(ocrPostData["pincode"].stringValue == addressArray[addressArray.count-1].replacingOccurrences(of: " ", with: "")){
-                    flag = true
-                }else{
-                    ocrPostData["pincode"].stringValue = String(addressArray[addressArray.count-1])
-                    extractAadhaarAddress(addressText: rawStrings[i])
-                    flag = true
-                }
-                
-                print(i)
-                break
-            }
-            i = i+1
-        }
-    
-        return flag;
     }
     
     func extractAadhaarAddress(addressText:String){
         let addressArray = addressText.replacingOccurrences(of: "Address: ", with: "").split(separator: ",")
-        var i = addressArray.count/2
+        let i = addressArray.count/2
         var j = 0
         var address1 = ""
         var address2 = ""

@@ -49,8 +49,6 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.1)
-  - GoogleMobileVision/TextDetector (1.4.1):
-    - GoogleMobileVision/Detector (~> 1.4)
   - GoogleToolboxForMac/Defines (2.1.4)
   - GoogleToolboxForMac/Logger (2.1.4):
     - GoogleToolboxForMac/Defines (= 2.1.4)
@@ -92,7 +90,6 @@ PODS:
     - DropDown (= 2.3.2)
     - Firebase/Core
     - Firebase/MLVision
-    - GoogleMobileVision/TextDetector (~> 1.4.1)
     - IGRPhotoTweaks (~> 1.0.0)
     - SkyFloatingLabelTextField (~> 3.0)
     - SwiftyJSON (~> 4.2)
@@ -151,7 +148,7 @@ SPEC CHECKSUMS:
   IGRPhotoTweaks: 8fe6b62c6599238d860b19b46a85a454e202f502
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SdkKhata: 2d3cdda0cfa83a9b65031fe4dccb610c600f9768
+  SdkKhata: 12e344eb1786637690ed3e26d8d7e61ba76c3b0c
   SkyFloatingLabelTextField: 38164979b79512f9ff9288ad8acfc4bbf5d843e3
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f

@@ -244,7 +244,6 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleMobileVision/GoogleMVTextDetectorResources.bundle",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/accordian_downarrow.imageset/accordian_downarrow.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/accordian_uparrow.imageset/accordian_uparrow.png",
 				"${PODS_ROOT}/../../SdkKhata/SdkKhata/Assets.xcassets/addmoneyicon.imageset/addmoneyicon.png",
@@ -335,7 +334,6 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMVTextDetectorResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/accordian_downarrow.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/accordian_uparrow.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/addmoneyicon.png",

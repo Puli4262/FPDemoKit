@@ -1,13 +1,13 @@
 //
-//  RetakeViewController.swift
+//  RatakeViewController.swift
 //  SdkKhata
 //
-//  Created by Puli Chakali on 09/12/18.
+//  Created by Puli Chakali on 07/12/18.
 //
 
 import UIKit
 
-class RetakeViewController: UIViewController {
+class RatakeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

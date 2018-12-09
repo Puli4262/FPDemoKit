@@ -9,8 +9,6 @@
 import UIKit
 import AVFoundation
 import SdkKhata
-
-
 class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
         

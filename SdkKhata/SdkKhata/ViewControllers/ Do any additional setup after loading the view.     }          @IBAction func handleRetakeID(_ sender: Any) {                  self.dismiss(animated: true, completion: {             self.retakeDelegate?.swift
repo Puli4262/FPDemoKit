@@ -1,13 +1,13 @@
 //
-//  RetakeViewController.swift
+//   Do any additional setup after loading the view.     }          @IBAction func handleRetakeID(_ sender: Any) {                  self.dismiss(animated: true, completion: {             self.retakeDelegate?.swift
 //  SdkKhata
 //
-//  Created by Puli Chakali on 09/12/18.
+//  Created by Puli Chakali on 07/12/18.
 //
 
 import UIKit
 
-class RetakeViewController: UIViewController {
+class _Do_any_additional_setup_after_loading_the_view__________________IBAction_func_handleRetakeID___sender__Any_____________________self_dismiss_animated__true__completion________________self_retakeDelegate_: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

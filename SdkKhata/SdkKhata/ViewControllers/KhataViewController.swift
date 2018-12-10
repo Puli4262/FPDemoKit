@@ -44,7 +44,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         //self.addBackButton()
         //UserDefaults.standard.set("1111111111", forKey: "mobileNumber")
         //UserDefaults.standard.set("9175389565", forKey: "mobileNumber")
-        UserDefaults.standard.set("9822662621", forKey: "mobileNumber")
+        UserDefaults.standard.set(self.mobileNumber, forKey: "mobileNumber")
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         UserDefaults.standard.set(emailID, forKey: "emailID")
         UserDefaults.standard.set(DOB, forKey: "DOB")

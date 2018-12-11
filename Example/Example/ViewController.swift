@@ -27,7 +27,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         
         let bundel = Bundle(for: KhataViewController.self)
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
-            //self.present(viewController, animated: true, completion: nil)
+            
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = "9819931788"
             viewController.emailID = "Anil@gmail.com "

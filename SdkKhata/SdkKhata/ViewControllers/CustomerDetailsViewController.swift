@@ -1154,7 +1154,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }
         let DOB = UserDefaults.standard.string(forKey: "DOB")
         if(emailID != ""){
-           self.dateOfBirthTextField.text = DOB
+           //self.dateOfBirthTextField.text = DOB
         }
         
         self.fatherNameTextField.text = userData["fatherName"].stringValue

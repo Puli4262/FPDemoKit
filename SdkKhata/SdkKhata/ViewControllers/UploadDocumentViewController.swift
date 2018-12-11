@@ -786,20 +786,29 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         let nameString = sencondLineFromLast[5 ..< sencondLineFromLast.count]
         
         let namesSearch = nameString.split(separator: "<")
+        print(namesSearch)
         var nameSearch:[String] = [String]()
         for name in namesSearch{
             nameSearch.append(String(name))
         }
-        if(nameSearch.count >= 3){
-            
+        
+        if(nameSearch.count >= 1){
             ocrPostData["docType"].stringValue = "Passport"
             ocrPostData["firstname"].stringValue = nameSearch[1]
-            ocrPostData["lastname"].stringValue = nameSearch[0]
-            ocrPostData["midelName"].stringValue = nameSearch[2]
-            print("last name is  === \(nameSearch[0])")
-            print("firstName name is  === \(nameSearch[1])")
-            print("middleName name is  === \(nameSearch[2])")
         }
+        
+        if(nameSearch.count >= 2){
+            ocrPostData["lastname"].stringValue = nameSearch[0]
+        }
+        if(nameSearch.count >= 3){
+            ocrPostData["midelName"].stringValue = nameSearch[2]
+        }
+//        if(nameSearch.count >= 3){
+//            ocrPostData["lastname"].stringValue = nameSearch[0]
+//            print("last name is  === \(nameSearch[0])")
+//            print("firstName name is  === \(nameSearch[1])")
+//            print("middleName name is  === \(nameSearch[2])")
+//        }
         
     }
     
@@ -852,12 +861,14 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             
             
         }
-        
+        print("is doc nunmber same === \(flag)")
+        print("is lastname same === \(flag2)")
+        print("is Address word contains === \(flag1)")
         if ((flag || flag2) && flag1) {
-            //extractPassportAddress(rawString: rawStrings)
+            extractPassportAddress(rawString: rawStrings)
         }
         print((flag || flag2) && flag1)
-        extractPassportAddress(rawString: rawStrings)
+        
         return ((flag || flag2) && flag1)
     }
     

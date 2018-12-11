@@ -14,6 +14,7 @@ class DateOfBirthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = UIDatePickerMode.date
+        datePicker.maximumDate = Calendar.current.date(byAdding: .year, value: -18, to: Date())
         //datePicker.minimumDate = Calendar.current.date(byAdding: .year, value: -18, to: Date())
         
     }

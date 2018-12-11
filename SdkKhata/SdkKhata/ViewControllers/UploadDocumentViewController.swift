@@ -508,7 +508,7 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["gender"].stringValue = gender.text
         }
         
-        print(self.ocrPostData)
+        //print(self.ocrPostData)
         
         
     }
@@ -573,16 +573,20 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                     self.openRetakeVC()
                                 })
                             })
-                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                            
                         }
                     }else{
                         let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
                         if(isValidPassportBack){
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
+                                alertController.dismiss(animated: true, completion: {
+                                    self.setBackImage(croppedImage: croppedImage)
+                                    self.ocrPostData["rawBack"].stringValue = resultText
+                                    
+                                    print(self.ocrPostData)
+                                })
                             })
-                            self.setBackImage(croppedImage: croppedImage)
-                            self.ocrPostData["rawBack"].stringValue = resultText
+                            
                         }else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                                 alertController.dismiss(animated: true, completion: {
@@ -596,7 +600,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                 }
                 
-            }else if(self.selectDoumemtTextFeild.text == "Aadhaarxxg"){
+            }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
                 let alertController = Utils().loadingAlert(viewController: self)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                     self.present(alertController, animated: false, completion: nil)
@@ -633,7 +637,10 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                 alertController.dismiss(animated: true, completion: nil)
                             })
                             self.setFrontImage(croppedImage: croppedImage)
-                            self.ocrPostData["raw_front"].stringValue = resultText
+                            if(!self.isAadharDataFetchedFromQRCode){
+                                self.ocrPostData["raw_front"].stringValue = resultText
+                            }
+                            
                         }else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                                 alertController.dismiss(animated: true, completion: {
@@ -650,7 +657,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     let options = VisionCloudTextRecognizerOptions()
                     options.languageHints = ["en"]
                     let textRecognizer = vision.cloudTextRecognizer(options:options)
-                    let image = VisionImage(image: croppedImage)
+                    let image = VisionImage(image: croppedImage.rightHalf!)
                     
                     textRecognizer.process(image) { ocrResult, error in
                         guard error == nil, let ocrResult = ocrResult else {
@@ -669,18 +676,20 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         if(isValidAadhaarBack){
                             
                             DispatchQueue.main.async {
-                                
+                                alertController.dismiss(animated: true, completion: {
+                                    self.setBackImage(croppedImage: croppedImage)
+                                    self.ocrPostData["rawBack"].stringValue = resultText
+                                    print(self.ocrPostData)
+                                })
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
-                            })
-                            self.setBackImage(croppedImage: croppedImage)
-                            self.ocrPostData["rawBack"].stringValue = resultText
+                            
+                            
                         }else{
                             
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.openRetakeVC()
+                                    
                                 })
                             }
                             
@@ -942,7 +951,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         print(address1)
         print(address2)
         UserDefaults.standard.set("Passport", forKey: "docType")
-        print(self.ocrPostData)
+        //print(self.ocrPostData)
         
         
     }
@@ -966,7 +975,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 if(self.aadhaarValidator(line: rawStrings[i])){
                     let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
                     print("aadharNumber is: \(aadharNumber)")
-                    if(ocrPostData["doc_number"].stringValue == aadharNumber){
+                    if(isAadharDataFetchedFromQRCode && ocrPostData["doc_number"].stringValue == aadharNumber){
                         flag = true
                     }else{
                         ocrPostData["doc_number"].stringValue = aadharNumber
@@ -1076,18 +1085,30 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
     private func checkAadhaarBack(rawText:String) -> Bool {
         print(rawText)
         //let aadharAddressRegex = "((Addres?s).*(,?\n\\d{6}))"
-        let aadharAddressRegex = "((Address).*(,?\\d{6}))"
+        let aadharAddressRegex = "((Addres?s?).*(,?\\d{6}))"
         
         let allAadharAddressMatches = self.matches(for: aadharAddressRegex, in: rawText.replacingOccurrences(of: "\n", with: " "))
+        print("allAadharAddressMatches")
         print(allAadharAddressMatches)
-        print(allAadharAddressMatches.count >= 2)
-        if(allAadharAddressMatches.count >= 2){
-            extractAadhaarAddress(addressText: allAadharAddressMatches[0])
-            self.ocrPostData["pincode"].stringValue = allAadharAddressMatches[2]
-            return true
-        }else{
-            return false
+        var flag = false
+        if(allAadharAddressMatches.count >= 1){
+            
+            let pincode = self.pinCodeExtraction(pinAdd: String(allAadharAddressMatches[0].suffix(6)))
+            if(pincode != ""){
+                
+                if(isAadharDataFetchedFromQRCode){
+                    if(self.ocrPostData["pincode"].stringValue == pincode){
+                        self.ocrPostData["pincode"].stringValue = pincode
+                        flag = true
+                    }
+                }else{
+                    flag = true
+                    self.ocrPostData["pincode"].stringValue = pincode
+                    extractAadhaarAddress(addressText: allAadharAddressMatches[0])
+                }
+            }
         }
+        return flag
     }
     
     func extractAadhaarAddress(addressText:String){

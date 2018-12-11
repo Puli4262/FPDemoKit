@@ -95,7 +95,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.emailIdTextField.text = emailID
         
         let DOB = UserDefaults.standard.string(forKey: "DOB")
-        self.dateOfBirthTextField.text = DOB
+        //self.dateOfBirthTextField.text = DOB
         
         self.pancardViewHeightConstraint.constant = 150
         self.customerDetailsViewConstraint.constant = 40

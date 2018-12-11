@@ -21,7 +21,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var frontView: UIView!
-    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"M"])
     
     var isOCRScannerCanceled = false
     
@@ -133,7 +133,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             self.frontImage.image = UIImage(named:"front")
             self.backImage.image = UIImage(named:"back")
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-            self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+            self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"M"])
         }
         self.ocrPostData["docType"].stringValue = documentType
         
@@ -373,6 +373,9 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         //self.openSelfieVC()
         
         let utils = Utils()
+        if(ocrPostData["gender"].stringValue == ""){
+            ocrPostData["gender"].stringValue = "M"
+        }
         let postData = JSON(["ocrdocument":ocrPostData])
         print(postData)
         if(utils.isConnectedToNetwork()){
@@ -794,11 +797,12 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         
         if(nameSearch.count >= 1){
             ocrPostData["docType"].stringValue = "Passport"
-            ocrPostData["firstname"].stringValue = nameSearch[1]
+            ocrPostData["lastname"].stringValue = nameSearch[0]
+            
         }
         
         if(nameSearch.count >= 2){
-            ocrPostData["lastname"].stringValue = nameSearch[0]
+            ocrPostData["firstname"].stringValue = nameSearch[1]
         }
         if(nameSearch.count >= 3){
             ocrPostData["midelName"].stringValue = nameSearch[2]

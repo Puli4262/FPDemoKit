@@ -42,11 +42,10 @@ class Utils {
         print(JSON(parameters))
         
         Alamofire.request(hostURL+strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON  { (response) -> Void in
-            print(response)
-            print(response.result)
+            
             switch response.result {
             case .success:
-                print(JSON(response.value!))
+                
                 success(JSON(response.value!))
                 
                 break

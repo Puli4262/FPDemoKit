@@ -569,20 +569,21 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             self.attemptsLabel.text = "\(self.numberOfAttempts) Attempt Left"
                             self.attemptsLabel.isHidden = false
                             self.pancardInValidLabel.isHidden = false
-                            print("handle invalid pin")
+                            
                             
                         }else if(res["panNumber"].stringValue == "absent"){
                             UserDefaults.standard.set("Pan valided", forKey: "status")
                             print("handle absent pin")
                             KhataViewController.panStatus = "Absent"
-                            //                                self.firstNameTextField.text = res["firstName"].stringValue
-                            //                                self.lastNameTextField.text = res["lastName"].stringValue
+                            
                             self.pancardTextField.text = ""
-                            self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
-                            self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
+                            if(res["firstName"].exists() && res["firstName"].stringValue != "" && JSON(res["firstName"]) != JSON.null  ){
+                                self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
+                            }
                             
-                            
-                            
+                            if(res["lastName"].exists() && res["lastName"].stringValue != "" && JSON(res["lastName"]) != JSON.null  ){
+                                self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
+                            }
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                                 self.handlePancardUIVisibility(visibility:true)
@@ -828,11 +829,19 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             let token = UserDefaults.standard.string(forKey: "token")
             print("token \(token!)")
             self.customerPostData["status"].stringValue = status
-            
-            
+            if(self.customerPostData["gender"].stringValue == ""){
+                customerPostData["gender"].stringValue  = "M"
+            }
+            if(self.customerPostData["maritialStatus"].stringValue == ""){
+                customerPostData["maritialStatus"].stringValue  = "Single"
+            }
+            if(self.customerPostData["employmentstatus"].stringValue == ""){
+                customerPostData["employmentstatus"].stringValue  = "Salary"
+            }
+            print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
                 
-                
+                print(res)
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
@@ -888,39 +897,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
     }
     
-    func getPostData(data:JSON) -> JSON {
-        var jsonData :[String:String] = [:]
-        var customerPostData = JSON(["mobileNumber": "","salutation": "","firstName": "","dob": "","gender": "","pan": "","status": "","emailid": "","employmentstatus": "","permanentAddLine1": "","permanentAddLine2": "","correspondenceAddLine1": "","correspondenceAddLine2": "","pincodePermanent": "","pincodeCorrespondence": "","cityPermanent": "","cityCorrespondence": "","statePermanent": "","stateCorrespondence": "","fatherName": "","motherName": "","lastName": ""])
-        
-        
-        
-        jsonData["mobileNumber"]  = data["mobileNumber"].stringValue
-        jsonData["salutation"]  = data["salutation"].stringValue
-        jsonData["firstName"] = data["firstName"].stringValue
-        jsonData["dob"]  = data["dob"].stringValue
-        jsonData["gender"]  = data["gender"].stringValue
-        jsonData["pan"]  = data["pan"].stringValue
-        
-        jsonData["status"]  = data["status"].stringValue
-        jsonData["emailid"]  = data["emailid"].stringValue
-        jsonData["employmentstatus"]  = data["employmentstatus"].stringValue
-        jsonData["permanentAddLine1"]  = data["permanentAddLine1"].stringValue
-        jsonData["permanentAddLine2"]  = data["permanentAddLine2"].stringValue
-        jsonData["correspondenceAddLine2"]  = data["correspondenceAddLine2"].stringValue
-        jsonData["correspondenceAddLine1"]  = data["correspondenceAddLine1"].stringValue
-        jsonData["pincodePermanent"]  = data["pincodePermanent"].stringValue
-        jsonData["pincodeCorrespondence"]  = data["pincodeCorrespondence"].stringValue
-        
-        jsonData["cityPermanent"]  = data["cityPermanent"].stringValue
-        jsonData["cityCorrespondence"]  = data["cityCorrespondence"].stringValue
-        jsonData["statePermanent"]  = data["statePermanent"].stringValue
-        jsonData["stateCorrespondence"]  = data["stateCorrespondence"].stringValue
-        jsonData["fatherName"] = data["fatherName"].stringValue
-        jsonData["motherName"]  = data["motherName"].stringValue
-        jsonData["lastName"] = data["lastName"].stringValue
-        
-        return JSON(jsonData)
-    }
+    
     
     @IBAction func handlePersonalDetailsUpload(_ sender: Any) {
         
@@ -1170,14 +1147,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.communicationAddCityTextField.text = userData["cityCorrespondence"].stringValue
         self.communicationAddStateTextField.text = userData["stateCorrespondence"].stringValue
         print(userData["maritialStatus"].stringValue == "")
-        if(JSON(userData["gender"]) == JSON.null){
+        if(JSON(userData["gender"]) == JSON.null || userData["gender"].stringValue == ""){
             customerPostData["gender"].stringValue  = "M"
-            
         }
-        if(JSON(userData["maritialStatus"]) == JSON.null){
+        if(JSON(userData["maritialStatus"]) == JSON.null || userData["maritialStatus"].stringValue == ""){
             customerPostData["maritialStatus"].stringValue  = "Single"
         }
-        if(JSON(userData["employmentstatus"]) == JSON.null){
+        if(JSON(userData["employmentstatus"]) == JSON.null || userData["employmentstatus"].stringValue == ""){
             customerPostData["employmentstatus"].stringValue  = "Salary"
         }
         

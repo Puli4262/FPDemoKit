@@ -838,6 +838,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             if(self.customerPostData["employmentstatus"].stringValue == ""){
                 customerPostData["employmentstatus"].stringValue  = "Salary"
             }
+            let emailID = UserDefaults.standard.string(forKey: "emailID")
+            
+            if(customerPostData["emailid"].stringValue == ""){
+                customerPostData["emailid"].stringValue = emailID!
+            }
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
                 

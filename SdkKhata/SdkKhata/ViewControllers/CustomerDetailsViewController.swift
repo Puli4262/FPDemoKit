@@ -30,7 +30,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var idDetailsDropdownArrowImg: UIImageView!
     @IBOutlet weak var pancardTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var pancardInValidLabel: UILabel!
-    @IBOutlet weak var attemptsLabel: UILabel!
+    
     @IBOutlet weak var checkboxImg: UIImageView!
     @IBOutlet weak var dontHavePanLabel: UILabel!
     @IBOutlet weak var greenTick: UIImageView!
@@ -78,7 +78,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var communicationAddStateTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var addressDetailsBtn: UIButton!
     
-    var numberOfAttempts = 4
+    
     var customerPostData = JSON(["mobileNumber": "","salutation": "","firstName": "","dob": "","gender": "","pan": "","status": "","emailid": "","employmentstatus": "","permanentAddLine1": "","permanentAddLine2": "","correspondenceAddLine1": "","correspondenceAddLine2": "","pincodePermanent": "","pincodeCorrespondence": "","cityPermanent": "","cityCorrespondence": "","statePermanent": "","stateCorrespondence": "","fatherName": "","motherName": "","lastName": ""])
     
     var handleTextFeilds = JSON([["name":"pan","height":60],["name":"firstName","height":90],["name":"lastName","height":90],["name":"dob","height":160],["name":"emailid","height":220],["name":"fatherName","height":550],["name":"motherName","height":600],["name":"permanentAddLine1","height":150],["name":"permanentAddLine2","height":200],["name":"pincodePermanent","height":250],["name":"cityPermanent","height":300],["name":"statePermanent","height":350],["name":"correspondenceAddLine1","height":500],["name":"correspondenceAddLine2","height":550],["name":"pincodeCorrespondence","height":600],["name":"cityCorrespondence","height":650],["name":"stateCorrespondence","height":700]])
@@ -188,11 +188,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }else if(textField == pancardTextField){
             
             self.pancardInValidLabel.isHidden = true
-            self.attemptsLabel.isHidden = true
+            //self.attemptsLabel.isHidden = true
             pancardTextField.text = textField.text?.uppercased()
             self.checkboxImg.image = UIImage(named:"check_box_outline_blank")
             textField.text = textField.text?.filter({ "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".contains($0) })
             if(textField.text?.count == 10){
+                textField.resignFirstResponder()
                 pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
                 checkboxImg.isUserInteractionEnabled = false
                 pancardBtn.isUserInteractionEnabled = true
@@ -211,6 +212,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     self.getPincodeDetails(from: "communication", pincode: textField.text!)
                 }
                 
+            }else if(textField.text?.count == 0){
+                if(textField == permanentAddPincodeTextField){
+                    self.permanentAddStateTextField.text = ""
+                    self.permanentAddCityTextField.text = ""
+                }else{
+                    self.communicationAddCityTextField.text = ""
+                    self.communicationAddStateTextField.text = ""
+                    
+                }
             }
         }
         let key = handleTextFeilds[textField.tag-1]["name"].stringValue
@@ -251,7 +261,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         pancardTextField.isHidden = visibility
         pancardInValidLabel.isHidden = visibility
         checkboxImg.isHidden = visibility
-        attemptsLabel.isHidden = visibility
+        //attemptsLabel.isHidden = visibility
         dontHavePanLabel.isHidden = visibility
         pancardBtn.isHidden = visibility
         greenTick.isHidden = true
@@ -267,7 +277,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             if(status! == "Pan valided" || status! == "personaldetail" || status! == "customercreated"){
                 pancardInValidLabel.isHidden = true
                 pancardBtn.isHidden = true
-                attemptsLabel.isHidden = true
+                //attemptsLabel.isHidden = true
                 dontHavePanLabel.isHidden = true
                 checkboxImg.isHidden = true
                 greenTick.isHidden = false
@@ -299,7 +309,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 checkboxImg.isHidden = false
                 dontHavePanLabel.isHidden = false
                 pancardBtn.isHidden = false
-                attemptsLabel.isHidden = true
+                //attemptsLabel.isHidden = true
                 pancardInValidLabel.isHidden = true
                 pancardTextField.isUserInteractionEnabled = true
                 pancardBtn.isUserInteractionEnabled = true
@@ -541,11 +551,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 self.present(alertController, animated: false, completion: nil)
                 var panNumber = ""
                 let phoneNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-                if(self.numberOfAttempts == 0){
-                    self.pancardTextField.text = ""
-                    self.pancardTextField.isUserInteractionEnabled = false
-                    self.checkboxImg.image = UIImage(named:"check_box")
-                }
+//                if(self.numberOfAttempts == 0){
+//                    self.pancardTextField.text = ""
+//                    self.pancardTextField.isUserInteractionEnabled = false
+//                    self.checkboxImg.image = UIImage(named:"check_box")
+//                }
                 if(self.checkboxImg.image == UIImage(named:"check_box")){
                     panNumber = "absent"
                 }else{
@@ -565,9 +575,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         
                         if(res["panNumber"].stringValue == "Invalid PAN"){
                             
-                            self.numberOfAttempts = self.numberOfAttempts - 1
-                            self.attemptsLabel.text = "\(self.numberOfAttempts) Attempt Left"
-                            self.attemptsLabel.isHidden = false
+//                            self.numberOfAttempts = self.numberOfAttempts - 1
+//                            self.attemptsLabel.text = "\(self.numberOfAttempts) Attempt Left"
+//                            self.attemptsLabel.isHidden = false
                             self.pancardInValidLabel.isHidden = false
                             
                             
@@ -620,7 +630,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 self.pancardTextField.isUserInteractionEnabled = false
                                 self.pancardInValidLabel.isHidden = true
                                 self.pancardBtn.isHidden = true
-                                self.attemptsLabel.isHidden = true
+                                //self.attemptsLabel.isHidden = true
                                 self.dontHavePanLabel.isHidden = true
                                 self.checkboxImg.isHidden = true
                                 self.pancardTextField.text = res["panNumber"].stringValue
@@ -843,6 +853,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             if(customerPostData["emailid"].stringValue == ""){
                 customerPostData["emailid"].stringValue = emailID!
             }
+            
+            let DOB = UserDefaults.standard.string(forKey: "DOB")
+            if(customerPostData["dob"].stringValue == ""){
+                customerPostData["dob"].stringValue = DOB!
+            }
+            
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
                 
@@ -928,7 +944,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
         }else if((year! - Int(dateOfBirthTextField.text!.suffix(4))! < 18)){
             
-            Utils().showToast(context: self, msg: "Please enter the valid date.", showToastFrom: 350.0)
+            Utils().showToast(context: self, msg: "Age should not be less than 18.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
         }else if(!Utils().isValidEmailAddress(emailAddressString: emailIdTextField.text!)){
             Utils().showToast(context: self, msg: "Please enter the valid email ID.", showToastFrom: 350.0)

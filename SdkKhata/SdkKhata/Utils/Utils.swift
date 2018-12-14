@@ -268,7 +268,7 @@ class Utils {
         viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
         
-        viewController.title = "Khata Registration"
+        viewController.title = "Khaata Application"
         let nav = viewController.navigationController?.navigationBar
         nav?.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.orange]
         

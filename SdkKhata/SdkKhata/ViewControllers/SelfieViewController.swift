@@ -9,9 +9,11 @@ import UIKit
 import IGRPhotoTweaks
 import SwiftyJSON
 import Alamofire
+import CropViewController
 
 class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
+    @IBOutlet weak var cameraIcon: UIImageView!
     
     @IBOutlet weak var continueBtn: UIButton!
     
@@ -56,14 +58,9 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         self.dismiss(animated: true, completion: {
             
-            let exampleCropViewController = self.storyboard?.instantiateViewController(withIdentifier: "ExCropVC") as! CropViewControllerWithAspectRatio
-            exampleCropViewController.delegate = self
-            exampleCropViewController.aspectRatio = "1:1"
-            exampleCropViewController.image = image
-            
-            
-            let navController = UINavigationController(rootViewController: exampleCropViewController)
-            self.present(navController, animated: true, completion: nil)
+            let cropViewController = CropViewController(image: image)
+            cropViewController.delegate = self
+            self.present(cropViewController, animated: true, completion: nil)
             
         })
     }
@@ -125,23 +122,27 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
 }
 
 
-extension SelfieViewController: IGRPhotoTweakViewControllerDelegate {
+extension SelfieViewController: CropViewControllerDelegate {
     
-    func photoTweaksController(_ controller: IGRPhotoTweakViewController, didFinishWithCroppedImage croppedImage: UIImage) {
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage croppedImage: UIImage, withRect cropRect: CGRect, angle: Int) {
+        print("handle image")
+        self.dismiss(animated: true, completion: {
+            self.selfieImageView.image = croppedImage
+            self.selfieImageView.layer.cornerRadius = self.selfieImageView.frame.height / 2
+            self.selfieImageView.clipsToBounds = true
+            self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+            self.continueBtn.isUserInteractionEnabled = true
+            self.cameraIcon.isHidden = false
+            self.view.bringSubview(toFront: self.cameraIcon)
+        })
         
-        self.selfieImageView.image = croppedImage
-        selfieImageView.layer.cornerRadius = selfieImageView.frame.height / 2
-        selfieImageView.clipsToBounds = true
-        continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-        continueBtn.isUserInteractionEnabled = true
+    }
+    
+    func cropViewController(_ cropViewController: CropViewController, didFinishCancelled cancelled: Bool) {
+        
         self.dismiss(animated: true, completion: nil)
     }
     
     
-    
-    func photoTweaksControllerDidCancel(_ controller: IGRPhotoTweakViewController) {
-        print("delegate cancel")
-        self.dismiss(animated: true, completion: nil)
-    }
 }
 

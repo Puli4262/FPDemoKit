@@ -17,10 +17,6 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        
     }
 
     @IBAction func openKhataApp(_ sender: Any) {
@@ -29,8 +25,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             
             viewController.sendFPSDKResponseDelegate = self
-            //viewController.mobileNumber = "9819931788"
-            viewController.mobileNumber = "9029344445"
+            viewController.mobileNumber = "9819931788"
+            //viewController.mobileNumber = "9029344445"
             viewController.emailID = "Anil@gmail.com "
             viewController.zipcode = ""
             viewController.tokenId = ""
@@ -49,6 +45,9 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         self.applyBtn.setTitle(status, for: .normal)
     }
 
+    @IBAction func handlePaynow(_ sender: Any) {
+        
+    }
     
     
 

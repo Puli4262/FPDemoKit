@@ -37,32 +37,29 @@ class AgreeViewController: UIViewController {
         
         print(AgreeViewController.docType)
         let docType = UserDefaults.standard.string(forKey: "docType")
-        var carryDocument = "Please remember to carry your \(docType!) for verification at for your next shopping visit at our stores."
+    
+        let attrs1 = [NSAttributedStringKey.foregroundColor : UIColor.black]
         
+        let attrs2 = [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 15), NSAttributedStringKey.foregroundColor : UIColor.black]
         
-        let carryDocumentAttributedString: NSMutableAttributedString = NSMutableAttributedString(string: carryDocument)
-        carryDocumentAttributedString.setColorForText(textForAttribute: "Please remember to carry your", withColor: UIColor.lightGray)
-        carryDocumentAttributedString.setColorForText(textForAttribute: "\(docType!)", withColor: Utils().hexStringToUIColor(hex: "#2C2C2D"))
+        let attributedString1 = NSMutableAttributedString(string:"Please remember to carry your ", attributes:attrs1)
         
-        carryDocumentAttributedString.setColorForText(textForAttribute: "for verification at for your next shopping visit at our stores.", withColor: UIColor.lightGray)
+        let attributedString2 = NSMutableAttributedString(string:"\(docType!)", attributes:attrs2)
         
-        let carryDocumentParagraphStyle = NSMutableParagraphStyle()
-        carryDocumentParagraphStyle.lineSpacing = 4
-        carryDocumentAttributedString.addAttribute(.paragraphStyle, value: carryDocumentParagraphStyle, range: NSMakeRange(0, carryDocumentAttributedString.length))
+        let attributedString3 = NSMutableAttributedString(string:" for verification at for your next shopping visit at our stores.", attributes:attrs1)
         
-        
-        carryIDLabel.attributedText = carryDocumentAttributedString;
+        attributedString1.append(attributedString2)
+        attributedString1.append(attributedString3)
+        self.carryIDLabel.attributedText = attributedString1
         carryIDView.layer.borderWidth = 1
         carryIDView.layer.cornerRadius = 5
-        self.carryIDLabel.font = UIFont(name: "OpenSans", size: 18)
+        khataAcoountLabel.textAlignment = NSTextAlignment.right
         carryIDView.layer.borderColor = Utils().hexStringToUIColor(hex: "#002C78").cgColor
         
+       
         
 
-        let FormattedText = NSMutableAttributedString()
-        FormattedText
-            .normal("I have read & agree to the ")
-            .bold("Terms & Conditions").normal("and").bold("Privacy Policy").normal("for Khaata")
+        
         
 
         let string              = "I have read & agree to the Terms & Conditions and Privacy Policy for Khaata"
@@ -79,7 +76,7 @@ class AgreeViewController: UIViewController {
         termsAndConditionsLabel.textAlignment = NSTextAlignment.center
         termsAndConditionsLabel.isUserInteractionEnabled = true
         
-        //termsAndConditionsLabel.attributedText = FormattedText
+        
         
         
         
@@ -87,12 +84,16 @@ class AgreeViewController: UIViewController {
     
     @IBAction func tapLabel(_ sender: UITapGestureRecognizer) {
         //nho set user interactive cho term
-        let text = (khataAcoountLabel.text)!
-        let termsRange = (text as NSString).range(of: "Terms and Conditions")
+        let text = (termsAndConditionsLabel.text)!
+        let termsRange = (text as NSString).range(of: "Terms & Conditions")
+        let privacyPolicyRange = (text as NSString).range(of: "Privacy Policy")
         
         
-        if sender.didTapAttributedTextInLabel(label: khataAcoountLabel, inRange: termsRange) {
-            print("Tapped terms")
+        if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: termsRange) {
+            print("Tapped terms clicked")
+            self.openTermsVC()
+        }else if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: privacyPolicyRange) {
+            print("privacy policy clicked")
             self.openTermsVC()
         }else {
             print("Tapped none")

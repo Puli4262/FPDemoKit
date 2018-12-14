@@ -57,7 +57,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         ocrPostData["mobileNumber"].stringValue = mobileNumber!
         
-        dropDown.dataSource = ["Aadhaar", "Passport", "Driving License","Voter ID"]
+        dropDown.dataSource = ["Aadhaar Card", "Passport", "Driving License","Voter ID"]
         dropDown.anchorView = selectDoumemtTextFeild
         dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
         dropDown.backgroundColor = .white
@@ -66,7 +66,12 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             print("Selected item: \(item) at index: \(index)")
             self.dropDown.hide()
-            self.handleDocument(documentType: item)
+            if(item == "Aadhaar Card"){
+                self.handleDocument(documentType: "Aadhaar")
+            }else{
+                self.handleDocument(documentType: item)
+            }
+            
         }
         
         
@@ -387,15 +392,16 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                 print(res)
                 let refreshToken = res["token"].stringValue
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    print("handle this situation")
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
-                    if(res["status"].intValue != 110){
-                        
-                        utils.showToast(context: self, msg: "Please take a clear picture of your ID.", showToastFrom: utils.screenHeight/2-10)
-                    }else if(res["status"].intValue == 110){
-                        utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
-                    }
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
+                    utils.networkError(title: "Authorization Faild", message: "")
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && (res["status"].intValue == 101)){
+                    UserDefaults.standard.set(refreshToken, forKey: "token")
+                    utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
+                    
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && (res["status"].intValue == 110)){
+                    UserDefaults.standard.set(refreshToken, forKey: "token")
+                     utils.showToast(context: self, msg: "Please take a clear picture of your ID.", showToastFrom: utils.screenHeight/2-10)
+                    
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && JSON(res["status"]) == JSON.null){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     UserDefaults.standard.set("DocumentUploaded",forKey: "status")
                     self.openSelfieVC()

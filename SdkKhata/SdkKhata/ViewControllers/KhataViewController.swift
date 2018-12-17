@@ -9,10 +9,10 @@ import UIKit
 import FirebaseCore
 import SwiftyJSON
 
-
 open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     
+    @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     public var mobileNumber = ""
     public var emailID = ""
     public var DOB = ""
@@ -25,6 +25,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     public static var LAN = ""
     public static var status = ""
     public static var CIF = ""
+    
+    //E-mandate Parameters
+    public var txnid = ""
+    public var amount = ""
+    public var productinfo = ""
+    public var firstname = ""
+    public var requestFrom = ""
+    
     public var sendFPSDKResponseDelegate:SendFPSDKResponseDelegate?
     
     required public init?(coder aDecoder: NSCoder) {
@@ -42,18 +50,25 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
         //self.addBackButton()
-        //UserDefaults.standard.set("1111111111", forKey: "mobileNumber")
-        //UserDefaults.standard.set("9175389565", forKey: "mobileNumber")
-        UserDefaults.standard.set(self.mobileNumber, forKey: "mobileNumber")
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-        UserDefaults.standard.set(emailID, forKey: "emailID")
-        UserDefaults.standard.set(DOB, forKey: "DOB")
-        //self.getLeadApi(mobileNumber: mobileNumber!)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+        if(self.requestFrom == "payment"){
             
-            self.openAgreeVC()
-        })
+            UserDefaults.standard.set(emailID, forKey: "emailID")
+            self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
+            
+        }else{
+            UserDefaults.standard.set(self.mobileNumber, forKey: "mobileNumber")
+            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+            UserDefaults.standard.set(emailID, forKey: "emailID")
+            UserDefaults.standard.set(DOB, forKey: "DOB")
+            self.getLeadApi(mobileNumber: mobileNumber!)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                
+               //self.openAutopayVC()
+            })
+        }
+        
         
     }
     
@@ -94,7 +109,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                 let token = res["token"].stringValue
                 
                 if(token == "" || token == "InvalidToken"){
-                    print("handle this situation")
+                    utils.networkError(title: "Authorization Failed", message: "")
                 }else{
                     UserDefaults.standard.set(token, forKey: "token")
                     let status = res["status"].stringValue
@@ -113,8 +128,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             
         }else{
             
-            //            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
-            //            self.present(alert, animated: true, completion: nil)
+            
+            self.activityIndicatior.isHidden = true
+            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
+            self.present(alert, animated: true, completion: nil)
             
             
         }
@@ -122,7 +139,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     }
     
     open override func viewWillAppear(_ animated: Bool) {
-        
+        self.activityIndicatior.isHidden = false
         if(KhataViewController.comingFrom == "data"){
             sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF)
             KhataViewController.comingFrom = ""
@@ -151,6 +168,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             break
         case "customercreated":
             self.openCustomerDetailsVC()
+            break
+        case "kycPending":
+            self.openAutopayVC()
             break
         default:
             self.openUploadDocumentsVC()
@@ -205,6 +225,21 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         let bundel = Bundle(for: AgreeViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AgreeVC") as? AgreeViewController {
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
+    func openPayUWebView(txnid:String,amount:String,productinfo:String,firstname:String,email:String) {
+        
+        let bundel = Bundle(for: PayUWebViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PayUWebVC") as? PayUWebViewController {
+            viewController.txnid = txnid
+            viewController.amount = amount
+            viewController.productinfo = productinfo
+            viewController.firstname = firstname
+            viewController.email = email
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         

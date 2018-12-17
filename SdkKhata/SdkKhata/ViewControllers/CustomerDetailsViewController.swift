@@ -216,7 +216,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 if(textField == permanentAddPincodeTextField){
                     self.permanentAddStateTextField.text = ""
                     self.permanentAddCityTextField.text = ""
-                }else{
+                }else if(textField == communicationAddPincodeTextField){
                     self.communicationAddCityTextField.text = ""
                     self.communicationAddStateTextField.text = ""
                     
@@ -326,11 +326,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
 //                self.pancardTextField.isUserInteractionEnabled = false
 //
 //                self.checkboxImg.isHidden = false
+//                self.checkboxImg.image = UIImage(named:"check_box")
+//                self.checkboxImg.isUserInteractionEnabled = false
 //                self.dontHavePanLabel.isHidden = false
 //                self.pancardTextField.isUserInteractionEnabled = false
 //                self.pancardBtnConstraint.constant = 0
 //                self.pancardViewHeightConstraint.constant = 150
-//                self.greenTick.isHidden = true
+//                self.greenTick.isHidden = false
 //
 //            }
             
@@ -457,14 +459,24 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.handleIsCommunicationAddressSame(isVisiblity: !permanentAddressLabel.isHidden)
         if(sender.isOn){
             self.addressDeatilsViewConstraint.constant = 380
+            
+            customerPostData["correspondenceAddLine1"].stringValue = self.permanentAddressLine1TextField.text!
+            customerPostData["correspondenceAddLine2"].stringValue = self.permanentAddressLine2TextField.text!
+            customerPostData["pincodeCorrespondence"].stringValue = permanentAddPincodeTextField.text!
+            customerPostData["cityCorrespondence"].stringValue = permanentAddCityTextField.text!
+            customerPostData["stateCorrespondence"].stringValue = permanentAddStateTextField.text!
         }else{
             self.communicationAddressLine1TextField.text = ""
             self.communicationAddLine2TextField.text = ""
             self.communicationAddPincodeTextField.text = ""
-            
+            self.communicationAddCityTextField.text = ""
+            self.communicationAddStateTextField.text = ""
             customerPostData["correspondenceAddLine1"].stringValue = ""
             customerPostData["correspondenceAddLine2"].stringValue = ""
             customerPostData["pincodeCorrespondence"].stringValue = ""
+            customerPostData["cityCorrespondence"].stringValue = ""
+            customerPostData["stateCorrespondence"].stringValue = ""
+            
             
             self.addressDeatilsViewConstraint.constant = 630
         }
@@ -723,7 +735,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     self.customerPostData = res
                     self.setPrefilledData(userData: self.customerPostData)
                     let status = UserDefaults.standard.string(forKey: "status")
-                    print(status)
+                    
                     
                     if(JSON(res["pincodePermanent"]) != JSON.null && res["pincodePermanent"].stringValue != "" && res["pincodePermanent"].stringValue.count == 6){
                         self.getPincodeDetails(from: "permanent", pincode: res["pincodePermanent"].stringValue)
@@ -754,7 +766,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.customerDetailsView.constant = 1000
                         self.view.frame.size.height = 800
                         self.handleVCHeight()
-                        self.idDetailsTextField.isUserInteractionEnabled = false
+                        self.idDetailsTextField.isUserInteractionEnabled = true
                         self.personalDetailsTextField.isUserInteractionEnabled = true
                         self.addressTitleTextField.isUserInteractionEnabled = false
                         
@@ -769,8 +781,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.handleAddressDetailsUIVisibility(visibility:false)
                         self.handleVCHeight()
                         
-                        self.idDetailsTextField.isUserInteractionEnabled = false
-                        self.personalDetailsTextField.isUserInteractionEnabled = false
+                        self.idDetailsTextField.isUserInteractionEnabled = true
+                        self.personalDetailsTextField.isUserInteractionEnabled = true
                         self.addressTitleTextField.isUserInteractionEnabled = true
                         
                         if(self.isCommunicationAddSameSwitch.isOn){
@@ -790,7 +802,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.handleAddressDetailsUIVisibility(visibility:false)
                         self.handleVCHeight()
                         
-                        //self.idDetailsTextField.isUserInteractionEnabled = false
+                        self.idDetailsTextField.isUserInteractionEnabled = true
                         self.personalDetailsTextField.isUserInteractionEnabled = true
                         self.addressTitleTextField.isUserInteractionEnabled = true
                         
@@ -987,6 +999,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.permanentAddStateTextField.text = res["state"].stringValue
                         self.permanentAddCityTextField.isUserInteractionEnabled = false
                         self.permanentAddStateTextField.isUserInteractionEnabled = false
+                        self.customerPostData["cityPermanent"].stringValue = res["city"].stringValue
+                        self.customerPostData["statePermanent"].stringValue = res["state"].stringValue
+                        if(self.isCommunicationAddSameSwitch.isOn){
+                            self.customerPostData["pincodeCorrespondence"].stringValue = pincode
+                            
+                            self.customerPostData["cityCorrespondence"].stringValue =
+                                res["city"].stringValue
+                            self.customerPostData["stateCorrespondence"].stringValue = res["state"].stringValue
+                        }
                         
                     }else{
                         
@@ -994,6 +1015,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.communicationAddStateTextField.text = res["state"].stringValue
                         self.communicationAddCityTextField.isUserInteractionEnabled = false
                         self.communicationAddStateTextField.isUserInteractionEnabled = false
+                        self.customerPostData["cityCorrespondence"].stringValue =
+                            res["city"].stringValue
+                        self.customerPostData["stateCorrespondence"].stringValue = res["state"].stringValue
                     }
                     
                 }
@@ -1151,7 +1175,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.emailIdTextField.text = emailID
         }
         let DOB = UserDefaults.standard.string(forKey: "DOB")
-        if(emailID != ""){
+        if(DOB != ""){
            //self.dateOfBirthTextField.text = DOB
         }
         

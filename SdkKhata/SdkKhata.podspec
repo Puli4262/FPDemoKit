@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
  s.source        = { :git => 'https://github.com/hpatni/fg-lending.git',:tag => "0.0.2", :branch => "ios_development" }
  s.swift_version = "4.0"
  s.source_files = 'SdkKhata/**/*.{h,m,swift,plist}'
- 
+ s.ios.vendored_frameworks = 'PayU_iOS_CoreSDKE.framework'
  s.resources = ['SdkKhata/**/*.{xcassets,storyboard,png,jpg,ttf}']
  s.static_framework = true
  
@@ -31,5 +31,6 @@ Pod::Spec.new do |s|
  s.dependency 'SWXMLHash', '~> 4.7.0'
  s.dependency 'DropDown', '2.3.2'
  s.dependency 'CropViewController'
+ 
  
 end

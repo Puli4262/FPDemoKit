@@ -21,7 +21,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var frontView: UIView!
-    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"M"])
+    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
     
     var isOCRScannerCanceled = false
     
@@ -389,19 +389,19 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             
             let token = UserDefaults.standard.string(forKey: "token")
             utils.postWithImageApi(strURL: "/upload/upLoadOCRDetail", headers: ["accessToken":token!], params: postData, forntImage: frontImage.image!,backImage: backImage.image!, viewController: self, isFromDocument: true, success: { res in
-                print(res)
+                //print(res)
                 let refreshToken = res["token"].stringValue
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
                     utils.networkError(title: "Authorization Faild", message: "")
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && (res["status"].intValue == 101)){
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
                     
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && (res["status"].intValue == 110)){
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                      utils.showToast(context: self, msg: "Please take a clear picture of your ID.", showToastFrom: utils.screenHeight/2-10)
                     
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "success") && JSON(res["status"]) == JSON.null){
+                }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     UserDefaults.standard.set("DocumentUploaded",forKey: "status")
                     self.openSelfieVC()
@@ -538,6 +538,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage croppedImage: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("handle image")
         self.dismiss(animated: true, completion: {
+        print(Utils().isConnectedToNetwork())
+            
+        if(Utils().isConnectedToNetwork()){
             
             if(self.selectDoumemtTextFeild.text == "Passport"){
                 
@@ -552,7 +555,6 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 
                 let textRecognizer = vision.cloudDocumentTextRecognizer(options: options)
                 let image = VisionImage(image: croppedImage)
-                
                 
                 
                 textRecognizer.process(image) { ocrResult, error in
@@ -704,29 +706,36 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                             
                             //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
-                        }
+                            }
                         
-                    }
+                        }
                     
-                }
+                    }
                 
                 
                 
-            }else{
-                
-                if(self.clicked == "front"){
-                    self.isFrontPictureUploaded = true
-                    self.firstPageImg.isHidden = true
-                    self.frontImage.image = croppedImage
                 }else{
-                    self.lastPageImg.isHidden = true
-                    self.backImage.image = croppedImage
-                    self.isBackPictureUploaded = true
-                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-                    self.continueBtn.isUserInteractionEnabled = true
+                
+                    if(self.clicked == "front"){
+                        self.isFrontPictureUploaded = true
+                        self.firstPageImg.isHidden = true
+                        self.frontImage.image = croppedImage
+                    }else{
+                        self.lastPageImg.isHidden = true
+                        self.backImage.image = croppedImage
+                        self.isBackPictureUploaded = true
+                        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                        self.continueBtn.isUserInteractionEnabled = true
+                    }
+                
+                
                 }
-                
-                
+        }else{
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Network Error", message: "Please Check your Internet Connection", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                }
             }
             
         })

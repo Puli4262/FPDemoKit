@@ -44,7 +44,7 @@ PODS:
     - GoogleUtilities/Network (~> 5.2)
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
-  - GoogleMobileVision/Detector (1.4.1):
+  - GoogleMobileVision/Detector (1.5.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - GTMSessionFetcher/Core (~> 1.1)
@@ -141,14 +141,14 @@ SPEC CHECKSUMS:
   FirebaseMLVision: eba288c56228b25d9be498861ad0b9f305e8ce5c
   GoogleAPIClientForREST: 825503f12cb5824601cf526cf06d81a1cea4afd9
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
-  GoogleMobileVision: bedef12c0924e948fc09b8f1b38c5fe1a3594b6f
+  GoogleMobileVision: a1f93108b3527d67339e2de80e1db76645f9e8b9
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   IGRPhotoTweaks: 8fe6b62c6599238d860b19b46a85a454e202f502
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SdkKhata: 12e344eb1786637690ed3e26d8d7e61ba76c3b0c
+  SdkKhata: 69ba48d87d27b84fdb6a586f3b42fea38bd2eb3f
   SkyFloatingLabelTextField: 38164979b79512f9ff9288ad8acfc4bbf5d843e3
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f

@@ -36,7 +36,7 @@ class AgreeViewController: UIViewController {
         //self.khataAcoountLabel.font = UIFont(name: "OpenSans", size: 25)
         
         print(AgreeViewController.docType)
-        let docType = UserDefaults.standard.string(forKey: "docType")
+        let docType = UserDefaults.standard.string(forKey: "docType") ?? "Aadhaar"
     
         let attrs1 = [NSAttributedStringKey.foregroundColor : UIColor.black]
         
@@ -44,7 +44,7 @@ class AgreeViewController: UIViewController {
         
         let attributedString1 = NSMutableAttributedString(string:"Please remember to carry your ", attributes:attrs1)
         
-        let attributedString2 = NSMutableAttributedString(string:"\(docType!)", attributes:attrs2)
+        let attributedString2 = NSMutableAttributedString(string:"\(docType)", attributes:attrs2)
         
         let attributedString3 = NSMutableAttributedString(string:" for verification at for your next shopping visit at our stores.", attributes:attrs1)
         
@@ -53,7 +53,7 @@ class AgreeViewController: UIViewController {
         self.carryIDLabel.attributedText = attributedString1
         carryIDView.layer.borderWidth = 1
         carryIDView.layer.cornerRadius = 5
-        khataAcoountLabel.textAlignment = NSTextAlignment.right
+        khataAcoountLabel.textAlignment = NSTextAlignment.center
         carryIDView.layer.borderColor = Utils().hexStringToUIColor(hex: "#002C78").cgColor
         
        

@@ -40,6 +40,9 @@
                         <viewLayoutGuide key="safeArea" id="FVO-cF-78K"/>
                     </view>
                     <navigationItem key="navigationItem" id="7X4-3a-w56"/>
+                    <connections>
+                        <outlet property="activityIndicatior" destination="Xee-ZF-d7K" id="LaF-qj-rpW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AQF-xM-QHR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1592,8 +1595,11 @@
                                         <integer key="value" value="25"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handleAutopayBtn:" destination="iae-aq-tte" eventType="touchUpInside" id="Mma-mX-agz"/>
+                                </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j8s-kH-jnu">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j8s-kH-jnu" customClass="Cardview" customModule="SdkKhata" customModuleProvider="target">
                                 <rect key="frame" x="16" y="112" width="288" height="378"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set up Auto Pay to automate your payments" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="u4z-Yz-k7n">
@@ -1615,8 +1621,11 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="We2-ue-NRL">
-                                        <rect key="frame" x="4" y="64" width="284" height="210"/>
+                                        <rect key="frame" x="4" y="64" width="284" height="300"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="300" id="VsO-Ik-Dg6"/>
+                                        </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="OTb-rs-7bf">
                                             <size key="itemSize" width="272" height="96"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1631,10 +1640,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="272" height="96"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FFR-tN-4CR">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FFR-tN-4CR" customClass="Cardview" customModule="SdkKhata" customModuleProvider="target">
                                                             <rect key="frame" x="2" y="3" width="268" height="90"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radio_button_checked" translatesAutoresizingMaskIntoConstraints="NO" id="4VS-dB-gVt">
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="radio_button_unchecked" translatesAutoresizingMaskIntoConstraints="NO" id="4VS-dB-gVt">
                                                                     <rect key="frame" x="8" y="35" width="20" height="20"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="20" id="59Q-0N-Lrw"/>
@@ -1671,32 +1680,45 @@
                                                         </view>
                                                     </subviews>
                                                 </view>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstItem="FFR-tN-4CR" firstAttribute="top" secondItem="dY1-Cn-WVW" secondAttribute="top" constant="3" id="CC9-8N-aR7"/>
                                                     <constraint firstAttribute="trailing" secondItem="FFR-tN-4CR" secondAttribute="trailing" constant="2" id="apo-Nt-s19"/>
                                                     <constraint firstItem="FFR-tN-4CR" firstAttribute="leading" secondItem="dY1-Cn-WVW" secondAttribute="leading" constant="2" id="kKG-Jf-LpQ"/>
                                                     <constraint firstAttribute="bottom" secondItem="FFR-tN-4CR" secondAttribute="bottom" constant="3" id="w5E-zv-M8D"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outlet property="bankImage" destination="S9w-69-DJW" id="7fX-ZK-Vxl"/>
+                                                    <outlet property="bankNameLabel" destination="NlN-hf-aVm" id="dDb-YY-zn2"/>
+                                                    <outlet property="bankView" destination="FFR-tN-4CR" id="gFx-z8-ffM"/>
+                                                    <outlet property="checkboxImg" destination="4VS-dB-gVt" id="Q9j-jI-7Y8"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kuo-Wp-eoB">
-                                        <rect key="frame" x="8" y="330" width="272" height="40"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kuo-Wp-eoB" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                        <rect key="frame" x="8" y="420" width="272" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="rgH-7z-m2l"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="IFSC CODE"/>
+                                        </userDefinedRuntimeAttributes>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Zk-yc-kbI">
-                                        <rect key="frame" x="8" y="282" width="272" height="40"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Zk-yc-kbI" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                        <rect key="frame" x="8" y="372" width="272" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="eSG-QE-CC3"/>
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Account Number"/>
+                                        </userDefinedRuntimeAttributes>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1742,6 +1764,66 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zej-EW-Z57" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2060.625" y="-11758.098591549297"/>
+        </scene>
+        <!--PayU Web View Controller-->
+        <scene sceneID="doH-Wf-hfM">
+            <objects>
+                <viewController storyboardIdentifier="PayUWebVC" id="2j6-gB-7Qh" customClass="PayUWebViewController" customModule="SdkKhata" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QAt-13-nPc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ke7-VV-c3C">
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ke7-VV-c3C" firstAttribute="leading" secondItem="UhM-uf-QNG" secondAttribute="leading" id="5D9-W2-FbG"/>
+                            <constraint firstItem="Ke7-VV-c3C" firstAttribute="bottom" secondItem="UhM-uf-QNG" secondAttribute="bottom" id="bHQ-Ne-Lth"/>
+                            <constraint firstItem="Ke7-VV-c3C" firstAttribute="trailing" secondItem="UhM-uf-QNG" secondAttribute="trailing" id="hgU-Uo-pRm"/>
+                            <constraint firstItem="Ke7-VV-c3C" firstAttribute="top" secondItem="UhM-uf-QNG" secondAttribute="top" id="iLx-W0-Xx7"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="UhM-uf-QNG"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="Ke7-VV-c3C" id="2RQ-0z-twq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iln-W4-B6e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2079.375" y="-10913.028169014086"/>
+        </scene>
+        <!--Emandate View Controller-->
+        <scene sceneID="ZAJ-PF-Hmd">
+            <objects>
+                <viewController storyboardIdentifier="EmandateWebVC" id="j6u-hD-USJ" customClass="EmandateViewController" customModule="SdkKhata" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zYE-4D-j6O">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C1g-Qi-Uo3">
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="C1g-Qi-Uo3" firstAttribute="bottom" secondItem="hfJ-ck-fDg" secondAttribute="bottom" id="Lqb-tI-kk5"/>
+                            <constraint firstItem="C1g-Qi-Uo3" firstAttribute="leading" secondItem="hfJ-ck-fDg" secondAttribute="leading" id="SeI-rp-n8l"/>
+                            <constraint firstItem="C1g-Qi-Uo3" firstAttribute="top" secondItem="hfJ-ck-fDg" secondAttribute="top" id="gAZ-5J-yuh"/>
+                            <constraint firstItem="C1g-Qi-Uo3" firstAttribute="trailing" secondItem="hfJ-ck-fDg" secondAttribute="trailing" id="gRC-1n-Zpi"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hfJ-ck-fDg"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="C1g-Qi-Uo3" id="YHs-M6-rsm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QZs-UW-cqm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3034" y="-10942"/>
         </scene>
         <!--Agree View Controller-->
         <scene sceneID="2s1-rH-l9h">
@@ -1789,7 +1871,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qVo-I4-iJQ">
                                 <rect key="frame" x="18" y="242" width="284" height="84"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VEc-ij-9eT">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VEc-ij-9eT">
                                         <rect key="frame" x="8" y="8" width="268" height="68"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <attributedString key="attributedText">
@@ -2299,7 +2381,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rb4-cJ-RRy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4648" y="-11771"/>
+            <point key="canvasLocation" x="-4772" y="-11759"/>
         </scene>
     </scenes>
     <resources>
@@ -2314,7 +2396,7 @@
         <image name="hdfc_icon" width="21" height="21"/>
         <image name="how_to_aadhar" width="420" height="240"/>
         <image name="provideID_progress" width="90" height="90"/>
-        <image name="radio_button_checked" width="24" height="24"/>
+        <image name="radio_button_unchecked" width="24" height="24"/>
         <image name="selfieicon" width="540" height="540"/>
         <image name="stepper_accept_terms" width="540" height="82"/>
         <image name="stepper_man_auto_pay" width="540" height="103"/>

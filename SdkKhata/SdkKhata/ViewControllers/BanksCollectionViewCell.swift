@@ -9,4 +9,8 @@ import UIKit
 
 class BanksCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var bankView: UIView!
+    @IBOutlet weak var bankNameLabel: UILabel!
+    @IBOutlet weak var checkboxImg: UIImageView!
+    @IBOutlet weak var bankImage: UIImageView!
 }

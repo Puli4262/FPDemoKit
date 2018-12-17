@@ -24,7 +24,7 @@ class Utils {
     let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server
-    //let hostURL = "http://192.168.0.136:8080/KhataBackEnd"
+    //let hostURL = "http://192.168.0.119:8080/KhataBackEnd"
     
     public var screenWidth: CGFloat {
         return UIScreen.main.bounds.width
@@ -668,7 +668,7 @@ extension UIImage {
         return UIImage(cgImage: image)
     }
     var rightHalf: UIImage? {
-        guard let cgImage = cgImage, let image = cgImage.cropping(to: CGRect(origin: CGPoint(x: CGFloat(Int(size.width)-Int((size.width/2))), y: 0), size: CGSize(width: CGFloat(Int(size.width)-Int((size.width/2))), height: size.height)))
+        guard let cgImage = cgImage, let image = cgImage.cropping(to: CGRect(origin: CGPoint(x: CGFloat(Int(size.width)-Int((size.width/2))-Int(20.00)), y: 0), size: CGSize(width: CGFloat(Int(size.width)-Int((size.width/2))-Int(20.00)), height: size.height)))
             else { return nil }
         return UIImage(cgImage: image)
     }

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -244,6 +245,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZRd-HQ-Rp2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1514" y="949"/>
+        </scene>
+        <!--Web ViewVC-->
+        <scene sceneID="1FF-0I-Xb7">
+            <objects>
+                <viewController storyboardIdentifier="PUUIWebViewVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dpb-Ap-7hY" customClass="PUUIWebViewVC" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="i4T-Tq-AsM">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIt-UC-FgV">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="iIt-UC-FgV" secondAttribute="height" multiplier="375:667" id="3wa-qG-v1b"/>
+                                </constraints>
+                            </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Sfo-pc-qg9">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="iIt-UC-FgV" firstAttribute="top" secondItem="i4T-Tq-AsM" secondAttribute="top" id="3lX-1b-ciM"/>
+                            <constraint firstItem="A2d-Pu-qZT" firstAttribute="trailing" secondItem="iIt-UC-FgV" secondAttribute="trailing" id="GlF-ad-CsW"/>
+                            <constraint firstItem="iIt-UC-FgV" firstAttribute="leading" secondItem="A2d-Pu-qZT" secondAttribute="leading" id="hTH-1w-nKA"/>
+                            <constraint firstItem="A2d-Pu-qZT" firstAttribute="bottom" secondItem="iIt-UC-FgV" secondAttribute="bottom" id="itl-4c-23q"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="A2d-Pu-qZT"/>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Sfo-pc-qg9" id="ej3-x9-4gW"/>
+                        <outlet property="webView" destination="iIt-UC-FgV" id="UJH-QH-qfV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kya-oo-Sfz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5940" y="-648.12593703148434"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="pck-uV-f4u">

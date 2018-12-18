@@ -42,7 +42,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email]
+            let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email,"deviceId":"ios"]
             
             let token = UserDefaults.standard.string(forKey: "token")
             print(token!)
@@ -110,12 +110,43 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
+        
+        var txnId = ""
+        var amount = ""
+        var name = ""
+        var productInfo = ""
+        var status = false
+        
         let requestURL = self.webView.request?.url
-        let requestString:String = (requestURL?.absoluteString)!
+        var requestString:String = (requestURL?.absoluteString)!
         print(requestString)
-        let response =  webView.stringByEvaluatingJavaScript(from: "PayU()")
-        print(response)
+        //let response =  webView.stringByEvaluatingJavaScript(from: "PayU()")
+        //print(response)
         print("webview current url")
+        
+        if(requestString.containsIgnoringCase(find: "KhataBackEnd/jsp/Cancel.jsp")){
+            self.navigationController?.popToRootViewController(animated: true)
+            
+        }else if(requestString.containsIgnoringCase(find: "success")){
+            print(requestString)
+            requestString = requestString.replacingOccurrences(of: "%7C", with: "|")
+            print(requestString.split(separator: "|"))
+            let dataArray = requestString.split(separator: "|")
+            if(dataArray.count > 2){
+                txnId = String(dataArray[1])
+                amount = String(dataArray[2])
+                name = String(dataArray[3])
+                productInfo = String(dataArray[4])
+                status = true
+                self.navigationController?.popToRootViewController(animated: true)
+            }else{
+                status = false
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            
+            
+        }
+        
         
         
     }

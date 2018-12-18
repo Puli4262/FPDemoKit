@@ -51,7 +51,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         Utils().setupTopBar(viewController: self)
         //self.addBackButton()
         
-        if(self.requestFrom == "payment"){
+        if(self.requestFrom == "Call Payu"){
             
             UserDefaults.standard.set(emailID, forKey: "emailID")
             self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
@@ -65,7 +65,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openAutopayVC()
+               //self.openUploadDocumentsVC()
             })
         }
         
@@ -118,6 +118,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     print(KhataViewController.panStatus)
                     UserDefaults.standard.set(status,forKey: "status")
                     self.handleStatus(status: status)
+                    let dncFlag = res["dncFlag"].boolValue
+                    UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
                 }
             }, failure: {error in
                 print(error.localizedDescription)
@@ -171,6 +173,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             break
         case "kycPending":
             self.openAutopayVC()
+            break
+        case "MandateCreated":
+            //self.openAgreeVC()
+            self.openCustomerDetailsVC()
             break
         default:
             self.openUploadDocumentsVC()

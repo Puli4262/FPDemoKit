@@ -13,6 +13,7 @@ import Alamofire
 class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     
+    @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet weak var customerDetailsView: NSLayoutConstraint!
@@ -87,6 +88,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setStepperIcon()
         self.hideKeyboardWhenTappedAround()
         Utils().setupTopBar(viewController: self)
         self.setDelegates()
@@ -129,6 +131,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         
         
+    }
+    
+    func setStepperIcon(){
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        if(dncFlag){
+            self.stepperImg.image = UIImage(named:"stepper_man_submit_id")
+        }else{
+            self.stepperImg.image = UIImage(named:"stepper_submit_id")
+        }
     }
     
     
@@ -318,23 +329,23 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
             }
             
-//            if(self.customerPostData["pan"].stringValue == "absent"){
-//                self.pancardBtn.isHidden = true
-//                self.firstNameTextField.isUserInteractionEnabled = true
-//                self.lastNameTextField.isUserInteractionEnabled = true
-//                self.pancardTextField.text = ""
-//                self.pancardTextField.isUserInteractionEnabled = false
-//
-//                self.checkboxImg.isHidden = false
-//                self.checkboxImg.image = UIImage(named:"check_box")
-//                self.checkboxImg.isUserInteractionEnabled = false
-//                self.dontHavePanLabel.isHidden = false
-//                self.pancardTextField.isUserInteractionEnabled = false
-//                self.pancardBtnConstraint.constant = 0
-//                self.pancardViewHeightConstraint.constant = 150
-//                self.greenTick.isHidden = false
-//
-//            }
+            if(self.customerPostData["pan"].stringValue == "absent"){
+                self.pancardBtn.isHidden = true
+                self.firstNameTextField.isUserInteractionEnabled = true
+                self.lastNameTextField.isUserInteractionEnabled = true
+                self.pancardTextField.text = ""
+                self.pancardTextField.isUserInteractionEnabled = false
+
+                self.checkboxImg.isHidden = false
+                self.checkboxImg.image = UIImage(named:"check_box")
+                self.checkboxImg.isUserInteractionEnabled = false
+                self.dontHavePanLabel.isHidden = false
+                self.pancardTextField.isUserInteractionEnabled = false
+                self.pancardBtnConstraint.constant = 0
+                self.pancardViewHeightConstraint.constant = 150
+                self.greenTick.isHidden = false
+
+            }
             
         }else{
             self.pancardViewHeightConstraint.constant = 40
@@ -617,7 +628,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 
                                 self.personalDetailsBtn.isUserInteractionEnabled = true
                                 self.personalDetailsTextField.isUserInteractionEnabled = true
-                                self.idDetailsTextField.isUserInteractionEnabled = false
+                                self.idDetailsTextField.isUserInteractionEnabled = true
                                 self.customerDetailsView.constant = 1000
                                 self.view.frame.size.height = 800
                                 self.handleVCHeight()
@@ -905,7 +916,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 }
                             }else{
                                 UserDefaults.standard.set(status, forKey: "status")
-                                self.openAgreeVC()
+                                let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+                                if(dncFlag){
+                                    self.openAutopayVC()
+                                }else{
+                                    self.openAgreeVC()
+                                }
+                                
                             }
                         }
                     }else{
@@ -926,6 +943,27 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
             
             
+        }
+        
+    }
+    
+    func openAutopayVC(){
+        
+        let bundel = Bundle(for: AutoPayViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AutoPayVC") as? AutoPayViewController {
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
+    func openAgreeVC() {
+        
+        let bundel = Bundle(for: AgreeViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AgreeVC") as? AgreeViewController {
+            print(AgreeViewController.docType)
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
         
     }
@@ -1105,16 +1143,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
     }
     
-    func openAgreeVC() {
-        
-        let bundel = Bundle(for: AgreeViewController.self)
-        
-        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AgreeVC") as? AgreeViewController {
-            print(AgreeViewController.docType)
-            self.navigationController?.pushViewController(viewController, animated: true)
-        }
-        
-    }
+    
     @IBAction func handleDontHavePancard(_ sender: Any) {
         
         let status = UserDefaults.standard.string(forKey: "status")

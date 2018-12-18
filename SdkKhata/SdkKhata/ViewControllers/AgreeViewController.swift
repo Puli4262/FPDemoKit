@@ -9,6 +9,7 @@ import UIKit
 
 class AgreeViewController: UIViewController {
     
+    @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var carryIDView: UIView!
     @IBOutlet weak var carryIDLabel: UITextView!
     @IBOutlet weak var khataAcoountLabel: UILabel!
@@ -17,6 +18,7 @@ class AgreeViewController: UIViewController {
     @IBOutlet weak var termsAndConditionsLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setStepperIcon()
         Utils().setupTopBar(viewController: self)
         self.hideKeyboardWhenTappedAround()
         var dataString = "Your ₹ 5000 Khaata"
@@ -76,10 +78,15 @@ class AgreeViewController: UIViewController {
         termsAndConditionsLabel.textAlignment = NSTextAlignment.center
         termsAndConditionsLabel.isUserInteractionEnabled = true
         
-        
-        
-        
-        
+    }
+    
+    func setStepperIcon(){
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        if(dncFlag){
+            self.stepperImg.image = UIImage(named:"stepper_man_accept_terms")
+        }else{
+            self.stepperImg.image = UIImage(named:"stepper_accept_terms")
+        }
     }
     
     @IBAction func tapLabel(_ sender: UITapGestureRecognizer) {
@@ -87,7 +94,6 @@ class AgreeViewController: UIViewController {
         let text = (termsAndConditionsLabel.text)!
         let termsRange = (text as NSString).range(of: "Terms & Conditions")
         let privacyPolicyRange = (text as NSString).range(of: "Privacy Policy")
-        
         
         if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: termsRange) {
             print("Tapped terms clicked")

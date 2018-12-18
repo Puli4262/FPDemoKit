@@ -32,8 +32,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             
             viewController.sendFPSDKResponseDelegate = self
-            //viewController.mobileNumber = "8888888888"
-            viewController.mobileNumber = "9029344445"
+            viewController.mobileNumber = "8888888888"
+            //viewController.mobileNumber = "9029344445"
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.tokenId = ""
@@ -97,6 +97,10 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         print("CIF : \(CIF)")
         self.applyBtn.setTitle(status, for: .normal)
     }
+    
+    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
+        print(status)
+    }
 
     @IBAction func handlePaynow(_ sender: Any) {
         
@@ -106,10 +110,10 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.sendFPSDKResponseDelegate = self
             viewController.txnid = "100123abcde"
             viewController.amount = "10.0"
-            viewController.productinfo = "xxssd"
+            viewController.productinfo = "Khaata"
             viewController.firstname = "Test"
             viewController.emailID = "testacc0990@gmail.com"
-            viewController.requestFrom = "payment"
+            viewController.requestFrom = "Call Payu"
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         

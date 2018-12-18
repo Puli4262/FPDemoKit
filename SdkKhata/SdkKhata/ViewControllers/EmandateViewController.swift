@@ -108,35 +108,63 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         print(requestString)
         
         
-        if(requestString.containsIgnoringCase(find: "https://www.tekprocess.co.in/MerchantIntegrationClient/MerchantResponsePage.jsp")){
+        if(requestString.containsIgnoringCase(find: "KhataBackEnd/khata_files/t_c.html?data=")){
             //self.handleEmandateCreation()
+            let dataString =  requestString.split(separator: "=")
+            let mandateResponse = String(dataString[1]).replacingOccurrences(of: "%7C", with: "|")
+            let madateResArray = mandateResponse.split(separator: "|")
+            
+            if(Int(madateResArray[0]) == 0300 ){
+                let madateRef = String(madateResArray[3].split(separator: "/")[0])
+                self.handleEmandateCreation(mandateRef: madateRef)
+            }
         }
 
     }
     
-    func handleEmandateCreation(){
+    func handleEmandateCreation(mandateRef:String){
         
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
-            let poastData = ["mandateRef":"","ifsc":consumerData["ifscCode"].stringValue,"accType":consumerData["accountType"].stringValue,"accNumber":consumerData["accountNo"].stringValue,"accHolderName":consumerData["accountHolderName"].stringValue,"mobileNumber":consumerData["consumerMobileNo"].stringValue]
+            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
+            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":consumerData["accountType"].stringValue,"accNumber":consumerData["accountNo"].stringValue,"accHolderName":consumerData["accountHolderName"].stringValue,"mobileNumber":mobileNumber]
             
             print(JSON(poastData))
             
-//            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-//            let token = UserDefaults.standard.string(forKey: "token")
-//            print(token!)
-//            utils.requestPOSTURL("/mandate/createMandate", parameters: [:], headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
-//
-//                alertController.dismiss(animated: true, completion: {
-//
-//                })
-//
-//            }, failure: { error in
-//
-//            })
+            
+            let token = UserDefaults.standard.string(forKey: "token")
+            print(token!)
+            utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
+
+                alertController.dismiss(animated: true, completion: {
+                    print(res)
+                    let refreshToken = res["token"].stringValue
+                    if(refreshToken == "" || refreshToken == "InvalidToken"){
+                        
+                    }else{
+                        UserDefaults.standard.set(refreshToken, forKey: "token")
+                        let response = res["response"].stringValue
+                        if(response.containsIgnoringCase(find: "success")){
+                            
+                            let status = UserDefaults.standard.string(forKey: "status")!
+                            print(status)
+                            if(status.containsIgnoringCase(find: "customercreated")){
+                                self.openAgreeVC()
+                            }else{
+                                //self.openAgreeVC()
+                                self.navigationController?.popToRootViewController(animated: true)
+                            }
+                        }
+                    }
+                    print()
+                })
+
+            }, failure: { error in
+
+            })
             
             
         }else{
@@ -146,6 +174,17 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             
             
         }
+    }
+    
+    func openAgreeVC() {
+        
+        let bundel = Bundle(for: AgreeViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AgreeVC") as? AgreeViewController {
+            print(AgreeViewController.docType)
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
     }
 
     

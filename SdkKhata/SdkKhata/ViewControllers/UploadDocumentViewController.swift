@@ -17,6 +17,7 @@ import CropViewController
 
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
+    @IBOutlet weak var stepperImg: UIImageView!
     
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var backView: UIView!
@@ -74,7 +75,18 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             
         }
         
+        self.setStepperIcon()
         
+        
+    }
+    
+    func setStepperIcon(){
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        if(dncFlag){
+            self.stepperImg.image = UIImage(named:"stepper_man_submit_id")
+        }else{
+            self.stepperImg.image = UIImage(named:"stepper_submit_id")
+        }
     }
     
     
@@ -1005,8 +1017,17 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 if(self.aadhaarValidator(line: rawStrings[i])){
                     let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
                     print("aadharNumber is: \(aadharNumber)")
-                    if(isAadharDataFetchedFromQRCode && ocrPostData["doc_number"].stringValue == aadharNumber){
-                        flag = true
+                    if(isAadharDataFetchedFromQRCode){
+                        if(ocrPostData["doc_number"].stringValue == aadharNumber){
+                            
+                            flag = true
+                            break
+                        }else{
+                            print("Cards not same")
+                            flag = false
+                            break
+                        }
+                        
                     }else{
                         ocrPostData["doc_number"].stringValue = aadharNumber
                         print(aadharNumber)
@@ -1016,8 +1037,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             extractAadhaarData(name: rawStrings[i - 3], dob: rawStrings[i - 2], gender: rawStrings[i - 1]);
                         }
                         flag = true
+                        break
                     }
-                    break
+                    
                 }
                 i = i+1
             }
@@ -1130,6 +1152,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     if(self.ocrPostData["pincode"].stringValue == pincode){
                         self.ocrPostData["pincode"].stringValue = pincode
                         flag = true
+                    }else{
+                        flag = false
+                        print("cards not same")
                     }
                 }else{
                     flag = true

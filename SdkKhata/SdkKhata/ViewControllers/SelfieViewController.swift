@@ -13,6 +13,7 @@ import CropViewController
 
 class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
+    @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var cameraIcon: UIImageView!
     
     @IBOutlet weak var continueBtn: UIButton!
@@ -26,15 +27,26 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
         self.setDelegates()
+        self.setStepperIcon()
         continueBtn.isUserInteractionEnabled = false
         
-        // Do any additional setup after loading the view.
+        
     }
     
     func setDelegates(){
         imagePicker.delegate = self
         imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
         imagePicker.allowsEditing = true
+        
+    }
+    
+    func setStepperIcon(){
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        if(dncFlag){
+            self.stepperImg.image = UIImage(named:"stepper_man_share_details")
+        }else{
+            self.stepperImg.image = UIImage(named:"stepper_share_details")
+        }
     }
     
     @IBAction func handleSelfiAction(_ sender: Any) {

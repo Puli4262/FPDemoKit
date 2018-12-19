@@ -19,7 +19,7 @@ class WebViewController: UIViewController,UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initPayment()
+        
         webView.delegate = self
         loadHTMLString()
 //        let url = NSURL (string: PayUBaseUrl)
@@ -122,48 +122,7 @@ class WebViewController: UIViewController,UIWebViewDelegate {
     }
     
     
-    func initPayment() {
-        
-        
-        
-        
-        let merchantKey = "gtKFFx"
-        let salt = "eCwWELxi"
-        var PayUBaseUrl = "https://test.payu.in/_payment"
-        let productInfo = "pixel2"
-        let firstName = "puli"
-        let email = "pullaiah4262@gmail.com"  //Details of user whose is purchasing order
-        let phone = "8688949492" //Details of user whose is purchasing order
-        let sUrl = "https://www.payumoney.com/mobileapp/payumoney/success.php"   //By this URL we match whether payment got success or failure
-        let fUrl = "https://www.payumoney.com/mobileapp/payumoney/failure.php"   //By this URL we match whether payment got success or failure
-        var txnid1: String! = "abcdef20171009"    //Its an unique id which can give order a specific order number.
-        let totalPriceAmount = "10.00"
-        //Generating Hash Key
-        let hashValue = String.localizedStringWithFormat("%@|%@|%@|%@|%@|%@|||||||||||%@",merchantKey,txnid1,totalPriceAmount,productInfo,firstName,email,salt)
-        let hash = "441ED95376D473B4AA30D0ECD7A71D22E9DC77E07BD8FF0247750092C4E7A45D12BCD885DAFF8055571976A9412F09D1FDBD8431CDBCE650EAF060F64196B946"
-        
-        let postStr = "txnid="+txnid1+"&key="+merchantKey+"&amount="+totalPriceAmount+"&productinfo="+productInfo+"&firstname="+firstName+"&email="+email+"&phone="+phone+"&surl="+sUrl+"&furl="+fUrl+"&hash="+hash
-        
-        
-        let url = NSURL(string: String.localizedStringWithFormat("%@", PayUBaseUrl))
-        let request = NSMutableURLRequest(url: url! as URL)
-        
-        do {
-            let postLength = String.localizedStringWithFormat("%lu",postStr.characters.count)
-            request.httpMethod = "POST"
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Current-Type")
-            request.setValue(postLength, forHTTPHeaderField: "Content-Length")
-            request.httpBody = postStr.data(using: String.Encoding.utf8)
-            webView.loadRequest(request as URLRequest)
-        }
-            
-        catch let error as NSError
-        {
-            
-            print(error)
-            
-        }
-    }
+    
     
 
 

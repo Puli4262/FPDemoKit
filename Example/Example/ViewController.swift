@@ -9,14 +9,13 @@
 import UIKit
 import AVFoundation
 import SdkKhata
-import PayU_coreSDK_Swift
+
 
 class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
         
     @IBOutlet weak var applyBtn: UIButton!
-    let paymentParams = PayUModelPaymentParams()
-    let webService = PayUWebService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -76,14 +75,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             }
             
             
-            let obj = PUSAGenerateHashes()
             
-            obj.saveOneTapDataAtMerchantServer(Key: paymentParams.key!, withCardToken: cardToken, forUserCredentials: paymentParams.userCredentials!, withMerchantHash: merchantHash, withCompletionBlock: { (message, error) in
-                
-                
-                print(message)
-                
-            })
         }
         
         self.present(alert, animated: true, completion: nil)
@@ -100,6 +92,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     }
     
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
+        print("PAYU response in FP APP")
         print(status)
     }
 
@@ -120,63 +113,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         
     }
     
-    func openPayUWebview(){
-        let createRequest = PayUCreateRequest()
-        
-        paymentParams.key = "gtKFFx"
-        paymentParams.txnId = generateTxnID()
-        paymentParams.amount = "10"
-        paymentParams.productInfo = "iPhone"
-        paymentParams.firstName = "Ashish"
-        paymentParams.email = "ashish.25@mailinator.com"
-        paymentParams.environment = ENVIRONMENT_TEST
-        
-        paymentParams.userCredentials = "hey:ur decision?"
-        paymentParams.phoneNumber = "9876543210"
-        
-        //offer key if some offer is enabled
-        paymentParams.offerKey = "Sample@7279"
-        
-        paymentParams.surl = "https://guarded-atoll-92892.herokuapp.com/"
-        paymentParams.furl = "https://guarded-atoll-92892.herokuapp.com/"
-        
-        let genHashes = PUSAGenerateHashes()
-        
-        genHashes.generateHashesFromServer(withPaymentParams: paymentParams) { (hashes, error) in
-            
-            
-            if (hashes.isEqual("") == false)
-            {
-                
-                
-                self.paymentParams.hashes.paymentRelatedDetailsHash = hashes.paymentRelatedDetailsHash
-                self.paymentParams.hashes.deleteUserCardHash = hashes.deleteUserCardHash
-                self.paymentParams.hashes.offerHash  = hashes.offerHash
-                self.paymentParams.hashes.VASForMobileSDKHash = hashes.VASForMobileSDKHash
-                self.paymentParams.hashes.saveUserCardHash = hashes.saveUserCardHash
-                
-                self.paymentParams.hashes.paymentHash = hashes.paymentHash
-                print(hashes.paymentHash)
-                DispatchQueue.main.async {
-                    createRequest.createRequest(withPaymentParam: self.paymentParams, forPaymentType: PAYMENT_PG_PAYU_MONEY) { (request, error) in
-                        
-                        let strBrd = UIStoryboard(name: "Main", bundle: nil)
-                        let webViewVC = strBrd.instantiateViewController(withIdentifier: "PUUIWebViewVC") as! PUUIWebViewVC
-                        webViewVC.request = request
-                        self.navigationController?.pushViewController(webViewVC, animated: true)
-                        
-                    }
-                }
-                
-            }
-            else
-            {
-                print(error)
-            }
-            
-            
-        }
-    }
+    
     
     func generateTxnID() -> String {
         

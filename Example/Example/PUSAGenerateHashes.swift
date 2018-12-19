@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-import PayU_coreSDK_Swift
 
 
 let URLGetHash = "https://payu.herokuapp.com/get_hash"

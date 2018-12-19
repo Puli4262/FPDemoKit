@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import PayU_coreSDK_Swift
 
 class PUUIWebViewVC : UIViewController,UIWebViewDelegate {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!

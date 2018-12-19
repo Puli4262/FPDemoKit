@@ -83,24 +83,22 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         let amount = payUData["amount"].stringValue
         let htmlString = """
                             <html>
-                                <head>
-                                </head>
-                                <body>
-                                <form action='https://test.payu.in/_payment' method='post'>
-                                <input type='hidden' name='firstname' value='\(firstname)' />
-                                <input type='hidden' name='lastname' value='\(lastName)' />
-                                <input type='hidden' name='surl' value='\(surl)' />
-                                <input type='hidden' name='phone' value='\(phone)' />
-                                <input type='hidden' name='key' value='\(key)' />
-                                <input type='hidden' name='hash' value ='\(hash)'/>
-                                <input type='hidden' name='curl' value='\(curl)' />
-                                <input type='hidden' name='furl' value='\(furl)' />
-                                <input type='hidden' name='txnid' value='\(txnid)' />
-                                <input type='hidden' name='productinfo' value='\(productinfo)' />
-                                <input type='hidden' name='amount' value='\(amount)' />
-                                <input type='hidden' name='email' value='\(email)' />
-                                <input type= 'submit' value='submit'>
-                                </form>
+                                <head></head>
+                                <body onload='form1.submit()'>
+                                    <form id='form1' action='https://test.payu.in/_payment' method='post'>
+                                        <input name='amount' type='hidden' value='\(amount)' />
+                                        <input name='firstname' type='hidden' value='\(firstname)' />
+                                        <input name='curl' type='hidden' value='\(curl)' />
+                                        <input name='phone' type='hidden' value='\(phone)' />
+                                        <input name='furl' type='hidden' value='\(furl)' />
+                                        <input name='surl' type='hidden' value='\(surl)' />
+                                        <input name='productinfo' type='hidden' value='\(productinfo)' />
+                                        <input name='key' type='hidden' value='gtKFFx' />
+                                        <input name='email' type='hidden' value='\(email)' />
+                                        <input name='hash' type='hidden' value='\(hash)' />
+                                        <input name='txnid' type='hidden' value='\(txnid)' />
+                                        <input name='lastname' type='hidden' value='null' />
+                                    </form>
                                 </body>
                             </html>
                             """
@@ -125,7 +123,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         print("webview current url")
         
         if(requestString.containsIgnoringCase(find: "KhataBackEnd/jsp/Cancel.jsp")){
-            self.navigationController?.popToRootViewController(animated: true)
+            self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             
         }else if(requestString.containsIgnoringCase(find: "success")){
             print(requestString)
@@ -138,17 +136,30 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 name = String(dataArray[3])
                 productInfo = String(dataArray[4])
                 status = true
-                self.navigationController?.popToRootViewController(animated: true)
+                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             }else{
                 status = false
-                self.navigationController?.popToRootViewController(animated: true)
+                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             }
             
             
         }
-        
-        
-        
+    
+    }
+    
+    func sendResponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: KhataViewController.self) {
+                KhataViewController.comingFrom = "payU"
+                KhataViewController.payUStatus = status
+                KhataViewController.payUTxnid = txnId
+                KhataViewController.payUAmount = amount
+                KhataViewController.payUName = name
+                KhataViewController.payUProductInfo = productInfo
+                self.navigationController!.popToViewController(controller, animated: true)
+                break
+            }
+        }
     }
     
     func generateTxnID() -> String {

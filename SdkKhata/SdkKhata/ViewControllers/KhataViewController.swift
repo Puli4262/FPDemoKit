@@ -33,6 +33,13 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     public var firstname = ""
     public var requestFrom = ""
     
+    
+    public static var payUTxnid = ""
+    public static var payUStatus = false
+    public static var payUName = ""
+    public static var payUAmount = ""
+    public static var payUProductInfo = ""
+    
     public var sendFPSDKResponseDelegate:SendFPSDKResponseDelegate?
     
     required public init?(coder aDecoder: NSCoder) {
@@ -146,6 +153,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
+        }else if(KhataViewController.comingFrom == "payU"){
+            sendFPSDKResponseDelegate?.payUresponse(status:KhataViewController.payUStatus,txnId:KhataViewController.payUTxnid,amount:KhataViewController.payUAmount,name:KhataViewController.payUName,productInfo:KhataViewController.payUProductInfo)
+            KhataViewController.comingFrom = ""
+            self.navigationController?.popViewController(animated: true)
         }
         
     }
@@ -255,6 +266,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
 
 public protocol SendFPSDKResponseDelegate {
     func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String)
+    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
 }
 
 

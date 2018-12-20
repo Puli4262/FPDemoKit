@@ -13,15 +13,20 @@ import SystemConfiguration
 
 private var __maxLengths = [UITextField: Int]()
 class Utils {
+    //SIT HOST IP
+    let hostIP = "10.0.77.244"
+    
+    //AWS HOST IP
+    //let hostIP = "52.66.207.92"
     
     //Test Server
     //let hostURL = "http://13.126.20.61:8080/KhataBackEnd"
     
     //SIT Server
-    //let hostURL = "http://10.0.77.244:8080/KhataBackEnd"
+    let hostURL = "http://10.0.77.244:8080/KhataBackEnd"
     
     //AWS Server
-    let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
+    //let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server
     //let hostURL = "http://192.168.0.124:8080/KhataBackEnd"
@@ -169,6 +174,15 @@ class Utils {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
         return alert
+    }
+    
+    func handleAurizationFail(title:String,message:String,viewController:UIViewController){
+        
+        let alert  = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            viewController.navigationController?.popToRootViewController(animated: true)
+        }))
+        viewController.present(alert, animated: true, completion: nil)
     }
     
     func isConnectedToNetwork() -> Bool {

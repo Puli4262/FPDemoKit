@@ -21,9 +21,14 @@ class AgreeViewController: UIViewController {
         self.setStepperIcon()
         Utils().setupTopBar(viewController: self)
         self.hideKeyboardWhenTappedAround()
-        var dataString = "Your ₹ 5000 Khaata"
+        self.setkhaataAcountLabel()
+        self.setCarryIdView()
+        self.setTermsAndPolicy()
+    }
+    
+    func setkhaataAcountLabel(){
         
-        
+        let dataString = "Your ₹ 5000 Khaata"
         
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: dataString,attributes: [ NSAttributedStringKey.font: UIFont.systemFont(ofSize: 25)])
         attributedString.setColorForText(textForAttribute: "₹ 5000", withColor: Utils().hexStringToUIColor(hex: "#FF6803"))
@@ -34,12 +39,11 @@ class AgreeViewController: UIViewController {
         khataAcoountLabel.attributedText = attributedString;
         khataAcoountLabel.textAlignment = NSTextAlignment.center
         khataAcoountLabel.isUserInteractionEnabled = true
-        
-        //self.khataAcoountLabel.font = UIFont(name: "OpenSans", size: 25)
-        
-        print(AgreeViewController.docType)
-        let docType = UserDefaults.standard.string(forKey: "docType") ?? "Aadhaar"
+    }
     
+    func setCarryIdView(){
+        let docType = UserDefaults.standard.string(forKey: "docType") ?? "Aadhaar"
+        
         let attrs1 = [NSAttributedStringKey.foregroundColor : UIColor.black]
         
         let attrs2 = [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 15), NSAttributedStringKey.foregroundColor : UIColor.black]
@@ -57,19 +61,17 @@ class AgreeViewController: UIViewController {
         carryIDView.layer.cornerRadius = 5
         khataAcoountLabel.textAlignment = NSTextAlignment.center
         carryIDView.layer.borderColor = Utils().hexStringToUIColor(hex: "#002C78").cgColor
-        
-       
-        
-
-        
-        
-
+    }
+    
+    func setTermsAndPolicy(){
         let string              = "I have read & agree to the Terms & Conditions and Privacy Policy for Khaata"
         let terms               = (string as NSString).range(of: "Terms & Conditions")
         let privacy               = (string as NSString).range(of: "Privacy Policy")
         let attributedStrings    = NSMutableAttributedString(string: string)
         
-        
+        let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: string,attributes: [ NSAttributedStringKey.font: UIFont.systemFont(ofSize: 25)])
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
         attributedStrings.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
         
         attributedStrings.addAttribute(NSAttributedStringKey.underlineStyle, value: NSNumber(value: 1), range: terms)
@@ -77,7 +79,6 @@ class AgreeViewController: UIViewController {
         termsAndConditionsLabel.attributedText = attributedStrings
         termsAndConditionsLabel.textAlignment = NSTextAlignment.center
         termsAndConditionsLabel.isUserInteractionEnabled = true
-        
     }
     
     func setStepperIcon(){
@@ -97,19 +98,20 @@ class AgreeViewController: UIViewController {
         
         if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: termsRange) {
             print("Tapped terms clicked")
-            self.openTermsVC()
+            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/t_c.html")
         }else if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: privacyPolicyRange) {
             print("privacy policy clicked")
-            self.openTermsVC()
+            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/privacy_policy.html")
         }else {
             print("Tapped none")
         }
     }
     
-    func openTermsVC() {
+    func openTermsVC(url:String) {
         
         let bundel = Bundle(for: TermsAndConditionsViewController.self)
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "TermsVC") as? TermsAndConditionsViewController {
+            viewController.url = url
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
@@ -130,19 +132,29 @@ class AgreeViewController: UIViewController {
             utils.requestPOSTURL("/lead/createLoan?mobilenumber=\(mobileNumber!)", parameters: [:], headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
-                    if(res["status"].stringValue == "kycPending"){
-                        for controller in self.navigationController!.viewControllers as Array {
-                            if controller.isKind(of: KhataViewController.self) {
-                                KhataViewController.comingFrom = "data"
-                                KhataViewController.sanctionAmount = res["amount"].intValue
-                                KhataViewController.CIF = res["cif"].stringValue
-                                KhataViewController.LAN  = res["lan"].stringValue
-                                KhataViewController.status = res["status"].stringValue
-                                self.navigationController!.popToViewController(controller, animated: true)
-                                break
+                    
+                    let token = res["token"].stringValue
+                    
+                    if(token == "" || token == "InvalidToken"){
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                    }else{
+                        if(res["status"].stringValue == "kycPending"){
+                            for controller in self.navigationController!.viewControllers as Array {
+                                if controller.isKind(of: KhataViewController.self) {
+                                    KhataViewController.comingFrom = "data"
+                                    KhataViewController.sanctionAmount = res["amount"].intValue
+                                    KhataViewController.CIF = res["cif"].stringValue
+                                    KhataViewController.LAN  = res["lan"].stringValue
+                                    KhataViewController.status = res["status"].stringValue
+                                    KhataViewController.mandateId = res["mandateId"].stringValue
+                                    self.navigationController!.popToViewController(controller, animated: true)
+                                    break
+                                }
                             }
                         }
                     }
+                    
+                    
                     
                     
                 })
@@ -170,8 +182,8 @@ extension NSMutableAttributedString {
     func setColorForText(textForAttribute: String, withColor color: UIColor) {
         let range: NSRange = self.mutableString.range(of: textForAttribute, options: .caseInsensitive)
         
-        var style = NSMutableParagraphStyle()
-        style.lineSpacing = 38 // change line spacing between paragraph like 36 or 48
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 38 
         
         
         self.addAttribute(NSAttributedStringKey.foregroundColor, value: color, range: range)

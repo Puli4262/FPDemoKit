@@ -9,7 +9,9 @@ import UIKit
 import FirebaseCore
 import SwiftyJSON
 
-open class KhataViewController: UIViewController,UIApplicationDelegate {
+open class KhataViewController: UIViewController,UIApplicationDelegate,PayUResponseDelegate {
+    
+    
     
     
     @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
@@ -18,6 +20,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     public var DOB = ""
     public var zipcode = ""
     public var tokenId = ""
+    public var mandateStatus = ""
     public static var panStatus = ""
     
     public static var comingFrom:String = ""
@@ -25,7 +28,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     public static var LAN = ""
     public static var status = ""
     public static var CIF = ""
-    
+    public static var mandateId = ""
     //E-mandate Parameters
     public var txnid = ""
     public var amount = ""
@@ -90,19 +93,6 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         print("tapped")
     }
     
-    
-    
-    
-    
-    func getLeadDetails(mobileNumber:String){
-        let utils = Utils()
-        utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: [:], viewCotroller: self, success: {res in
-            print(res)
-        }, failure: {error in
-            
-        })
-    }
-    
     func getLeadApi(mobileNumber:String){
         let utils = Utils()
         
@@ -116,17 +106,23 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                 let token = res["token"].stringValue
                 
                 if(token == "" || token == "InvalidToken"){
-                    utils.networkError(title: "Authorization Failed", message: "")
+                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                 }else{
                     UserDefaults.standard.set(token, forKey: "token")
-                    let status = res["status"].stringValue
+                    var status = res["status"].stringValue
                     KhataViewController.panStatus = res["docType"].stringValue
                     UserDefaults.standard.set(res["docType"].stringValue, forKey: "docType")
-                    print(KhataViewController.panStatus)
                     UserDefaults.standard.set(status,forKey: "status")
-                    self.handleStatus(status: status)
                     let dncFlag = res["dncFlag"].boolValue
                     UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
+                    if(status == "kycPending"){
+                        if(self.mandateStatus == "editMandate"){
+                            UserDefaults.standard.set("editMandate",forKey: "status")
+                            status = "editMandate"
+                        }
+                    }
+                    self.handleStatus(status: status)
+                    
                 }
             }, failure: {error in
                 print(error.localizedDescription)
@@ -150,7 +146,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     open override func viewWillAppear(_ animated: Bool) {
         self.activityIndicatior.isHidden = false
         if(KhataViewController.comingFrom == "data"){
-            sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF)
+            sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF, mandateId: KhataViewController.mandateId)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
         }else if(KhataViewController.comingFrom == "payU"){
@@ -163,6 +159,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     
     func handleStatus(status:String){
+        print(status)
         switch(status) {
         case "KYCInitaited":
             self.openUploadDocumentsVC()
@@ -185,9 +182,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         case "kycPending":
             self.openAutopayVC()
             break
+        case "MandateCompleted":
+            self.openAgreeVC()
+            break
         case "MandateCreated":
-            //self.openAgreeVC()
-            self.openCustomerDetailsVC()
+            self.openAgreeVC()
+            break
+        case "editMandate":
+            self.openAutopayVC()
             break
         default:
             self.openUploadDocumentsVC()
@@ -200,6 +202,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         let bundel = Bundle(for: AutoPayViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AutoPayVC") as? AutoPayViewController {
+            
+            
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
@@ -242,6 +246,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         let bundel = Bundle(for: AgreeViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AgreeVC") as? AgreeViewController {
+            
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
@@ -257,15 +262,23 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             viewController.productinfo = productinfo
             viewController.firstname = firstname
             viewController.email = email
+            viewController.payUResponseDelegate = self
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
     }
     
+    
+    public func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
+    sendFPSDKResponseDelegate?.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
+        KhataViewController.comingFrom = ""
+        self.navigationController?.popViewController(animated: true)
+    }
+    
 }
 
 public protocol SendFPSDKResponseDelegate {
-    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String)
+    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
 }
 

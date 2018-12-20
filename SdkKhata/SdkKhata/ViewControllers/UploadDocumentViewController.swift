@@ -67,12 +67,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             print("Selected item: \(item) at index: \(index)")
             self.dropDown.hide()
-            if(item == "Aadhaar Card"){
-                self.handleDocument(documentType: "Aadhaar")
-            }else{
-                self.handleDocument(documentType: item)
-            }
-            
+            self.handleDocument(documentType: item)
         }
         
         self.setStepperIcon()
@@ -113,23 +108,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         print("tapped")
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        
-        self.showAlertDailog()
-    }
     
-    
-    
-    
-    
-    func showAlertDailog(){
-        let alert = UIAlertController(title: "Choose Document", message: "", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Aadhaar", style: UIAlertActionStyle.default, handler: {action in self.handleDocument(documentType:"Aadhaar")}))
-        alert.addAction(UIAlertAction(title: "Passport", style: UIAlertActionStyle.default, handler: {action in self.handleDocument(documentType:"Passport")}))
-        alert.addAction(UIAlertAction(title: "Driving License", style: UIAlertActionStyle.default, handler: {action in self.handleDocument(documentType:"Driving License")}))
-        alert.addAction(UIAlertAction(title: "Voter ID", style: UIAlertActionStyle.default, handler: {action in self.handleDocument(documentType:"Voter ID")}))
-        self.present(alert, animated: true, completion: nil)
-    }
     
     func handleDocument(documentType:String){
         self.frontView.isHidden = false
@@ -154,7 +133,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         }
         self.ocrPostData["docType"].stringValue = documentType
         
-        if(documentType == "Aadhaar"){
+        if(documentType == "Aadhaar Card"){
             self.isOCRScannerCanceled = true
             self.openQRCodeScanner()
         }
@@ -188,7 +167,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         if(self.selectDoumemtTextFeild.text == ""){
             Utils().showToast(context: self, msg: "Please select document type.", showToastFrom: 120.0)
         }else{
-            if(self.selectDoumemtTextFeild.text == "Aadhaar"){
+            if(self.selectDoumemtTextFeild.text == "Aadhaar Card"){
                 print(isOCRScannerCanceled)
                 if(!isOCRScannerCanceled){
                     self.isOCRScannerCanceled = true
@@ -404,7 +383,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                 //print(res)
                 let refreshToken = res["token"].stringValue
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    utils.networkError(title: "Authorization Faild", message: "")
+                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                 }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
@@ -452,8 +431,8 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
         isAadharDataFetchedFromQRCode = true
         QRCodeResult = result
         let xml = SWXMLHash.parse(result)
-        self.ocrPostData["docType"].stringValue = "Aadhaar"
-        UserDefaults.standard.set("Aadhaar", forKey: "docType")
+        self.ocrPostData["docType"].stringValue = "Aadhaar Card"
+        UserDefaults.standard.set("Aadhaar Card", forKey: "docType")
         self.ocrPostData["raw_front"].stringValue = result
         
         //        <PrintLetterBarcodeData uid="236854735724" name="Swati Kailash Dipake" gender="F" yob="1993" loc="salipura" vtc="Malkapur" po="Malkapur" dist="Buldhana" subdist="Malkapur" state="Maharashtra" pc="443101" dob="03/04/1993"/>
@@ -623,7 +602,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                 }
                 
-            }else if(self.selectDoumemtTextFeild.text == "Aadhaar"){
+            }else if(self.selectDoumemtTextFeild.text == "Aadhaar Card"){
                 let alertController = Utils().loadingAlert(viewController: self)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                     self.present(alertController, animated: false, completion: nil)
@@ -730,10 +709,10 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 
                     if(self.clicked == "front"){
                         self.isFrontPictureUploaded = true
-                        self.firstPageImg.isHidden = true
+                        self.firstPageImg.isHidden = false
                         self.frontImage.image = croppedImage
                     }else{
-                        self.lastPageImg.isHidden = true
+                        self.lastPageImg.isHidden = false
                         self.backImage.image = croppedImage
                         self.isBackPictureUploaded = true
                         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
@@ -915,6 +894,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 addressString = addressString + rawString[i + 2]
                 var pinAdd = rawString[i + 3].replacingOccurrences(of: "PIN", with: "")
                 let tempPin = pinCodeExtraction(pinAdd: pinAdd)
+                self.ocrPostData["pincode"].stringValue = tempPin
                 pinAdd = pinAdd.replacingOccurrences(of:"", with:tempPin)
                 addressString = addressString + pinAdd
                 
@@ -948,7 +928,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         let allPincodeNumberMatches = self.matches(for: pincodeRegex, in: pinAdd as String)
         if(allPincodeNumberMatches.count > 0){
             print("Pincode is: \(allPincodeNumberMatches[0])")
-            self.ocrPostData["pincode"].stringValue = allPincodeNumberMatches[0]
+            //self.ocrPostData["pincode"].stringValue = allPincodeNumberMatches[0]
             return allPincodeNumberMatches[0]
         }
         return ""

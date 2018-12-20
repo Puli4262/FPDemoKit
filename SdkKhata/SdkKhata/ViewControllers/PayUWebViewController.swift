@@ -17,7 +17,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     var productinfo = ""
     var firstname = ""
     var email = ""
-    
+    var payUResponseDelegate:PayUResponseDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.delegate = self
@@ -50,7 +50,17 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
+//                    let token = res["token"].stringValue
+//
+//                    if(token == "" || token == "InvalidToken"){
+//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                    }else{
+//                        self.loadPayUWebview(payUData: res)
+//                    }
+                    
                     self.loadPayUWebview(payUData: res)
+                    
+                    
                 })
                 
             }, failure: { error in
@@ -143,23 +153,17 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             }
             
             
+        }else if(requestString.containsIgnoringCase(find: "failure")){
+            status = false
+            self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
         }
     
     }
     
     func sendResponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
-        for controller in self.navigationController!.viewControllers as Array {
-            if controller.isKind(of: KhataViewController.self) {
-                KhataViewController.comingFrom = "payU"
-                KhataViewController.payUStatus = status
-                KhataViewController.payUTxnid = txnId
-                KhataViewController.payUAmount = amount
-                KhataViewController.payUName = name
-                KhataViewController.payUProductInfo = productInfo
-                self.navigationController!.popToViewController(controller, animated: true)
-                break
-            }
-        }
+        print(status,txnId,amount,name,productInfo)
+        payUResponseDelegate?.payUresponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+        self.navigationController?.popViewController(animated: true)
     }
     
     func generateTxnID() -> String {
@@ -175,4 +179,8 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
 
     
 
+}
+
+public protocol PayUResponseDelegate {
+    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
 }

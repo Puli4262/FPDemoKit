@@ -115,7 +115,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         addressDetailsBtn.isUserInteractionEnabled  = false
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         self.customerPostData["mobileNumber"].stringValue = mobileNumber!
-        self.getCustomerDetails(mobileNumber:mobileNumber!)
+        self.getCustomerDetailsApi(mobileNumber:mobileNumber!)
         self.dateOfBirthTextField.keyboardType = UIKeyboardType.numberPad
         self.emailIdTextField.keyboardType = UIKeyboardType.emailAddress
         self.permanentAddPincodeTextField.keyboardType = UIKeyboardType.numberPad
@@ -136,9 +136,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
         if(dncFlag){
-            self.stepperImg.image = UIImage(named:"stepper_man_submit_id")
+            self.stepperImg.image = UIImage(named:"stepper_man_share_details")
         }else{
-            self.stepperImg.image = UIImage(named:"stepper_submit_id")
+            self.stepperImg.image = UIImage(named:"stepper_share_details")
         }
     }
     
@@ -329,23 +329,23 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
             }
             
-            if(self.customerPostData["pan"].stringValue == "absent"){
-                self.pancardBtn.isHidden = true
-                self.firstNameTextField.isUserInteractionEnabled = true
-                self.lastNameTextField.isUserInteractionEnabled = true
-                self.pancardTextField.text = ""
-                self.pancardTextField.isUserInteractionEnabled = false
-
-                self.checkboxImg.isHidden = false
-                self.checkboxImg.image = UIImage(named:"check_box")
-                self.checkboxImg.isUserInteractionEnabled = false
-                self.dontHavePanLabel.isHidden = false
-                self.pancardTextField.isUserInteractionEnabled = false
-                self.pancardBtnConstraint.constant = 0
-                self.pancardViewHeightConstraint.constant = 150
-                self.greenTick.isHidden = false
-
-            }
+//            if(self.customerPostData["pan"].stringValue == "absent"){
+//                self.pancardBtn.isHidden = true
+//                self.firstNameTextField.isUserInteractionEnabled = true
+//                self.lastNameTextField.isUserInteractionEnabled = true
+//                self.pancardTextField.text = ""
+//                self.pancardTextField.isUserInteractionEnabled = false
+//
+//                self.checkboxImg.isHidden = false
+//                self.checkboxImg.image = UIImage(named:"check_box")
+//                self.checkboxImg.isUserInteractionEnabled = false
+//                self.dontHavePanLabel.isHidden = false
+//                self.pancardTextField.isUserInteractionEnabled = false
+//                self.pancardBtnConstraint.constant = 0
+//                self.pancardViewHeightConstraint.constant = 150
+//                self.greenTick.isHidden = false
+//
+//            }
             
         }else{
             self.pancardViewHeightConstraint.constant = 40
@@ -590,7 +590,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     print(res)
                     let refreshToken = res["token"].stringValue
                     if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        print("handle this")
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                         
                         //self.navigationController?.popToRootViewController(animated: true)
                     }else{
@@ -725,7 +725,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
     }
     
-    func getCustomerDetails(mobileNumber:String){
+    func getCustomerDetailsApi(mobileNumber:String){
         
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
@@ -739,7 +739,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 let refreshToken = res["token"].stringValue
                 print("refreshToken \(refreshToken)" )
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    print("handle this situtation")
+                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                 }else{
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     //UserDefaults.standard.set(res["status"].stringValue, forKey: "status")
@@ -927,7 +927,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         }
                     }else{
                         
-                        print("handle this")
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }
                     print(res)
                 })
@@ -1027,7 +1027,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 let refreshToken = res["token"].stringValue
                 
                 if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    print("handle this situation")
+                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     
                 }else{
                     UserDefaults.standard.set(refreshToken, forKey: "token")

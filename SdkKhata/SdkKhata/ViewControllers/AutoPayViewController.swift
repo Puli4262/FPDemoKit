@@ -63,14 +63,15 @@ class AutoPayViewController: UIViewController {
     @IBAction func handleAutopayBtn(_ sender: Any) {
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         let utils = Utils()
+        let hostUrl = utils.hostURL
         var featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
-        var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"http://52.66.207.92:8080/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
+        var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"\(hostUrl)/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
         
         
         
         if(selectedBankIndex == 4){
             
-            self.handleEmandateCreation()
+            self.handleEmandateCreationApi()
             
         }else{
             if(accountNumberTextFeild.text == ""){
@@ -86,7 +87,7 @@ class AutoPayViewController: UIViewController {
                 consumerDataDict["ifscCode"].stringValue = ifscCodeTextFeild.text!
                 
                 var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
-                self.getMandateToken(params:JSON(mandateDict))
+                self.getMandateTokenApi(params:JSON(mandateDict))
                 
                 
             }
@@ -96,7 +97,7 @@ class AutoPayViewController: UIViewController {
         
     }
     
-    func getMandateToken(params:JSON){
+    func getMandateTokenApi(params:JSON){
         let utils = Utils()
         let hostUrl = utils.hostURL
         print(hostUrl+"/mandate/getMandateToken")
@@ -139,7 +140,7 @@ class AutoPayViewController: UIViewController {
                                         
                                         let refreshToken = resJson["returnStatus"]["token"].stringValue
                                         if(refreshToken.containsIgnoringCase(find: "InvalidToken")){
-                                            
+                                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                                         }else{
                                             UserDefaults.standard.set(refreshToken, forKey: "token")
                                             let response = resJson["returnStatus"]["response"].stringValue
@@ -181,8 +182,12 @@ class AutoPayViewController: UIViewController {
         let bundel = Bundle(for: EmandateViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "EmandateWebVC") as? EmandateViewController {
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             viewController.mandateTokenResponse = madateTokenResponse
-            self.navigationController?.pushViewController(viewController, animated: true)
+            viewController.eMandateResponseDelegate = self
+            self.present(viewController, animated: true)
+            //self.navigationController?.pushViewController(viewController, animated: true)
         }
         
     }
@@ -266,7 +271,7 @@ class AutoPayViewController: UIViewController {
     }
     
     
-    func handleEmandateCreation(){
+    func handleEmandateCreationApi(){
         
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
@@ -286,7 +291,7 @@ class AutoPayViewController: UIViewController {
                     print(res)
                     let refreshToken = res["token"].stringValue
                     if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }else{
                         UserDefaults.standard.set(refreshToken, forKey: "token")
                         let response = res["response"].stringValue
@@ -330,6 +335,30 @@ class AutoPayViewController: UIViewController {
         
     }
     
+    
+    
+    
+}
+
+extension AutoPayViewController: EMandateResponseDelegate {
+    func gotoAgreeVC() {
+        self.openAgreeVC()
+    }
+    
+    func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String) {
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: KhataViewController.self) {
+                KhataViewController.comingFrom = "data"
+                KhataViewController.sanctionAmount = sanctionAmount
+                KhataViewController.CIF = CIF
+                KhataViewController.LAN  = LAN
+                KhataViewController.status = status
+                KhataViewController.mandateId = mandateId
+                self.navigationController!.popToViewController(controller, animated: true)
+                break
+            }
+        }
+    }
     
     
     

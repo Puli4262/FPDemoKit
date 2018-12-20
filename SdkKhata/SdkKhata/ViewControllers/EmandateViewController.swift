@@ -13,6 +13,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     var mandateTokenResponse : JSON = JSON([])
+    var eMandateResponseDelegate:EMandateResponseDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
@@ -23,7 +24,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
     
     
     func loadHTMLString() -> Void {
-        
+        let hostUrl = Utils().hostURL
         let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
         let htmlString = "<!doctype html>" +
             "<html>" +
@@ -52,7 +53,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             "'consumerData': {" +
             "'deviceId': 'WEBSH1'," +
             "'token': '\(consumerData["token"].stringValue)'," +
-            "'returnUrl': 'http://52.66.207.92:8080/KhataBackEnd/jsp/response.jsp'," +
+            "'returnUrl': '\(hostUrl)/KhataBackEnd/jsp/response.jsp'," +
             "'responseHandler': handleResponse," +
             "'paymentMode': '\(consumerData["paymentMode"].stringValue)'," +
             "'merchantLogoUrl': '\(consumerData["merchantLogoUrl"].stringValue)'," +
@@ -117,6 +118,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             if(Int(madateResArray[0]) == 0300 ){
                 let madateRef = String(madateResArray[3].split(separator: "/")[0])
                 self.handleEmandateCreation(mandateRef: madateRef)
+            }else{
+                self.dismiss(animated: true, completion: nil)
             }
         }
 
@@ -153,13 +156,20 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                             print(status)
                             if(status.containsIgnoringCase(find: "customercreated")){
                                 self.openAgreeVC()
+                                self.dismiss(animated: true, completion: {
+                                    self.eMandateResponseDelegate?.gotoAgreeVC()
+                                })
                             }else{
-                                //self.openAgreeVC()
-                                self.navigationController?.popToRootViewController(animated: true)
+                                
+                                
+                                self.dismiss(animated: true, completion: {
+                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                })
+                                //self.navigationController?.popToRootViewController(animated: true)
                             }
                         }
                     }
-                    print()
+                    
                 })
 
             }, failure: { error in
@@ -186,7 +196,22 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         }
         
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        let touch: UITouch? = touches.first
+        
+        if touch?.view != self.webView  {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
 
     
 
+}
+
+public protocol EMandateResponseDelegate {
+    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
+    func gotoAgreeVC()
+    
 }

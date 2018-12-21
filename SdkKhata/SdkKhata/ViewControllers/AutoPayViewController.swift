@@ -10,8 +10,9 @@ import Alamofire
 import SwiftyJSON
 import SkyFloatingLabelTextField
 
-class AutoPayViewController: UIViewController {
+class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
+    @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var ifscCodeTextFeild: SkyFloatingLabelTextField!
     @IBOutlet weak var accountNumberTextFeild: SkyFloatingLabelTextField!
@@ -42,6 +43,17 @@ class AutoPayViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
+        self.setDelegates()
+        
+        
+    }
+    
+    func setDelegates(){
+        self.ifscCodeTextFeild.delegate = self
+        self.accountNumberTextFeild.delegate = self
+        
+        self.ifscCodeTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+        self.accountNumberTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -58,6 +70,47 @@ class AutoPayViewController: UIViewController {
         }
     }
     
+    @objc func textFieldDidChange(_ textField : UITextField){
+        
+        if(textField == ifscCodeTextFeild){
+            textField.autocapitalizationType = UITextAutocapitalizationType.allCharacters
+            textField.text = textField.text?.uppercased()
+            if((textField.text?.count)! < 5){
+                self.continueBtn.isUserInteractionEnabled = false
+                self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+            }else{
+                
+                if((accountNumberTextFeild.text?.count)! >= 5){
+                    self.continueBtn.isUserInteractionEnabled = true
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                }else{
+                    self.continueBtn.isUserInteractionEnabled = false
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+                }
+                
+            }
+            
+        }else if(textField == accountNumberTextFeild){
+            if((textField.text?.count)! < 5){
+                self.continueBtn.isUserInteractionEnabled = false
+                self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+            }else{
+                if((ifscCodeTextFeild.text?.count)! >= 5){
+                    self.continueBtn.isUserInteractionEnabled = true
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                }else{
+                    self.continueBtn.isUserInteractionEnabled = false
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+                }
+                
+            }
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
     
     @IBAction func handleAutopayBtn(_ sender: Any) {
@@ -162,6 +215,10 @@ class AutoPayViewController: UIViewController {
                 case .failure(let encodingError):
                     
                     print("encodingError",encodingError)
+                    alertController.dismiss(animated: true, completion: {
+                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        
+                    })
                     break
                 }
             }
@@ -218,6 +275,8 @@ class AutoPayViewController: UIViewController {
             sbiRadioImg.image = UIImage(named:"radio_button_checked")
             break
         case 4:
+            self.continueBtn.isUserInteractionEnabled = true
+            self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
             noBankView.backgroundColor = Utils().hexStringToUIColor(hex: "#DFE0E0")
             noBankRadiImg.image = UIImage(named:"radio_button_checked")
             break
@@ -307,10 +366,14 @@ class AutoPayViewController: UIViewController {
                             }
                         }
                     }
-                    print()
+                    
                 })
                 
             }, failure: { error in
+                print(error.localizedDescription)
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                })
                 
             })
             

@@ -10,6 +10,7 @@ import SwiftyJSON
 
 class PayUWebViewController: UIViewController,UIWebViewDelegate {
 
+    @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     @IBOutlet weak var webView: UIWebView!
     
     var txnid = ""
@@ -35,7 +36,14 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     }
     
     
+    func webViewDidStartLoad(_ webView: UIWebView){
+        self.activityIndicatior.isHidden = false
+    }
     
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error){
+        self.activityIndicatior.isHidden = true
+    }
     
     func getPayUtokenApi(){
         let utils = Utils()
@@ -157,6 +165,8 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             status = false
             self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
         }
+        
+        self.activityIndicatior.isHidden = true
     
     }
     

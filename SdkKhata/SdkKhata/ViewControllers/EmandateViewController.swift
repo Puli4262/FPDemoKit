@@ -11,6 +11,8 @@ import SwiftyJSON
 
 class EmandateViewController: UIViewController,UIWebViewDelegate {
 
+    @IBOutlet weak var closeImg: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var webView: UIWebView!
     var mandateTokenResponse : JSON = JSON([])
     var eMandateResponseDelegate:EMandateResponseDelegate?
@@ -20,6 +22,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         print(mandateTokenResponse)
         webView.delegate = self
         self.loadHTMLString()
+        //self.view.bringSubview(toFront: self.closeImg)
     }
     
     
@@ -53,7 +56,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             "'consumerData': {" +
             "'deviceId': 'WEBSH1'," +
             "'token': '\(consumerData["token"].stringValue)'," +
-            "'returnUrl': '\(hostUrl)/KhataBackEnd/jsp/response.jsp'," +
+            "'returnUrl': '\(hostUrl)/jsp/response.jsp'," +
             "'responseHandler': handleResponse," +
             "'paymentMode': '\(consumerData["paymentMode"].stringValue)'," +
             "'merchantLogoUrl': '\(consumerData["merchantLogoUrl"].stringValue)'," +
@@ -122,6 +125,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 self.dismiss(animated: true, completion: nil)
             }
         }
+        
+        self.activityIndicator.isHidden = true
 
     }
     
@@ -173,7 +178,10 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 })
 
             }, failure: { error in
-
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    
+                })
             })
             
             
@@ -184,6 +192,16 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             
             
         }
+    }
+    
+    func webViewDidStartLoad(_ webView: UIWebView){
+        self.activityIndicator.isHidden = false
+    }
+    
+    
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error){
+        self.activityIndicator.isHidden = true
     }
     
     func openAgreeVC() {
@@ -197,15 +215,18 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        let touch: UITouch? = touches.first
-        
-        if touch?.view != self.webView  {
-            self.dismiss(animated: true, completion: nil)
-        }
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesBegan(touches, with: event)
+//        let touch: UITouch? = touches.first
+//
+//        if touch?.view != self.webView  {
+//            self.dismiss(animated: true, completion: nil)
+//        }
+//    }
 
+    @IBAction func handleCloseWebview(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
 
 }

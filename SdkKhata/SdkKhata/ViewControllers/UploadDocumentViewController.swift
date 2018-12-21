@@ -392,6 +392,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                      utils.showToast(context: self, msg: "Please take a clear picture of your ID.", showToastFrom: utils.screenHeight/2-10)
                     
+                    self.openRetakeVC()
+                    
                 }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
                     UserDefaults.standard.set(refreshToken, forKey: "token")
                     UserDefaults.standard.set("DocumentUploaded",forKey: "status")
@@ -495,11 +497,12 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
         
         
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"yob"){
-            self.ocrPostData["dob"].stringValue = "01/01/"+dob.text
+            self.ocrPostData["dob"].stringValue = dob.text+"01/01/"
         }
         
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"dob"){
-            self.ocrPostData["dob"].stringValue = dob.text
+            var dobArray = dob.text.split(separator: "/")
+            self.ocrPostData["dob"].stringValue = dobArray[2]+"/"+dobArray[1]+"/"+dobArray[0]
         }
         
         
@@ -508,7 +511,7 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["gender"].stringValue = gender.text
         }
         
-        //print(self.ocrPostData)
+       
         
         
     }
@@ -584,8 +587,6 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                 alertController.dismiss(animated: true, completion: {
                                     self.setBackImage(croppedImage: croppedImage)
                                     self.ocrPostData["rawBack"].stringValue = resultText
-                                    
-                                    print(self.ocrPostData)
                                 })
                             })
                             
@@ -595,7 +596,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                     self.openRetakeVC()
                                 })
                             })
-                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                            
                         }
                     }
                     
@@ -694,33 +695,30 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                     
                                 })
                             }
-                            
-                            
-                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
-                            }
-                        
                         }
+                        
+                    }
                     
-                    }
-                
-                
-                
-                }else{
-                
-                    if(self.clicked == "front"){
-                        self.isFrontPictureUploaded = true
-                        self.firstPageImg.isHidden = false
-                        self.frontImage.image = croppedImage
-                    }else{
-                        self.lastPageImg.isHidden = false
-                        self.backImage.image = croppedImage
-                        self.isBackPictureUploaded = true
-                        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-                        self.continueBtn.isUserInteractionEnabled = true
-                    }
-                
-                
                 }
+                
+                
+                
+            }else{
+                
+                if(self.clicked == "front"){
+                    self.isFrontPictureUploaded = true
+                    self.firstPageImg.isHidden = false
+                    self.frontImage.image = croppedImage
+                }else{
+                    self.lastPageImg.isHidden = false
+                    self.backImage.image = croppedImage
+                    self.isBackPictureUploaded = true
+                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                    self.continueBtn.isUserInteractionEnabled = true
+                }
+                
+                
+            }
         }else{
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Network Error", message: "Please Check your Internet Connection", preferredStyle: .alert)
@@ -831,7 +829,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             print("DOB is: \(allDOBNumberMatches[0]) \(Utils().ageDifferenceFromNow(birthday: allDOBNumberMatches[0]))")
             
             if(Utils().ageDifferenceFromNow(birthday: allDOBNumberMatches[0]) > 18){
-                ocrPostData["dob"].stringValue = allDOBNumberMatches[0]
+                let dobArray = allDOBNumberMatches[0].split(separator: "/")
+                ocrPostData["dob"].stringValue = dobArray[2]+"/"+dobArray[1]+"/"+dobArray[0]
+                
             }else{
                 ocrPostData["dob"].stringValue = ""
             }
@@ -1063,15 +1063,15 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             let birthYear = dob.suffix(4)
             let birthMonth = dob[dob.count-7 ..< dob.count-5]
             let birthDay = dob[dob.count-10 ..< dob.count-8]
-            ocrPostData["dob"].stringValue = "\(birthDay)/\(birthMonth)/\(birthYear)"
-            print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
+            ocrPostData["dob"].stringValue = "\(birthYear)/\(birthMonth)/\(birthDay)"
+            
             
         }else{
             print(dob)
             let birthYear = dob.suffix(4)
             let birthMonth = "01"
             let birthDay = "01"
-            ocrPostData["dob"].stringValue = "\(birthDay)/\(birthMonth)/\(birthYear)"
+            ocrPostData["dob"].stringValue = "\(birthYear)/\(birthMonth)/\(birthDay)"
              print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
             
         }
@@ -1194,18 +1194,27 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             retakeVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             retakeVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             retakeVC.retakeDelegate = self
+            retakeVC.docType = ocrPostData["docType"].stringValue
             self.present(retakeVC, animated: true, completion: nil)
             
         }
         
     }
     
-    func getDocumentString(docType:String, imageSide:String) -> String {
+    func openMismatchPopupVC(titleDescription:String){
         
-        let imageName = ""
+        let bundel = Bundle(for: MismatchPopupViewController.self)
         
-        return imageName
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "MismatchPopupVC") as? MismatchPopupViewController {
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            
+            self.present(viewController, animated: true)
+        }
+        
     }
+    
+    
     
     
     

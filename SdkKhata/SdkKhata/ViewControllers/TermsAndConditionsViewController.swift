@@ -7,15 +7,18 @@
 
 import UIKit
 
-class TermsAndConditionsViewController: UIViewController {
+class TermsAndConditionsViewController: UIViewController,UIWebViewDelegate {
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var closeImg: UIImageView!
     @IBOutlet weak var webView: UIWebView!
     var url = "http://52.66.207.92/khata_files/t_c.html"
+    var popupTitle = ""
     override func viewDidLoad() {
         super.viewDidLoad()
-        Utils().setupTopBar(viewController: self)
-        self.addBackButton()
-        
+        self.webView.delegate = self
+        titleLabel.text = popupTitle
         let url = NSURL (string: self.url)
         let requestObj = NSURLRequest(url: url as! URL)
         self.webView.loadRequest(requestObj as URLRequest)
@@ -31,6 +34,24 @@ class TermsAndConditionsViewController: UIViewController {
     
     @objc func handleBackTap() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    @IBAction func handleClose(_ sender: Any) {
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func webViewDidStartLoad(_ webView: UIWebView){
+        self.activityIndicator.isHidden = false
+    }
+    
+    func webViewDidFinishLoad(_ webView: UIWebView){
+        self.activityIndicator.isHidden = true
+    }
+    
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error){
+        self.activityIndicator.isHidden = true
     }
     
     

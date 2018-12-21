@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openUploadDocumentsVC()
+               //self.openSelfieVC()
             })
         }
         
@@ -104,9 +104,12 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: [:], viewCotroller: self, success: {res in
                 print(res)
                 let token = res["token"].stringValue
+                let constantToken = res["constantToken"].stringValue
                 
                 if(token == "" || token == "InvalidToken"){
                     utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                }else if(constantToken != self.tokenId){
+                    self.handnleGoBackPopup(titleDescription: "We are unable to open your Khaata at the moment as your not eligible")
                 }else{
                     UserDefaults.standard.set(token, forKey: "token")
                     var status = res["status"].stringValue
@@ -119,6 +122,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                         if(self.mandateStatus == "editMandate"){
                             UserDefaults.standard.set("editMandate",forKey: "status")
                             status = "editMandate"
+                        }else{
+                            if(!dncFlag){
+                                UserDefaults.standard.set("editMandate",forKey: "status")
+                                status = "editMandate"
+                            }else{
+                                UserDefaults.standard.set("nonMandatory",forKey: "status")
+                                status = "nonMandatory"
+                            }
                         }
                     }
                     self.handleStatus(status: status)
@@ -126,7 +137,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                 }
             }, failure: {error in
                 print(error.localizedDescription)
-                //self.handleStatus(status: "KYC Initiated")
+                Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
             })
             
             
@@ -142,6 +153,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         }
         
     }
+    
+    
     
     open override func viewWillAppear(_ animated: Bool) {
         self.activityIndicatior.isHidden = false
@@ -167,35 +180,47 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         case "DocumentUploaded":
             self.openSelfieVC()
             break
-        case "SalfieUploaded":
+        case "SalfieUploaded","Pan valided","personaldetail","customercreated":
             self.openCustomerDetailsVC()
             break
-        case "Pan valided":
-            self.openCustomerDetailsVC()
-            break
-        case "personaldetail":
-            self.openCustomerDetailsVC()
-            break
-        case "customercreated":
-            self.openCustomerDetailsVC()
-            break
-        case "kycPending":
+        case "kycPending","editMandate","MandateCreated":
             self.openAutopayVC()
             break
         case "MandateCompleted":
             self.openAgreeVC()
             break
-        case "MandateCreated":
-            self.openAgreeVC()
-            break
-        case "editMandate":
-            self.openAutopayVC()
+        case "nonMandatory":
+            Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                
+                self.navigationController?.popToRootViewController(animated: true)
+            })
             break
         default:
             self.openUploadDocumentsVC()
             break
         }
     }
+    
+    func handnleGoBackPopup(titleDescription:String){
+        self.openPopupVC(titleDescription:titleDescription)
+    }
+    
+    func openPopupVC(titleDescription:String){
+        
+        let bundel = Bundle(for: PopupViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PopupVC") as? PopupViewController {
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            viewController.titleDescription = titleDescription
+            viewController.closeAppDelegate = self
+            self.present(viewController, animated: true)
+        }
+        
+    }
+    
+    
     
     func openAutopayVC(){
         
@@ -280,6 +305,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
 public protocol SendFPSDKResponseDelegate {
     func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
+}
+
+extension KhataViewController:CloseAppDelegate {
+    func closeApp() {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    
 }
 
 

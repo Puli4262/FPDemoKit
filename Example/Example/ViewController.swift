@@ -29,12 +29,15 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = "9819064110"
+            viewController.tokenId = "RrHyCdfsbSFZol6ik3kRnw=="
             //viewController.mobileNumber = "9029344445"
+            //viewController.tokenId = "qZVy/Q7KfuTgLoMtFepAww=="
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
-            viewController.tokenId = ""
+           
             viewController.DOB = "01/01/1990"
-            viewController.mandateStatus = "editMandate"
+            viewController.mandateStatus = ""
+            
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }

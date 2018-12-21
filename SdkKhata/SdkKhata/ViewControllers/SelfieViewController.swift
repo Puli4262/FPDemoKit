@@ -70,7 +70,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         self.dismiss(animated: true, completion: {
             
-            let cropViewController = CropViewController(image: image)
+            let cropViewController = CropViewController(image: self.flipImage(image: image))
             cropViewController.delegate = self
             self.present(cropViewController, animated: true, completion: nil)
             
@@ -108,7 +108,10 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                     alertController.dismiss(animated: true, completion: nil)
                 }, failure: {error in
                     print(error)
-                    alertController.dismiss(animated: true, completion: nil)
+                    alertController.dismiss(animated: true, completion: {
+                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+
+                    })
                 })
             })
             
@@ -129,6 +132,19 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
+    }
+    
+    func flipImage(image: UIImage) -> UIImage {
+        guard let cgImage = image.cgImage else {
+            // Could not form CGImage from UIImage for some reason.
+            // Return unflipped image
+            print("image p")
+            return image
+        }
+        let flippedImage = UIImage(cgImage: cgImage,
+                                   scale: image.scale,
+                                   orientation: .upMirrored)
+        return flippedImage
     }
     
 }

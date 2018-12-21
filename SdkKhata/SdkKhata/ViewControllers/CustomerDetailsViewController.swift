@@ -197,7 +197,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         if(textField == dateOfBirthTextField){
             textField.text = Utils().formattedNumber(number: textField.text!, format: "XX/XX/XXXX")
         }else if(textField == pancardTextField){
-            
+            textField.autocapitalizationType = UITextAutocapitalizationType.allCharacters
             self.pancardInValidLabel.isHidden = true
             //self.attemptsLabel.isHidden = true
             pancardTextField.text = textField.text?.uppercased()
@@ -272,11 +272,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         pancardTextField.isHidden = visibility
         pancardInValidLabel.isHidden = visibility
         checkboxImg.isHidden = visibility
-        //attemptsLabel.isHidden = visibility
         dontHavePanLabel.isHidden = visibility
         pancardBtn.isHidden = visibility
         greenTick.isHidden = true
         if(!visibility){
+            self.idDetailsDropdownArrowImg.image = UIImage(named:"accordian_uparrow")
             self.pancardViewHeightConstraint.constant = 150
             self.pancardBtnConstraint.constant = 46
             
@@ -329,25 +329,26 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
             }
             
-//            if(self.customerPostData["pan"].stringValue == "absent"){
-//                self.pancardBtn.isHidden = true
-//                self.firstNameTextField.isUserInteractionEnabled = true
-//                self.lastNameTextField.isUserInteractionEnabled = true
-//                self.pancardTextField.text = ""
-//                self.pancardTextField.isUserInteractionEnabled = false
-//
-//                self.checkboxImg.isHidden = false
-//                self.checkboxImg.image = UIImage(named:"check_box")
-//                self.checkboxImg.isUserInteractionEnabled = false
-//                self.dontHavePanLabel.isHidden = false
-//                self.pancardTextField.isUserInteractionEnabled = false
-//                self.pancardBtnConstraint.constant = 0
-//                self.pancardViewHeightConstraint.constant = 150
-//                self.greenTick.isHidden = false
-//
-//            }
+            if(self.customerPostData["pan"].stringValue == "absent"){
+                self.pancardBtn.isHidden = true
+                self.firstNameTextField.isUserInteractionEnabled = true
+                self.lastNameTextField.isUserInteractionEnabled = true
+                self.pancardTextField.text = ""
+                self.pancardTextField.isUserInteractionEnabled = false
+
+                self.checkboxImg.isHidden = false
+                self.checkboxImg.image = UIImage(named:"check_box")
+                self.checkboxImg.isUserInteractionEnabled = false
+                self.dontHavePanLabel.isHidden = false
+                self.pancardTextField.isUserInteractionEnabled = false
+                self.pancardBtnConstraint.constant = 0
+                self.pancardViewHeightConstraint.constant = 150
+                self.greenTick.isHidden = false
+
+            }
             
         }else{
+            self.idDetailsDropdownArrowImg.image = UIImage(named:"accordian_downarrow")
             self.pancardViewHeightConstraint.constant = 40
             self.pancardBtnConstraint.constant = 0
             
@@ -397,6 +398,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }
         
         if(!visibility){
+            self.personalDetailsDropdownImg.image = UIImage(named:"accordian_uparrow")
             self.customerDetailsViewConstraint.constant = 554
             customerDetailsView.constant = 1500
             self.view.frame.size.height = 1100
@@ -404,6 +406,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             
         }else{
+            self.personalDetailsDropdownImg.image = UIImage(named:"accordian_downarrow")
             self.customerDetailsViewConstraint.constant = 40
             self.customerDeatilsBtnConstrint.constant = 0
             
@@ -446,6 +449,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }
         
         if(!visibility){
+            self.addressDetailsDropdownImg.image = UIImage(named:"accordian_uparrow")
             self.addressDeatilsViewConstraint.constant = 630
             self.addressDetailsBtnConstraint.constant = 46
             customerDetailsView.constant = 1500
@@ -453,6 +457,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             //self.handleIsCommunicationAddressSame(isVisiblity: visibility)
             
         }else{
+            self.addressDetailsDropdownImg.image = UIImage(named:"accordian_downarrow")
             self.addressDeatilsViewConstraint.constant = 40
             self.addressDetailsBtnConstraint.constant = 0
             
@@ -702,9 +707,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     
                     alertController.dismiss(animated: true, completion: nil)
                 }, failure: {error in
-                    print(error.localizedDescription)
-                    //self.handleStatus(status: "KYC Initiated")
-                    alertController.dismiss(animated: true, completion: nil)
+                    
+                    alertController.dismiss(animated: true, completion: {
+                        Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                    })
                 })
                 
                 
@@ -752,7 +758,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.getPincodeDetails(from: "permanent", pincode: res["pincodePermanent"].stringValue)
                     }
                     if(JSON(res["pincodeCorrespondence"]) != JSON.null && res["pincodeCorrespondence"].stringValue != "" && res["pincodeCorrespondence"].stringValue.count == 6){
-                        //self.getPincodeDetails(from: "pincodeCorrespondence", pincode: res["pincodeCorrespondence"].stringValue)
+                        
                     }
                     
                     if(status! == "DocumentUploaded" || status! == "SalfieUploaded"){
@@ -837,8 +843,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 alertController.dismiss(animated: true, completion: nil)
             }, failure: {error in
                 print(error.localizedDescription)
-                //self.handleStatus(status: "KYC Initiated")
-                alertController.dismiss(animated: true, completion: nil)
+                
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    
+                })
+
+                
             })
             
             
@@ -854,7 +865,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     }
     
     func handleCreateCustomer(status:String){
-        //self.openAgreeVC()
+        
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
@@ -884,8 +895,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
-                
-                print(res)
+            
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
@@ -931,8 +941,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     }
                     print(res)
                 })
-            }, failure: {res in
-                alertController.dismiss(animated: true, completion: nil)
+            }, failure: {error in
+                
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                })
             })
             
             
@@ -1061,7 +1074,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 }
                 
             }, failure: { error in
-                
+                Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
             })
             
             
@@ -1309,7 +1322,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
 extension CustomerDetailsViewController: DateOfBirthDelegate {
     
     func selectedDateOfBirth(day: String, month: String, year: String) {
-        self.dateOfBirthTextField.text = "\(day)/\(month)/\(year)"
+        self.dateOfBirthTextField.text = "\(year)/\(month)/\(day)"
     }
     
     

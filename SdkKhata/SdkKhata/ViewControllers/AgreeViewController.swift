@@ -98,21 +98,24 @@ class AgreeViewController: UIViewController {
         
         if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: termsRange) {
             print("Tapped terms clicked")
-            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/t_c.html")
+            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/t_c.html",popupTitle:"Terms & Conditions")
         }else if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: privacyPolicyRange) {
             print("privacy policy clicked")
-            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/privacy_policy.html")
+            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/privacy_policy.html",popupTitle:"Privacy Policy")
         }else {
             print("Tapped none")
         }
     }
     
-    func openTermsVC(url:String) {
+    func openTermsVC(url:String,popupTitle:String) {
         
         let bundel = Bundle(for: TermsAndConditionsViewController.self)
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "TermsVC") as? TermsAndConditionsViewController {
             viewController.url = url
-            self.navigationController?.pushViewController(viewController, animated: true)
+            viewController.popupTitle = popupTitle
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self.present(viewController, animated: true)
         }
         
     }

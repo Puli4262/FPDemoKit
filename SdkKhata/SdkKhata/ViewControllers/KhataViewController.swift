@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openSelfieVC()
+               //self.openUploadDocumentsVC()
             })
         }
         
@@ -101,15 +101,17 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             //            self.present(alertController, animated: false, completion: nil)
             
             
-            utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: [:], viewCotroller: self, success: {res in
+            utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":self.tokenId], viewCotroller: self, success: {res in
                 print(res)
                 let token = res["token"].stringValue
                 let constantToken = res["constantToken"].stringValue
                 
-                if(token == "" || token == "InvalidToken"){
-                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                }else if(constantToken != self.tokenId){
-                    self.handnleGoBackPopup(titleDescription: "We are unable to open your Khaata at the moment as your not eligible")
+                if(constantToken == "InvalidToken"){
+                    self.handnleGoBackPopup(titleDescription: "We are unable to open your Khaata at the moment as you are not eligible")
+                }else if(token == "" || token == "InvalidToken"){
+                    DispatchQueue.main.async {
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                    }
                 }else{
                     UserDefaults.standard.set(token, forKey: "token")
                     var status = res["status"].stringValue

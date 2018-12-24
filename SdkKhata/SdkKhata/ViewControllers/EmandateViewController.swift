@@ -149,11 +149,11 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-                    let refreshToken = res["token"].stringValue
-                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        
-                    }else{
-                        UserDefaults.standard.set(refreshToken, forKey: "token")
+//                    let refreshToken = res["token"].stringValue
+//                    if(refreshToken == "" || refreshToken == "InvalidToken"){
+//
+//                    }else{
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
                         let response = res["response"].stringValue
                         if(response.containsIgnoringCase(find: "success")){
                             
@@ -173,7 +173,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                                 //self.navigationController?.popToRootViewController(animated: true)
                             }
                         }
-                    }
+                    //}
                     
                 })
 

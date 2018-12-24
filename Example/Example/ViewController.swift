@@ -34,7 +34,6 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //viewController.tokenId = "qZVy/Q7KfuTgLoMtFepAww=="
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
-           
             viewController.DOB = "01/01/1990"
             viewController.mandateStatus = ""
             

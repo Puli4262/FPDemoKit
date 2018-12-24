@@ -216,137 +216,6 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         })
     }
     
-    func readPassportDetails(recognisedText:String){
-        
-        
-        
-        
-        
-        print("----- passport details ------")
-        
-        if(clicked == "front"){
-            self.handlePassortFronData(ocrText: recognisedText)
-        }else{
-            self.handlePassportBackData(ocrText: recognisedText)
-        }
-        
-        
-        
-        
-        
-    }
-    
-    func handlePassportBackData(ocrText:String){
-        
-        let addressRegex = "(.*\\d{6})"
-        var value: NSMutableString = ocrText as! NSMutableString
-        
-        let allAddressMatches = self.matches(for: addressRegex, in: value as String)
-        print(allAddressMatches)
-        if(allAddressMatches.count >= 2){
-            
-            if(allAddressMatches[0].count == 8 || allAddressMatches[0].count == 9){
-                print("Address is \(allAddressMatches[1])")
-            }else{
-                print("Address is \(allAddressMatches[0])")
-            }
-        }
-        
-        let motherNameRegex = "(Mo.*[A-Z\\s\n]+)"
-        let allMotherNameMatches = self.matches(for: motherNameRegex, in: value as String)
-        print(allMotherNameMatches)
-        if(allMotherNameMatches.count >= 2 ){
-            
-        }
-        
-        
-        
-    }
-    
-    func handlePassortFronData(ocrText:String){
-        
-        let passportNumberRegex = "([A-Z]{1,2}+[\\d]+) | ([A-Z]{1,2}+[\\d\\s]{7}+)|([A-Z]+[\\d]+)"
-        var value: NSMutableString = ocrText as! NSMutableString
-        
-        let allPassortNumberMatches = self.matches(for: passportNumberRegex, in: value as String)
-        print(allPassortNumberMatches)
-        if(allPassortNumberMatches.count > 0){
-            print("Passport Number is: \(allPassortNumberMatches[0])")
-            
-        }
-        
-        let surnameRegex = "(\\Surname [A-Z\\s]+)|(\\/Su.*?[A-Z]+)|(\\/S.*?[A-Z]+)"
-        let allSurnameMatches = self.matches(for: surnameRegex, in: value as String)
-        print(allSurnameMatches)
-        if(allSurnameMatches.count > 0){
-            
-            let surNamesArray = allSurnameMatches[0].split(separator: " ")
-            print("Surname Name is: \(surNamesArray[surNamesArray.count-1])")
-            
-            
-        }else{
-            let surnameRegex = "(\\/Su(.*\n){2})"
-            let allSurnameMatches = self.matches(for: surnameRegex, in: value as String)
-            print(allSurnameMatches)
-            if(allSurnameMatches.count > 0){
-                let surNamesArray = allSurnameMatches[0].split(separator: "\n")
-                print("Surname Name is: \(surNamesArray[surNamesArray.count-1])")
-                
-                
-            }
-        }
-        
-        let userNameRegex = "(\\/G.*[A-Z\\s]{1,20})|(\\/[\\s]G.*[A-Z\\s]{1,20})|(\\/G.*[a-zA-Z\\s]{1,20})|(\\/[\\s]G.*[a-zA-Z\\s]{1,20})"
-        let allUsernameMatches = self.matches(for: userNameRegex, in: value as String)
-        print(allUsernameMatches)
-        if(allUsernameMatches.count > 0 && allUsernameMatches[0].count > 15){
-            print("case 1:")
-            print(allUsernameMatches)
-            var userNamesArray = allUsernameMatches[0].split(separator: " ")
-            print(allUsernameMatches[0].containsIgnoringCase(find: "\n"))
-            if(allUsernameMatches[0].containsIgnoringCase(find: "\n")){
-                userNamesArray = allUsernameMatches[0].split(separator: "\n")
-                
-                
-                
-                print("Username Name is:\(userNamesArray[userNamesArray.count-1])")
-            }else{
-                userNamesArray = allUsernameMatches[0].split(separator: " ")
-                if(userNamesArray.count >= 2){
-                    print("Username Name is:\(userNamesArray[userNamesArray.count-2]) \(userNamesArray[userNamesArray.count-1])")
-                    
-                }else{
-                    
-                    print("Username Name is:\(userNamesArray[userNamesArray.count-1])")
-                }
-            }
-            
-            
-            
-        }else{
-            let userNameRegex = "(\\/G.*[a-zA-Z\n\\s]{1,20})|(\\/[\\s]G.*[a-zA-Z\n\\s]{1,20})"
-            let allUsernameMatches = self.matches(for: userNameRegex, in: value as String)
-            print(allUsernameMatches)
-            if(allUsernameMatches.count > 0){
-                print("case 2:")
-                let userNamesArray = allUsernameMatches[0].split(separator: "\n")
-                print("Username Name is: \(userNamesArray[userNamesArray.count-1])")
-                
-            }
-        }
-        
-        
-        
-        let dobRegex = "(\\d{2}[\\/]\\d{2}[\\/]\\d{4})"
-        
-        let allDOBNumberMatches = self.matches(for: dobRegex, in: value as String)
-        print(allDOBNumberMatches)
-        if(allDOBNumberMatches.count > 0){
-            print("DOB is: \(allDOBNumberMatches[0])")
-        }
-        
-    }
-    
     func matches(for regex: String, in text: String) -> [String] {
         do {
             let regex = try NSRegularExpression(pattern: regex)
@@ -365,41 +234,53 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     
     @IBAction func handleUploadDocumentsApi(_ sender: Any) {
         
-        print("handle upload api")
-        //self.openSelfieVC()
-        
+       
         let utils = Utils()
         if(ocrPostData["gender"].stringValue == ""){
             ocrPostData["gender"].stringValue = "M"
         }
+        let token = UserDefaults.standard.string(forKey: "token")
+        let headers = ["accessToken":token!]
+        print("headers \(headers)")
         let postData = JSON(["ocrdocument":ocrPostData])
         print(postData)
+        
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            let token = UserDefaults.standard.string(forKey: "token")
+            
             utils.postWithImageApi(strURL: "/upload/upLoadOCRDetail", headers: ["accessToken":token!], params: postData, forntImage: frontImage.image!,backImage: backImage.image!, viewController: self, isFromDocument: true, success: { res in
-                //print(res)
-                let refreshToken = res["token"].stringValue
-                if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
-                    UserDefaults.standard.set(refreshToken, forKey: "token")
-                    utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
-                    
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
-                    UserDefaults.standard.set(refreshToken, forKey: "token")
-                     utils.showToast(context: self, msg: "Please take a clear picture of your ID.", showToastFrom: utils.screenHeight/2-10)
-                    
-                    self.openRetakeVC()
-                    
-                }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
-                    UserDefaults.standard.set(refreshToken, forKey: "token")
-                    UserDefaults.standard.set("DocumentUploaded",forKey: "status")
-                    self.openSelfieVC()
-                }
-                alertController.dismiss(animated: true, completion: nil)
+                
+                
+                alertController.dismiss(animated: true, completion: {
+                    let refreshToken = res["token"].stringValue
+//                    if(refreshToken == "" || refreshToken == "InvalidToken"){
+//                        DispatchQueue.main.async {
+//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                        }
+//                    }else
+                    if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        DispatchQueue.main.async {
+                            self.openMismatchPopupVC()
+                        }
+//                        utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
+                        
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        
+                        DispatchQueue.main.async {
+                            self.openRetakeVC()
+                        }
+                        
+                        
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        UserDefaults.standard.set("DocumentUploaded",forKey: "SalfieUploaded")
+                        self.openSelfieVC()
+                    }
+                })
             }, failure: {error in
                 print(error)
                 alertController.dismiss(animated: true, completion: nil)
@@ -429,7 +310,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
 
 extension UploadDocumentViewController: QRScannerCodeDelegate {
     func qrScanner(_ controller: UIViewController, scanDidComplete result: String) {
-        print(result)
+        
         isAadharDataFetchedFromQRCode = true
         QRCodeResult = result
         let xml = SWXMLHash.parse(result)
@@ -1201,14 +1082,15 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         
     }
     
-    func openMismatchPopupVC(titleDescription:String){
+    func openMismatchPopupVC(){
         
         let bundel = Bundle(for: MismatchPopupViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "MismatchPopupVC") as? MismatchPopupViewController {
             viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            
+            viewController.requestFrom = "document"
+            viewController.mismatcPopupDelegate = self
             self.present(viewController, animated: true)
         }
         
@@ -1218,6 +1100,21 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
     
     
     
+    
+    
+}
+
+extension UploadDocumentViewController: MismatcPopupDelegate {
+    func resetDocument() {
+        self.frontImage.image = UIImage(named:"front")
+        self.backImage.image = UIImage(named:"back")
+        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+        self.continueBtn.isUserInteractionEnabled = false
+        let docType = self.ocrPostData["docType"].stringValue
+        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+        
+    }
     
     
 }

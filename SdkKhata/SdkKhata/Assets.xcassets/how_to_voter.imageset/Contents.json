@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "how_to_voter.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "how_to_voter.png",
+      "filename" : "how_to_voter@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "how_to_voter@3x.png",
       "scale" : "3x"
     }
   ],

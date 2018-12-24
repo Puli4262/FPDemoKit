@@ -29,7 +29,7 @@ class Utils {
     let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server
-    //let hostURL = "http://192.168.0.124:8080/KhataBackEnd"
+    //let hostURL = "http://192.168.43.233:8080/KhataBackEnd"
     
     public var screenWidth: CGFloat {
         return UIScreen.main.bounds.width
@@ -209,7 +209,7 @@ class Utils {
     
     func isValidDate(dateString: String) -> Bool {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "dd/MM/yyyy"
+        dateFormatterGet.dateFormat = "yyyy/MM/dd"
         if(dateString.count<10){
             return false
         }else{

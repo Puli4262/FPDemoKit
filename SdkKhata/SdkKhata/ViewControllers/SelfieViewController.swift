@@ -94,18 +94,22 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 
                 utils.postWithImageApi(strURL: "/upload/upLoadSelfie", headers: ["accessToken":token!], params: postData, forntImage: self.selfieImageView.image!,backImage: self.selfieImageView.image!, viewController: self, isFromDocument: false, success: { res in
                     
-                    let refreshToken = res["token"].stringValue
-                    print("new \(refreshToken)")
-                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                    }else if(res["response"].stringValue == "success" && refreshToken != ""){
-                        UserDefaults.standard.set(refreshToken, forKey: "token")
-                        UserDefaults.standard.set("SalfieUploaded",forKey: "status")
-                        self.openCustomerDetailsVC()
+                    
+                    alertController.dismiss(animated: true, completion: {
+                        let refreshToken = res["token"].stringValue
+                        let status = res["status"].stringValue
+                        print("new \(refreshToken)")
                         
-                        
-                    }
-                    alertController.dismiss(animated: true, completion: nil)
+                        if(res["response"].stringValue == "success"){
+                            //UserDefaults.standard.set(refreshToken, forKey: "token")
+                            UserDefaults.standard.set("SalfieUploaded",forKey: "status")
+                            self.openCustomerDetailsVC()
+                            
+                            
+                        }else if(res["response"].stringValue == "fail" && status.containsIgnoringCase(find: "noMatch")){
+                            Utils().showToast(context: self, msg: "show pop up", showToastFrom: 20.0)
+                        }
+                    })
                 }, failure: {error in
                     print(error)
                     alertController.dismiss(animated: true, completion: {
@@ -130,6 +134,21 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "CustomerDetailsVC") as? CustomerDetailsViewController {
             self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
+    func openMismatchPopupVC(titleDescription:String){
+        
+        let bundel = Bundle(for: MismatchPopupViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "MismatchPopupVC") as? MismatchPopupViewController {
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            viewController.btnTitle = "Retake selfie"
+            viewController.titleDescription = "There is a mismatch between your ID photograph and selfie"
+            viewController.requestFrom = "selfie"
+            self.present(viewController, animated: true)
         }
         
     }

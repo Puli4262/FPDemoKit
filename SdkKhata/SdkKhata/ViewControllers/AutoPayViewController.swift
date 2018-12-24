@@ -193,9 +193,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                         
                                         let refreshToken = resJson["returnStatus"]["token"].stringValue
                                         if(refreshToken.containsIgnoringCase(find: "InvalidToken")){
-                                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                                            DispatchQueue.main.async {
+                                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                                            }
                                         }else{
-                                            UserDefaults.standard.set(refreshToken, forKey: "token")
+                                            //UserDefaults.standard.set(refreshToken, forKey: "token")
                                             let response = resJson["returnStatus"]["response"].stringValue
                                             if(response.containsIgnoringCase(find: "success")){
                                                 self.openEmandateWebView(madateTokenResponse: resJson)
@@ -349,10 +351,12 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                 alertController.dismiss(animated: true, completion: {
                     print(res)
                     let refreshToken = res["token"].stringValue
-                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                    }else{
-                        UserDefaults.standard.set(refreshToken, forKey: "token")
+//                    if(refreshToken == "" || refreshToken == "InvalidToken"){
+//                        DispatchQueue.main.async {
+//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                        }
+//                    }else{
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
                         let response = res["response"].stringValue
                         if(response.containsIgnoringCase(find: "success")){
                             
@@ -365,7 +369,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                 self.navigationController?.popToRootViewController(animated: true)
                             }
                         }
-                    }
+                    //}
                     
                 })
                 

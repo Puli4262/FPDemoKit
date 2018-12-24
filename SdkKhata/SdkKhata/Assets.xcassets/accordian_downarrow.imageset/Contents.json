@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "accordian_downarrow.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "accordian_downarrow.png",
       "scale" : "2x"
     },
     {

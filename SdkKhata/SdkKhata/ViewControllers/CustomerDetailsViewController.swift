@@ -415,8 +415,6 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     func handleAddressDetailsUIVisibility(visibility:Bool){
         
-        print("AddressDetails view visibility \(visibility)")
-        
         permanentAddressLabel.isHidden = visibility
         permanentAddressLine1TextField.isHidden = visibility
         permanentAddressLine2TextField.isHidden = visibility
@@ -501,7 +499,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     func handleIsCommunicationAddressSame(isVisiblity:Bool){
         
-        print(isVisiblity)
+        
         if(isCommunicationAddSameSwitch.isOn){
             
             communicationAddressLine1TextField.isHidden = true
@@ -569,7 +567,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         print("calling pan submit")
         
-        //self.openAgreeVC()
+        
         let utils = Utils()
         
         if(checkPancardValidation()){
@@ -579,11 +577,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 self.present(alertController, animated: false, completion: nil)
                 var panNumber = ""
                 let phoneNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-//                if(self.numberOfAttempts == 0){
-//                    self.pancardTextField.text = ""
-//                    self.pancardTextField.isUserInteractionEnabled = false
-//                    self.checkboxImg.image = UIImage(named:"check_box")
-//                }
+
                 if(self.checkboxImg.image == UIImage(named:"check_box")){
                     panNumber = "absent"
                 }else{
@@ -593,80 +587,39 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 let token = UserDefaults.standard.string(forKey: "token")
                 utils.requestGETURL("/customer/getPanDetail?mobilenumber=\(phoneNumber!)&panNumber=\(panNumber)", headers: ["accessToken":token!], viewCotroller: self, success: { res in
                     print(res)
-                    let refreshToken = res["token"].stringValue
-                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                        
-                        //self.navigationController?.popToRootViewController(animated: true)
-                    }else{
-                        UserDefaults.standard.set(refreshToken, forKey: "token")
-                        
-                        if(res["panNumber"].stringValue == "Invalid PAN"){
-                            
-//                            self.numberOfAttempts = self.numberOfAttempts - 1
-//                            self.attemptsLabel.text = "\(self.numberOfAttempts) Attempt Left"
-//                            self.attemptsLabel.isHidden = false
-                            self.pancardInValidLabel.isHidden = false
-                            
-                            
-                        }else if(res["panNumber"].stringValue == "absent"){
-                            UserDefaults.standard.set("Pan valided", forKey: "status")
-                            print("handle absent pin")
-                            KhataViewController.panStatus = "Absent"
-                            
-                            self.pancardTextField.text = ""
-                            if(res["firstName"].exists() && res["firstName"].stringValue != "" && JSON(res["firstName"]) != JSON.null  ){
-                                self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
-                            }
-                            
-                            if(res["lastName"].exists() && res["lastName"].stringValue != "" && JSON(res["lastName"]) != JSON.null  ){
-                                self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                                self.handlePancardUIVisibility(visibility:true)
-                                self.handlePersonalDetailsUIVisibility(visibility: false)
-                                self.handleAddressDetailsUIVisibility(visibility:true)
-                                self.customerDetailsViewConstraint.constant = 554
-                                self.customerDeatilsBtnConstrint.constant = 46
-                                self.personalDetailsBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                    
+                    
+                    alertController.dismiss(animated: true, completion: {
+                        let refreshToken = res["token"].stringValue
+//                        if(refreshToken == "" || refreshToken == "InvalidToken"){
+//                            DispatchQueue.main.async {
+//                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                            }
+//
+//
+//                        }else{
+                            //UserDefaults.standard.set(refreshToken, forKey: "token")
+                         if(res["panNumber"].stringValue == "Invalid PAN"){
                                 
-                                self.personalDetailsBtn.isUserInteractionEnabled = true
-                                self.personalDetailsTextField.isUserInteractionEnabled = true
-                                self.idDetailsTextField.isUserInteractionEnabled = true
-                                self.customerDetailsView.constant = 1000
-                                self.view.frame.size.height = 800
-                                self.handleVCHeight()
+                                self.pancardInValidLabel.isHidden = false
                                 
-                            })
-                            
-                            
-                            
-                        }else {
-                            UserDefaults.standard.set("Pan valided", forKey: "status")
-                            
-                            if(res["firstName"].exists() && res["firstName"].stringValue != "" ){
-                                self.firstNameTextField.text = res["firstName"].stringValue
-                                self.lastNameTextField.text = res["lastName"].stringValue
-                                self.pancardTextField.text = res["panNumber"].stringValue
-                                self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
-                                self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
                                 
-                                self.pancardBtn.isHidden = true
-                                self.firstNameTextField.isUserInteractionEnabled = false
-                                self.lastNameTextField.isUserInteractionEnabled = false
-                                self.pancardTextField.isUserInteractionEnabled = false
-                                self.pancardInValidLabel.isHidden = true
-                                self.pancardBtn.isHidden = true
-                                //self.attemptsLabel.isHidden = true
-                                self.dontHavePanLabel.isHidden = true
-                                self.checkboxImg.isHidden = true
-                                self.pancardTextField.text = res["panNumber"].stringValue
-                                self.pancardTextField.isUserInteractionEnabled = false
-                                self.idDetailsTextField.isUserInteractionEnabled = false
-                                self.pancardBtnConstraint.constant = 0
-                                self.pancardViewHeightConstraint.constant = 110
-                                self.greenTick.isHidden = false
+                            }else if(res["panNumber"].stringValue == "noMatch"){
+                                
+                                self.openPanMismatchPopupVC()
+                            }else if(res["panNumber"].stringValue == "absent"){
+                                UserDefaults.standard.set("Pan valided", forKey: "status")
+                                print("handle absent pin")
+                                KhataViewController.panStatus = "Absent"
+                                
+                                self.pancardTextField.text = ""
+                                if(res["firstName"].exists() && res["firstName"].stringValue != "" && JSON(res["firstName"]) != JSON.null  ){
+                                    self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
+                                }
+                                
+                                if(res["lastName"].exists() && res["lastName"].stringValue != "" && JSON(res["lastName"]) != JSON.null  ){
+                                    self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
+                                }
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                                     self.handlePancardUIVisibility(visibility:true)
@@ -675,37 +628,81 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                     self.customerDetailsViewConstraint.constant = 554
                                     self.customerDeatilsBtnConstrint.constant = 46
                                     self.personalDetailsBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                                    
                                     self.personalDetailsBtn.isUserInteractionEnabled = true
                                     self.personalDetailsTextField.isUserInteractionEnabled = true
+                                    self.idDetailsTextField.isUserInteractionEnabled = true
                                     self.customerDetailsView.constant = 1000
                                     self.view.frame.size.height = 800
                                     self.handleVCHeight()
-                                    
-                                    if(res["panNumber"].stringValue == "absent"){
-                                        self.pancardBtn.isHidden = true
-                                        self.firstNameTextField.isUserInteractionEnabled = true
-                                        self.lastNameTextField.isUserInteractionEnabled = true
-                                        self.pancardTextField.text = "absent"
-                                        self.pancardTextField.isUserInteractionEnabled = false
-                                        
-                                        self.checkboxImg.isHidden = false
-                                        self.dontHavePanLabel.isHidden = false
-                                        self.pancardBtnConstraint.constant = 0
-                                        self.pancardViewHeightConstraint.constant = 150
-                                        self.greenTick.isHidden = true
-                                        
-                                    }
                                     
                                 })
                                 
                                 
                                 
-                            }
+                            }else {
+                                UserDefaults.standard.set("Pan valided", forKey: "status")
+                                
+                                if(res["firstName"].exists() && res["firstName"].stringValue != "" ){
+                                    self.firstNameTextField.text = res["firstName"].stringValue
+                                    self.lastNameTextField.text = res["lastName"].stringValue
+                                    self.pancardTextField.text = res["panNumber"].stringValue
+                                    self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
+                                    self.customerPostData["lastName"].stringValue = res["lastName"].stringValue
+                                    
+                                    self.pancardBtn.isHidden = true
+                                    self.firstNameTextField.isUserInteractionEnabled = false
+                                    self.lastNameTextField.isUserInteractionEnabled = false
+                                    self.pancardTextField.isUserInteractionEnabled = false
+                                    self.pancardInValidLabel.isHidden = true
+                                    self.pancardBtn.isHidden = true
+                                    //self.attemptsLabel.isHidden = true
+                                    self.dontHavePanLabel.isHidden = true
+                                    self.checkboxImg.isHidden = true
+                                    self.pancardTextField.text = res["panNumber"].stringValue
+                                    self.pancardTextField.isUserInteractionEnabled = false
+                                    self.idDetailsTextField.isUserInteractionEnabled = false
+                                    self.pancardBtnConstraint.constant = 0
+                                    self.pancardViewHeightConstraint.constant = 110
+                                    self.greenTick.isHidden = false
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                        self.handlePancardUIVisibility(visibility:true)
+                                        self.handlePersonalDetailsUIVisibility(visibility: false)
+                                        self.handleAddressDetailsUIVisibility(visibility:true)
+                                        self.customerDetailsViewConstraint.constant = 554
+                                        self.customerDeatilsBtnConstrint.constant = 46
+                                        self.personalDetailsBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                                        self.personalDetailsBtn.isUserInteractionEnabled = true
+                                        self.personalDetailsTextField.isUserInteractionEnabled = true
+                                        self.customerDetailsView.constant = 1000
+                                        self.view.frame.size.height = 800
+                                        self.handleVCHeight()
+                                        
+                                        if(res["panNumber"].stringValue == "absent"){
+                                            self.pancardBtn.isHidden = true
+                                            self.firstNameTextField.isUserInteractionEnabled = true
+                                            self.lastNameTextField.isUserInteractionEnabled = true
+                                            self.pancardTextField.text = "absent"
+                                            self.pancardTextField.isUserInteractionEnabled = false
+                                            
+                                            self.checkboxImg.isHidden = false
+                                            self.dontHavePanLabel.isHidden = false
+                                            self.pancardBtnConstraint.constant = 0
+                                            self.pancardViewHeightConstraint.constant = 150
+                                            self.greenTick.isHidden = true
+                                            
+                                        }
+                                        
+                                    })
+                                    
+                                    
+                                    
+                                }
+                            
+                            
                         }
-                        
-                    }
-                    
-                    alertController.dismiss(animated: true, completion: nil)
+                    })
                 }, failure: {error in
                     
                     alertController.dismiss(animated: true, completion: {
@@ -726,9 +723,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }
         
         
-        
-        
-        
+    
     }
     
     func getCustomerDetailsApi(mobileNumber:String){
@@ -744,11 +739,16 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 print(res)
                 let refreshToken = res["token"].stringValue
                 print("refreshToken \(refreshToken)" )
-                if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                }else{
-                    UserDefaults.standard.set(refreshToken, forKey: "token")
-                    //UserDefaults.standard.set(res["status"].stringValue, forKey: "status")
+//                if(refreshToken == "" || refreshToken == "InvalidToken"){
+//                    DispatchQueue.main.async {
+//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                    }
+//                }else{
+                    //UserDefaults.standard.set(refreshToken, forKey: "token")
+                
+        
+                alertController.dismiss(animated: true, completion: {
+                    
                     self.customerPostData = res
                     self.setPrefilledData(userData: self.customerPostData)
                     let status = UserDefaults.standard.string(forKey: "status")
@@ -835,12 +835,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         
                     }
                     
-                    
-                }
-                
-                
-                
-                alertController.dismiss(animated: true, completion: nil)
+                })
             }, failure: {error in
                 print(error.localizedDescription)
                 
@@ -899,9 +894,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
-                        UserDefaults.standard.set(refreshToken, forKey: "token")
+                        //UserDefaults.standard.set(refreshToken, forKey: "token")
                         
-                        if(res["response"].stringValue == "success"){
+                        if(status.containsIgnoringCase(find: "Customer dedup found")){
+                            self.openPopupVC(titleDescription: "We are unable to create your account as details provided by you already in use")
+                        }else if(res["response"].stringValue == "success"){
                             
                             if(status == "personaldetail"){
                                 UserDefaults.standard.set(status, forKey: "status")
@@ -935,11 +932,14 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 
                             }
                         }
-                    }else{
-                        
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }
-                    print(res)
+//                    else{
+//
+//                        DispatchQueue.main.async {
+//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                        }
+//                    }
+                    
                 })
             }, failure: {error in
                 
@@ -966,6 +966,19 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "AutoPayVC") as? AutoPayViewController {
             self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
+    func openPanMismatchPopupVC(){
+        
+        let bundel = Bundle(for: PanDataMismatchPopupViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PanDataMismatchVC") as? PanDataMismatchPopupViewController {
+            viewController.pancardPopupDelegate = self
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self.present(viewController, animated: true)
         }
         
     }
@@ -1005,14 +1018,16 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             Utils().showToast(context: self, msg: "Please enter the valid date.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
             
-        }else if((year! - Int(dateOfBirthTextField.text!.suffix(4))! < 18)){
+        }else if((year! - Int(dateOfBirthTextField.text!.split(separator: "/")[0])! < 18)){
             
             Utils().showToast(context: self, msg: "Age should not be less than 18.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
         }else if(!Utils().isValidEmailAddress(emailAddressString: emailIdTextField.text!)){
+            
             Utils().showToast(context: self, msg: "Please enter the valid email ID.", showToastFrom: 350.0)
             emailIdTextField.becomeFirstResponder()
         }else if(fatherNameTextField.text! == ""){
+            
             Utils().showToast(context: self, msg: "Please enter the father name.", showToastFrom: 350.0)
             fatherNameTextField.becomeFirstResponder()
         }else if(motherNameTextField.text! == ""){
@@ -1039,11 +1054,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 print(res)
                 let refreshToken = res["token"].stringValue
                 
-                if(refreshToken == "" || refreshToken == "InvalidToken"){
-                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                    
-                }else{
-                    UserDefaults.standard.set(refreshToken, forKey: "token")
+//                if(refreshToken == "" || refreshToken == "InvalidToken"){
+//                    DispatchQueue.main.async {
+//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                    }
+//
+//                }else{
+                    //UserDefaults.standard.set(refreshToken, forKey: "token")
                     if(from == "permanent"){
                         
                         self.permanentAddCityTextField.text = res["city"].stringValue
@@ -1071,7 +1088,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.customerPostData["stateCorrespondence"].stringValue = res["state"].stringValue
                     }
                     
-                }
+                
                 
             }, failure: { error in
                 Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
@@ -1316,6 +1333,29 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         
     }
+    func openUploadDocumentsVC() {
+        
+        let bundel = Bundle(for: UploadDocumentViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "UploadDocumentsVC") as? UploadDocumentViewController {
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
+    func openPopupVC(titleDescription:String){
+        
+        let bundel = Bundle(for: PopupViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PopupVC") as? PopupViewController {
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            viewController.titleDescription = titleDescription
+            viewController.closeAppDelegate = self
+            self.present(viewController, animated: true)
+        }
+        
+    }
     
 }
 
@@ -1323,6 +1363,24 @@ extension CustomerDetailsViewController: DateOfBirthDelegate {
     
     func selectedDateOfBirth(day: String, month: String, year: String) {
         self.dateOfBirthTextField.text = "\(year)/\(month)/\(day)"
+    }
+    
+    
+}
+
+extension CustomerDetailsViewController:PancardPopupDelegate {
+    func handleGotoDocuments() {
+        self.openUploadDocumentsVC()
+    }
+    
+    func handlePanupate() {
+        print("handle pan details")
+    }
+}
+
+extension CustomerDetailsViewController : CloseAppDelegate {
+    func closeApp() {
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     

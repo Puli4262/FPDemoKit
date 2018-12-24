@@ -129,7 +129,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             self.frontImage.image = UIImage(named:"front")
             self.backImage.image = UIImage(named:"back")
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-            self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"M"])
+            self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
         }
         self.ocrPostData["docType"].stringValue = documentType
         
@@ -377,7 +377,7 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
         
         
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"yob"){
-            self.ocrPostData["dob"].stringValue = dob.text+"01/01/"
+            self.ocrPostData["dob"].stringValue = dob.text+"/01/01/"
         }
         
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"dob"){

@@ -609,6 +609,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 KhataViewController.panStatus = "Absent"
                                 
                                 self.pancardTextField.text = ""
+                            
                                 if(res["firstName"].exists() && res["firstName"].stringValue != "" && JSON(res["firstName"]) != JSON.null  ){
                                     self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
                                 }
@@ -631,7 +632,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                     self.customerDetailsView.constant = 1000
                                     self.view.frame.size.height = 800
                                     self.handleVCHeight()
-                                    
+                                    self.checkboxImg.image = UIImage(named:"check_box")
+                                    self.checkboxImg.isUserInteractionEnabled = false
                                 })
                                 
                                 
@@ -679,14 +681,17 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                             self.pancardBtn.isHidden = true
                                             self.firstNameTextField.isUserInteractionEnabled = true
                                             self.lastNameTextField.isUserInteractionEnabled = true
-                                            self.pancardTextField.text = "absent"
+                                            self.pancardTextField.text = ""
                                             self.pancardTextField.isUserInteractionEnabled = false
                                             
                                             self.checkboxImg.isHidden = false
+                                            self.checkboxImg.image = UIImage(named:"check_box")
+                                            self.checkboxImg.isUserInteractionEnabled = false
                                             self.dontHavePanLabel.isHidden = false
+                                            self.pancardTextField.isUserInteractionEnabled = false
                                             self.pancardBtnConstraint.constant = 0
                                             self.pancardViewHeightConstraint.constant = 150
-                                            self.greenTick.isHidden = true
+                                            self.greenTick.isHidden = false
                                             
                                         }
                                         

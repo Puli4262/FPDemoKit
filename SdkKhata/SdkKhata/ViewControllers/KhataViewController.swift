@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openUploadDocumentsVC()
+               //self.openCustomerDetailsVC()
             })
         }
         

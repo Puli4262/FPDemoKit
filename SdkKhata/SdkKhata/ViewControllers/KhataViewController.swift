@@ -307,10 +307,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
 public protocol SendFPSDKResponseDelegate {
     func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
+    func KhaataSDKFailure(status:String)
 }
 
 extension KhataViewController:CloseAppDelegate {
-    func closeApp() {
+    
+    
+    func closeApp(status:String) {
+        sendFPSDKResponseDelegate?.KhaataSDKFailure(status: status)
         self.navigationController?.popToRootViewController(animated: true)
     }
     

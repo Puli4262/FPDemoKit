@@ -30,7 +30,14 @@ class PopupViewController: UIViewController {
         
         
         self.dismiss(animated: true, completion: {
-            self.closeAppDelegate?.closeApp()
+            if(self.titleLabel.text?.containsIgnoringCase(find: "eligible"))!{
+                self.closeAppDelegate?.closeApp(status: "notEligible")
+            }else if(self.titleLabel.text?.containsIgnoringCase(find: "already in use"))!{
+                self.closeAppDelegate?.closeApp(status: "notEligible")
+            }else{
+                self.closeAppDelegate?.closeApp(status: "")
+            }
+           
         })
         
     }
@@ -42,5 +49,5 @@ class PopupViewController: UIViewController {
 }
 
 protocol CloseAppDelegate {
-    func closeApp()
+    func closeApp(status:String)
 }

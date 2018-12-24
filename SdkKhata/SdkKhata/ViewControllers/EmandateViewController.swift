@@ -149,28 +149,42 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-//                    let refreshToken = res["token"].stringValue
-//                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-//
-//                    }else{
-                        //UserDefaults.standard.set(refreshToken, forKey: "token")
-                        let response = res["response"].stringValue
-                        if(response.containsIgnoringCase(find: "success")){
+                    let refreshToken = res["token"].stringValue
+                    let response = res["response"].stringValue
+                    if(refreshToken == "InvalidToken"){
+                        DispatchQueue.main.async {
+                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                        }
+                    }else if(response.containsIgnoringCase(find: "success")){
                             
                             let status = UserDefaults.standard.string(forKey: "status")!
                             print(status)
-                            if(status.containsIgnoringCase(find: "customercreated")){
-                                self.openAgreeVC()
-                                self.dismiss(animated: true, completion: {
-                                    self.eMandateResponseDelegate?.gotoAgreeVC()
+                            if(status.containsIgnoringCase(find: "customercreated")||status.containsIgnoringCase(find: "MandateCreated")){
+                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+                                
+                                self.present(alert, animated: true, completion: nil)
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                    self.dismiss(animated: true, completion: {
+                                        self.eMandateResponseDelegate?.gotoAgreeVC()
+                                    })
+                                    
                                 })
+                                
                             }else{
                                 
+                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
                                 
-                                self.dismiss(animated: true, completion: {
-                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                self.present(alert, animated: true, completion: nil)
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                    
+                                    self.dismiss(animated: true, completion: {
+                                        self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                    })
                                 })
-                                //self.navigationController?.popToRootViewController(animated: true)
+                                
+                                
                             }
                         }
                     //}

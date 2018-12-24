@@ -15,6 +15,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     
     
+    
+    
         
     @IBOutlet weak var applyBtn: UIButton!
     
@@ -87,6 +89,11 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         let dateString = currentDate.string(from : date as Date)
         return dateString
         
+    }
+    
+    func KhaataSDKFailure(status: String) {
+        print("in Main app Failure")
+        print("status \(status)")
     }
     
     

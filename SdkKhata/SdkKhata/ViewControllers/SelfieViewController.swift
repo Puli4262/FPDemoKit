@@ -99,8 +99,11 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                         let refreshToken = res["token"].stringValue
                         let status = res["status"].stringValue
                         print("new \(refreshToken)")
-                        
-                        if(res["response"].stringValue == "success"){
+                        if(refreshToken == "InvalidToken"){
+                            DispatchQueue.main.async {
+                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                            }
+                        }else if(res["response"].stringValue == "success"){
                             //UserDefaults.standard.set(refreshToken, forKey: "token")
                             UserDefaults.standard.set("SalfieUploaded",forKey: "status")
                             self.openCustomerDetailsVC()

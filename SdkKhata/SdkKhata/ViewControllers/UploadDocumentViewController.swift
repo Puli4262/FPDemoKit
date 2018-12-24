@@ -255,12 +255,11 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                 
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
-//                    if(refreshToken == "" || refreshToken == "InvalidToken"){
-//                        DispatchQueue.main.async {
-//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                        }
-//                    }else
-                    if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
+                    if(refreshToken == "InvalidToken"){
+                        DispatchQueue.main.async {
+                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                        }
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
                         //UserDefaults.standard.set(refreshToken, forKey: "token")
                         DispatchQueue.main.async {
                             self.openMismatchPopupVC()

@@ -138,12 +138,11 @@ class AgreeViewController: UIViewController {
                     
                     let token = res["token"].stringValue
                     
-//                    if(token == "" || token == "InvalidToken"){
-//                        DispatchQueue.main.async {
-//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                        }
-//                    }else{
-                        if(res["status"].stringValue == "kycPending"){
+                    if(token == "InvalidToken"){
+                        DispatchQueue.main.async {
+                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                        }
+                    }else if(res["status"].stringValue == "kycPending"){
                             for controller in self.navigationController!.viewControllers as Array {
                                 if controller.isKind(of: KhataViewController.self) {
                                     KhataViewController.comingFrom = "data"

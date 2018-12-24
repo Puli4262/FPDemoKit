@@ -591,23 +591,19 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     
                     alertController.dismiss(animated: true, completion: {
                         let refreshToken = res["token"].stringValue
-//                        if(refreshToken == "" || refreshToken == "InvalidToken"){
-//                            DispatchQueue.main.async {
-//                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                            }
-//
-//
-//                        }else{
-                            //UserDefaults.standard.set(refreshToken, forKey: "token")
-                         if(res["panNumber"].stringValue == "Invalid PAN"){
+                        if(refreshToken == "InvalidToken"){
+                            DispatchQueue.main.async {
+                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                            }
+                        }else if(res["panNumber"].stringValue == "Invalid PAN"){
                                 
                                 self.pancardInValidLabel.isHidden = false
                                 
                                 
-                            }else if(res["panNumber"].stringValue == "noMatch"){
+                        }else if(res["panNumber"].stringValue == "noMatch"){
                                 
                                 self.openPanMismatchPopupVC()
-                            }else if(res["panNumber"].stringValue == "absent"){
+                        }else if(res["panNumber"].stringValue == "absent"){
                                 UserDefaults.standard.set("Pan valided", forKey: "status")
                                 print("handle absent pin")
                                 KhataViewController.panStatus = "Absent"
@@ -640,7 +636,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 
                                 
                                 
-                            }else {
+                        }else {
                                 UserDefaults.standard.set("Pan valided", forKey: "status")
                                 
                                 if(res["firstName"].exists() && res["firstName"].stringValue != "" ){
@@ -661,7 +657,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                     self.checkboxImg.isHidden = true
                                     self.pancardTextField.text = res["panNumber"].stringValue
                                     self.pancardTextField.isUserInteractionEnabled = false
-                                    self.idDetailsTextField.isUserInteractionEnabled = false
+                                    self.idDetailsTextField.isUserInteractionEnabled = true
                                     self.pancardBtnConstraint.constant = 0
                                     self.pancardViewHeightConstraint.constant = 110
                                     self.greenTick.isHidden = false
@@ -933,12 +929,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             }
                         }
                     }
-//                    else{
-//
-//                        DispatchQueue.main.async {
-//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                        }
-//                    }
+                    else if(refreshToken == "InvalidToken"){
+
+                        DispatchQueue.main.async {
+                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                        }
+                    }
                     
                 })
             }, failure: {error in
@@ -1054,14 +1050,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 print(res)
                 let refreshToken = res["token"].stringValue
                 
-//                if(refreshToken == "" || refreshToken == "InvalidToken"){
-//                    DispatchQueue.main.async {
-//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                    }
-//
-//                }else{
-                    //UserDefaults.standard.set(refreshToken, forKey: "token")
-                    if(from == "permanent"){
+                if(refreshToken == "InvalidToken"){
+                    DispatchQueue.main.async {
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                    }
+
+                }else if(from == "permanent"){
                         
                         self.permanentAddCityTextField.text = res["city"].stringValue
                         self.permanentAddStateTextField.text = res["state"].stringValue
@@ -1077,7 +1071,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             self.customerPostData["stateCorrespondence"].stringValue = res["state"].stringValue
                         }
                         
-                    }else{
+                }else{
                         
                         self.communicationAddCityTextField.text = res["city"].stringValue
                         self.communicationAddStateTextField.text = res["state"].stringValue
@@ -1086,7 +1080,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.customerPostData["cityCorrespondence"].stringValue =
                             res["city"].stringValue
                         self.customerPostData["stateCorrespondence"].stringValue = res["state"].stringValue
-                    }
+                }
                     
                 
                 
@@ -1379,9 +1373,7 @@ extension CustomerDetailsViewController:PancardPopupDelegate {
 }
 
 extension CustomerDetailsViewController : CloseAppDelegate {
-    func closeApp() {
+    func closeApp(status: String) {
         self.navigationController?.popToRootViewController(animated: true)
     }
-    
-    
 }

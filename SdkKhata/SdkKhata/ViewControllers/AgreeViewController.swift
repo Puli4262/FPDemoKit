@@ -9,6 +9,7 @@ import UIKit
 
 class AgreeViewController: UIViewController {
     
+    @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var carryIDView: UIView!
     @IBOutlet weak var carryIDLabel: UITextView!
@@ -83,11 +84,10 @@ class AgreeViewController: UIViewController {
     
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-        if(dncFlag){
-            self.stepperImg.image = UIImage(named:"stepper_man_accept_terms")
-        }else{
-            self.stepperImg.image = UIImage(named:"stepper_accept_terms")
+        if(!dncFlag){
+            self.autoPayView.isHidden = true
         }
+
     }
     
     @IBAction func tapLabel(_ sender: UITapGestureRecognizer) {

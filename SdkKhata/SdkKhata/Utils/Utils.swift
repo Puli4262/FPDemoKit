@@ -14,19 +14,19 @@ import SystemConfiguration
 private var __maxLengths = [UITextField: Int]()
 class Utils {
     //SIT HOST IP
-    //let hostIP = "10.0.77.244"
+    let hostIP = "10.0.77.244"
     
     //AWS HOST IP
-    let hostIP = "52.66.207.92"
+    //let hostIP = "52.66.207.92"
     
     //Test Server
     //let hostURL = "http://13.126.20.61:8080/KhataBackEnd"
     
     //SIT Server
-    //let hostURL = "http://10.0.77.244:8080/KhataBackEnd"
+    let hostURL = "http://10.0.77.244:8080/KhataBackEnd"
     
     //AWS Server
-    let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
+    //let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server
     //let hostURL = "http://192.168.43.233:8080/KhataBackEnd"
@@ -180,7 +180,18 @@ class Utils {
         
         let alert  = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            viewController.navigationController?.popToRootViewController(animated: true)
+            let bundel = Bundle(for: KhataViewController.self)
+            
+            for controller in viewController.navigationController!.viewControllers as Array {
+                if controller.isKind(of: KhataViewController.self) {
+                    let VC = controller as! KhataViewController
+                    KhataViewController.comingFrom = "unauthorised"
+                    VC.requestFrom = "failure"
+                    viewController.navigationController!.popToViewController(VC, animated: true)
+                    
+                }
+            }
+            
         }))
         viewController.present(alert, animated: true, completion: nil)
     }
@@ -352,6 +363,34 @@ class Utils {
     }
     
     
+    func matches(for regex: String, in text: String) -> [String] {
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            let finalResult = results.map {
+                String(text[Range($0.range, in: text)!])
+            }
+            return finalResult
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    func pinCodeExtraction(pinAdd:String) -> String{
+        
+        let pincodeRegex = "([0-9]{6})"
+        print(pinAdd)
+        let allPincodeNumberMatches = Utils().matches(for: pincodeRegex, in: pinAdd as String)
+        if(allPincodeNumberMatches.count > 0){
+            print("Pincode is: \(allPincodeNumberMatches[0])")
+            return allPincodeNumberMatches[0]
+        }
+        return ""
+    }
+    
+    
     func getAllMatches(regex:String,ocrResult:String) -> [String] {
         
         
@@ -384,20 +423,7 @@ class Utils {
     
     
     
-    func matches(for regex: String, in text: String) -> [String] {
-        do {
-            let regex = try NSRegularExpression(pattern: regex)
-            let results = regex.matches(in: text,
-                                        range: NSRange(text.startIndex..., in: text))
-            let finalResult = results.map {
-                String(text[Range($0.range, in: text)!])
-            }
-            return finalResult
-        } catch let error {
-            print("invalid regex: \(error.localizedDescription)")
-            return []
-        }
-    }
+    
     
     func loadingAlert(viewController:UIViewController) -> UIAlertController{
         

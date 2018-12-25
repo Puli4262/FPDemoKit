@@ -33,7 +33,7 @@ class PopupViewController: UIViewController {
             if(self.titleLabel.text?.containsIgnoringCase(find: "eligible"))!{
                 self.closeAppDelegate?.closeApp(status: "notEligible")
             }else if(self.titleLabel.text?.containsIgnoringCase(find: "already in use"))!{
-                self.closeAppDelegate?.closeApp(status: "notEligible")
+                self.closeAppDelegate?.closeApp(status: "alreadyCustomer")
             }else{
                 self.closeAppDelegate?.closeApp(status: "")
             }

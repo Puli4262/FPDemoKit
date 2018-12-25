@@ -58,15 +58,15 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-//                    let token = res["token"].stringValue
-//
-//                    if(token == "" || token == "InvalidToken"){
-//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                    }else{
-//                        self.loadPayUWebview(payUData: res)
-//                    }
+                    let token = res["token"].stringValue
+
+                    if(token == "" || token == "InvalidToken"){
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                    }else{
+                        self.loadPayUWebview(payUData: res)
+                    }
                     
-                    self.loadPayUWebview(payUData: res)
+                    //self.loadPayUWebview(payUData: res)
                     
                     
                 })

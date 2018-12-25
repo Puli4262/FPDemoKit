@@ -13,6 +13,7 @@ import CropViewController
 
 class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
+    @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var cameraIcon: UIImageView!
     
@@ -42,11 +43,10 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-        if(dncFlag){
-            self.stepperImg.image = UIImage(named:"stepper_man_share_details")
-        }else{
-            self.stepperImg.image = UIImage(named:"stepper_share_details")
+        if(!dncFlag){
+            self.autoPayView.isHidden = true
         }
+
     }
     
     @IBAction func handleSelfiAction(_ sender: Any) {

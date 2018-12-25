@@ -25,10 +25,10 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             
             viewController.sendFPSDKResponseDelegate = self
-            //viewController.mobileNumber = "9819064110"
-            //viewController.tokenId = "RrHyCdfsbSFZol6ik3kRnw=="
-            viewController.mobileNumber = "9029344445"
-            viewController.tokenId = "qZVy/Q7KfuTgLoMtFepAww=="
+            viewController.mobileNumber = "9819064110"
+            viewController.tokenId = "RrHyCdfsbSFZol6ik3kRnw==="
+            //viewController.mobileNumber = "9029344445"
+            //viewController.tokenId = "qZVy/Q7KfuTgLoMtFepAww=="
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "01/01/1990"

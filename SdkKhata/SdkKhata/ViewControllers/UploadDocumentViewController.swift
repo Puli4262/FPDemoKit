@@ -17,6 +17,7 @@ import CropViewController
 
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
+    @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     
     @IBOutlet weak var continueBtn: UIButton!
@@ -77,10 +78,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-        if(dncFlag){
-            self.stepperImg.image = UIImage(named:"stepper_man_submit_id")
-        }else{
-            self.stepperImg.image = UIImage(named:"stepper_submit_id")
+        if(!dncFlag){
+            self.autoPayView.isHidden = true
         }
     }
     
@@ -264,7 +263,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                         DispatchQueue.main.async {
                             self.openMismatchPopupVC()
                         }
-//                        utils.showToast(context: self, msg: "There is mismatch in selected & uploaded document.", showToastFrom: utils.screenHeight/2-10)
+
                         
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
                         //UserDefaults.standard.set(refreshToken, forKey: "token")
@@ -444,31 +443,52 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     print(resultText)
                     
                     if(self.clicked == "front"){
-                        let isValidPassportFront = self.checkPassportFront(rawText: resultText)
-                        print(isValidPassportFront)
-                        if(isValidPassportFront){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
-                            })
-                            self.setFrontImage(croppedImage: croppedImage)
-                            self.ocrPostData["raw_front"].stringValue = resultText
+                        let passportData = PassportOCR().checkPassportFront(rawText: resultText)
+                        print(passportData)
+                        //let isValidPassportFront = self.checkPassportFront(rawText: resultText)
+                        
+                        if(passportData["isValidPassportFront"].boolValue){
+                            DispatchQueue.main.async {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.setFrontImage(croppedImage: croppedImage)
+                                    
+                                    self.ocrPostData["raw_front"].stringValue = resultText
+                                    self.ocrPostData["lastname"].stringValue = passportData["lastname"].stringValue
+                                    self.ocrPostData["firstname"].stringValue = passportData["firstname"].stringValue
+                                    self.ocrPostData["midelName"].stringValue = passportData["midelName"].stringValue
+                                    self.ocrPostData["doc_number"].stringValue = passportData["doc_number"].stringValue
+                                    self.ocrPostData["dob"].stringValue = passportData["dob"].stringValue
+                                })
+                            }
+                            
+                            
                         }else{
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                            DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.openRetakeVC()
                                 })
-                            })
+                            }
+                           
                             
                         }
                     }else{
-                        let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
-                        if(isValidPassportBack){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                        let passportBackData = PassportOCR().checkPassportBack(rawText: resultText, passportNumber: self.ocrPostData["doc_number"].stringValue, lastName: self.ocrPostData["lastname"].stringValue)
+                        print(passportBackData)
+                        //let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
+                        if(passportBackData["isValidPassportFront"].boolValue){
+                            DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.setBackImage(croppedImage: croppedImage)
                                     self.ocrPostData["rawBack"].stringValue = resultText
+                                    self.ocrPostData["pincode"].stringValue = passportBackData["pincode"].stringValue
+                                    self.ocrPostData["address1"].stringValue = passportBackData["address1"].stringValue
+                                    self.ocrPostData["address2"].stringValue = passportBackData["address2"].stringValue
+                                    self.ocrPostData["docType"].stringValue = passportBackData["docType"].stringValue
+                                    self.ocrPostData["motherName"].stringValue = passportBackData["motherName"].stringValue
+                                    self.ocrPostData["midelName"].stringValue = passportBackData["midelName"].stringValue
                                 })
-                            })
+                            }
+                            
                             
                         }else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
@@ -511,26 +531,36 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         
                         let resultText = ocrResult.text
                         print(resultText)
+                        let aadharData = AadharOCR().checkAadhaarFront(rawText: resultText, isAadharDataFetchedFromQRCode: self.isAadharDataFetchedFromQRCode, QRScannerAadhanrNumber: self.ocrPostData["doc_number"].stringValue)
+                        //let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
+                        print(aadharData)
                         
-                        let isValidAadhaarFront = self.checkAadhaarFront(rawText: resultText)
-                        print(isValidAadhaarFront)
-                        
-                        if(isValidAadhaarFront){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
-                            })
-                            self.setFrontImage(croppedImage: croppedImage)
-                            if(!self.isAadharDataFetchedFromQRCode){
-                                self.ocrPostData["raw_front"].stringValue = resultText
+                        if(aadharData["isValidAadharFront"].boolValue){
+                            DispatchQueue.main.async {
+                                alertController.dismiss(animated: true, completion: {
+                                    self.setFrontImage(croppedImage: croppedImage)
+                                    if(!self.isAadharDataFetchedFromQRCode){
+                                        self.ocrPostData["raw_front"].stringValue = resultText
+                                        self.ocrPostData["firstname"].stringValue = aadharData["firstname"].stringValue
+                                        self.ocrPostData["lastname"].stringValue = aadharData["lastname"].stringValue
+                                        self.ocrPostData["midelName"].stringValue = aadharData["midelName"].stringValue
+                                        self.ocrPostData["doc_number"].stringValue = aadharData["doc_number"].stringValue
+                                        self.ocrPostData["gender"].stringValue = aadharData["gender"].stringValue
+                                        self.ocrPostData["dob"].stringValue = aadharData["dob"].stringValue
+                                        self.ocrPostData["docType"].stringValue = aadharData["docType"].stringValue
+                                    }
+                                })
                             }
                             
+                            
+                            
                         }else{
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                            DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.openRetakeVC()
                                 })
-                            })
-                            //Utils().showToast(context: self, msg: "Please upload  proper document.", showToastFrom: 300.0)
+                            }
+                            
                         }
                         
                     }
@@ -553,15 +583,20 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         
                         let resultText = ocrResult.text
                         print(resultText)
-                        
-                        let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
-                        print(isValidAadhaarBack)
-                        if(isValidAadhaarBack){
+                        let aadharBackData = AadharOCR().checkAadhaarBack(rawText: resultText, isAadharDataFetchedFromQRCode: self.isAadharDataFetchedFromQRCode, QRScannerPincode: self.ocrPostData["pincode"].stringValue)
+                        //let isValidAadhaarBack = self.checkAadhaarBack(rawText: resultText)
+                        print(aadharBackData)
+                        if(aadharBackData["isValidAadharBack"].boolValue){
                             
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.setBackImage(croppedImage: croppedImage)
                                     self.ocrPostData["rawBack"].stringValue = resultText
+                                    if(!self.isAadharDataFetchedFromQRCode){
+                                        self.ocrPostData["pincode"].stringValue =   aadharBackData["pincode"].stringValue
+                                        self.ocrPostData["address1"].stringValue =   aadharBackData["address1"].stringValue
+                                        self.ocrPostData["address2"].stringValue =   aadharBackData["address2"].stringValue
+                                    }
                                     print(self.ocrPostData)
                                 })
                             }
@@ -642,63 +677,12 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         
     }
     
-    private func checkPassportFront(rawText:String) -> Bool {
-        var rawStrings = [String]()
-        let rawString = rawText.split(separator: "\n")
-        print("===========Passport Data Front===========")
-        print(rawString)
-        for line in rawString{
-            rawStrings.append(String(line))
-        }
-        print(rawStrings)
-        var i = rawStrings.count - 1
-        if(rawStrings[i].replacingOccurrences(of: " ", with: "").count == 44  && rawStrings[i-1].replacingOccurrences(of: " ", with: "").count == 44 ){
-            print("Passport Number ==  \(rawStrings[i].prefix(8))")
-            ocrPostData["doc_number"].stringValue = "\(rawStrings[i].prefix(8))"
-            self.extractPassportName(rawString: rawStrings)
-            self.dateValidator(date: rawText)
-            return true
-        }else{
-            return false
-        }
-    }
     
     
     
     
-    func extractPassportName(rawString:[String]){
-        
-        
-        let sencondLineFromLast = rawString[rawString.count - 2]
-        let nameString = sencondLineFromLast[5 ..< sencondLineFromLast.count]
-        
-        let namesSearch = nameString.split(separator: "<")
-        print(namesSearch)
-        var nameSearch:[String] = [String]()
-        for name in namesSearch{
-            nameSearch.append(String(name))
-        }
-        
-        if(nameSearch.count >= 1){
-            ocrPostData["docType"].stringValue = "Passport"
-            ocrPostData["lastname"].stringValue = nameSearch[0]
-            
-        }
-        
-        if(nameSearch.count >= 2){
-            ocrPostData["firstname"].stringValue = nameSearch[1]
-        }
-        if(nameSearch.count >= 3){
-            ocrPostData["midelName"].stringValue = nameSearch[2]
-        }
-//        if(nameSearch.count >= 3){
-//            ocrPostData["lastname"].stringValue = nameSearch[0]
-//            print("last name is  === \(nameSearch[0])")
-//            print("firstName name is  === \(nameSearch[1])")
-//            print("middleName name is  === \(nameSearch[2])")
-//        }
-        
-    }
+    
+    
     
     func dateValidator(date:String){
         
@@ -718,243 +702,6 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             
         }
         
-    }
-    
-    private func checkPassportBack(rawText:String) -> Bool {
-        
-        var rawStrings = [String]()
-        let rawString = rawText.split(separator: "\n")
-        print("===========Passport Data Back ===========")
-        print(rawString)
-        var i = 0
-        var flag = false
-        var flag1 = false
-        var flag2 = false
-        for line in rawString{
-            rawStrings.append(String(line))
-        }
-        print(rawStrings)
-        
-        while i < rawStrings.count {
-            if ( ocrPostData["doc_number"].stringValue.containsIgnoringCase(find: rawStrings[i])){
-                flag = true
-            }
-            
-            if (rawStrings[i].contains(ocrPostData["lastname"].stringValue)) {
-                flag2 = true;
-            }
-            if (rawStrings[i].contains("Address")) {
-                flag1 = true;
-            }
-            
-            i = i+1
-            
-            
-        }
-        print("is doc nunmber same === \(flag)")
-        print("is lastname same === \(flag2)")
-        print("is Address word contains === \(flag1)")
-        if ((flag || flag2) && flag1) {
-            extractPassportAddress(rawString: rawStrings)
-        }
-        print((flag || flag2) && flag1)
-        
-        return ((flag || flag2) && flag1)
-    }
-    
-    func extractPassportAddress(rawString:[String]){
-        
-        var addressString = ""
-        var i = 0
-        var fFlag = false
-        while (i < rawString.count){
-            
-            if (rawString[i].contains("Address")) {
-                addressString = addressString + rawString[i + 1]
-                addressString = addressString + rawString[i + 2]
-                var pinAdd = rawString[i + 3].replacingOccurrences(of: "PIN", with: "")
-                let tempPin = pinCodeExtraction(pinAdd: pinAdd)
-                self.ocrPostData["pincode"].stringValue = tempPin
-                pinAdd = pinAdd.replacingOccurrences(of:"", with:tempPin)
-                addressString = addressString + pinAdd
-                
-            }
-            
-            print(ocrPostData["lastname"].stringValue,rawString[i])
-            if (rawString[i].contains(ocrPostData["lastname"].stringValue) && !fFlag) {
-                ocrPostData["midelName"].stringValue = rawString[i]
-                fFlag = true;
-                print("fatherName \(rawString[i])")
-            }
-            
-            if (rawString[i].contains(ocrPostData["lastname"].stringValue) && fFlag) {
-                ocrPostData["motherName"].stringValue = rawString[i]
-                print("motherName \(rawString[i])")
-            }
-            i = i+1
-        }
-        
-        print("=====Address is ========")
-        print(addressString)
-        
-        self.addressSplitter(address: addressString)
-        
-    }
-    
-    func pinCodeExtraction(pinAdd:String) -> String{
-        
-        let pincodeRegex = "([0-9]{6})"
-        print(pinAdd)
-        let allPincodeNumberMatches = self.matches(for: pincodeRegex, in: pinAdd as String)
-        if(allPincodeNumberMatches.count > 0){
-            print("Pincode is: \(allPincodeNumberMatches[0])")
-            //self.ocrPostData["pincode"].stringValue = allPincodeNumberMatches[0]
-            return allPincodeNumberMatches[0]
-        }
-        return ""
-    }
-    
-    func addressSplitter(address : String){
-        var addressSplitter = [String]()
-        let rawString = address.split(separator: " ")
-        
-        for line in rawString{
-            addressSplitter.append(String(line))
-        }
-        
-        
-        var address1 = ""
-        var address2 = ""
-        let splitCount = addressSplitter.count / 2
-        var i = 0;
-        var fFlag = false
-        while (i < splitCount) {
-            
-            if (address1.count == 0) {
-                address1 = addressSplitter[i];
-            } else if(String(address1 + " " + addressSplitter[i]).count <= 50) {
-                address1 = address1 + " " + addressSplitter[i]
-            } else {
-                break;
-            }
-            
-            i = i+1
-        }
-        while (i < addressSplitter.count) {
-            if (address2.count == 0) {
-                address2 = "\(address2) \(addressSplitter[i])"
-            } else {
-                address2 = "\(address2)  \(addressSplitter[i])"
-            }
-            i = i+1
-        }
-        self.ocrPostData["address1"].stringValue = address1
-        self.ocrPostData["address2"].stringValue = address2
-        print(address1)
-        print(address2)
-        UserDefaults.standard.set("Passport", forKey: "docType")
-        //print(self.ocrPostData)
-        
-        
-    }
-    
-    private func checkAadhaarFront(rawText:String) -> Bool {
-        var rawStrings:[String] = [String]()
-        let rawString = rawText.split(separator: "\n")
-        print("=====Aadhar data ======")
-        print(rawString)
-        for line in rawString {
-            rawStrings.append(String(line))
-        }
-        
-        var i = 0
-        var flag = false
-        print(rawText.containsIgnoringCase(find: "address"))
-        if(rawText.containsIgnoringCase(find: "address")){
-            flag = false
-        }else{
-            while (i < rawStrings.count) {
-                if(self.aadhaarValidator(line: rawStrings[i])){
-                    let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
-                    print("aadharNumber is: \(aadharNumber)")
-                    if(isAadharDataFetchedFromQRCode){
-                        if(ocrPostData["doc_number"].stringValue == aadharNumber){
-                            
-                            flag = true
-                            break
-                        }else{
-                            print("Cards not same")
-                            flag = false
-                            break
-                        }
-                        
-                    }else{
-                        ocrPostData["doc_number"].stringValue = aadharNumber
-                        print(aadharNumber)
-                        if(i > (rawStrings.count/2)){
-                            extractAadhaarData(name: rawStrings[i - 3], dob: rawStrings[i - 2], gender: rawStrings[i - 1]);
-                        }else{
-                            extractAadhaarData(name: rawStrings[i - 3], dob: rawStrings[i - 2], gender: rawStrings[i - 1]);
-                        }
-                        flag = true
-                        break
-                    }
-                    
-                }
-                i = i+1
-            }
-        }
-        
-        
-        
-        return flag
-    }
-    
-    func aadhaarValidator(line:String) -> Bool{
-        
-        var aadharNumber = ""
-        aadharNumber = line.replacingOccurrences(of: " ", with: "-")
-        
-        let aadharRegex = "([\\d-]+)"
-        
-        let allAadharNumberMatches = self.matches(for: aadharRegex, in: aadharNumber as String)
-        if(allAadharNumberMatches.count > 0 && allAadharNumberMatches[0].count == 14){
-            
-            return true
-        }else{
-            return false
-        }
-        
-        
-    }
-    
-    func extractAadhaarData(name:String,dob:String,gender:String){
-        print(name,dob,gender)
-        self.extractName(name: name)
-        
-        if(gender.containsIgnoringCase(find: "female")){
-            ocrPostData["gender"].stringValue = "F"
-        }else {
-            ocrPostData["gender"].stringValue = "M"
-        }
-        print("Gender is: \(ocrPostData["gender"].stringValue)")
-        if(dob.containsIgnoringCase(find: "DOB")){
-            print(dob)
-            let birthYear = dob.suffix(4)
-            let birthMonth = dob[dob.count-7 ..< dob.count-5]
-            let birthDay = dob[dob.count-10 ..< dob.count-8]
-            ocrPostData["dob"].stringValue = "\(birthYear)/\(birthMonth)/\(birthDay)"
-            
-            
-        }else{
-            print(dob)
-            let birthYear = dob.suffix(4)
-            let birthMonth = "01"
-            let birthDay = "01"
-            ocrPostData["dob"].stringValue = "\(birthYear)/\(birthMonth)/\(birthDay)"
-             print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
-            
-        }
     }
     
     func extractName(name:String){
@@ -1005,7 +752,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         var flag = false
         if(allAadharAddressMatches.count >= 1){
             
-            let pincode = self.pinCodeExtraction(pinAdd: String(allAadharAddressMatches[0].suffix(6)))
+            let pincode = Utils().pinCodeExtraction(pinAdd: String(allAadharAddressMatches[0].suffix(6)))
             if(pincode != ""){
                 
                 if(isAadharDataFetchedFromQRCode){

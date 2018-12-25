@@ -429,22 +429,43 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
 
 extension AutoPayViewController: EMandateResponseDelegate {
     func gotoAgreeVC() {
-        self.openAgreeVC()
+        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            self.dismiss(animated: true, completion: {
+                self.openAgreeVC()
+            })
+            
+        })
+        //self.openAgreeVC()
     }
     
     func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String) {
-        for controller in self.navigationController!.viewControllers as Array {
-            if controller.isKind(of: KhataViewController.self) {
-                KhataViewController.comingFrom = "data"
-                KhataViewController.sanctionAmount = sanctionAmount
-                KhataViewController.CIF = CIF
-                KhataViewController.LAN  = LAN
-                KhataViewController.status = status
-                KhataViewController.mandateId = mandateId
-                self.navigationController!.popToViewController(controller, animated: true)
-                break
-            }
-        }
+        
+        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            self.dismiss(animated: true, completion: {
+                for controller in self.navigationController!.viewControllers as Array {
+                    if controller.isKind(of: KhataViewController.self) {
+                        KhataViewController.comingFrom = "data"
+                        KhataViewController.sanctionAmount = sanctionAmount
+                        KhataViewController.CIF = CIF
+                        KhataViewController.LAN  = LAN
+                        KhataViewController.status = status
+                        KhataViewController.mandateId = mandateId
+                        self.navigationController!.popToViewController(controller, animated: true)
+                        break
+                    }
+                }
+            })
+            
+        })
+        
     }
     
     

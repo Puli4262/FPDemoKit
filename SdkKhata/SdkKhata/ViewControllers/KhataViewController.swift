@@ -66,7 +66,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             UserDefaults.standard.set(emailID, forKey: "emailID")
             self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
             
-        }else{
+        }else if(self.requestFrom != "failure"){
             UserDefaults.standard.set(self.mobileNumber, forKey: "mobileNumber")
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
             UserDefaults.standard.set(emailID, forKey: "emailID")
@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openCustomerDetailsVC()
+               //self.openAgreeVC()
             })
         }
         
@@ -160,6 +160,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     
     open override func viewWillAppear(_ animated: Bool) {
         self.activityIndicatior.isHidden = false
+        print(KhataViewController.comingFrom == "unauthorised")
         if(KhataViewController.comingFrom == "data"){
             sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF, mandateId: KhataViewController.mandateId)
             KhataViewController.comingFrom = ""
@@ -168,6 +169,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             sendFPSDKResponseDelegate?.payUresponse(status:KhataViewController.payUStatus,txnId:KhataViewController.payUTxnid,amount:KhataViewController.payUAmount,name:KhataViewController.payUName,productInfo:KhataViewController.payUProductInfo)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
+        }else if(self.requestFrom == "failure"){
+            sendFPSDKResponseDelegate?.KhaataSDKFailure(status: KhataViewController.comingFrom)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         
     }

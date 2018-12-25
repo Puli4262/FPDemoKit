@@ -13,6 +13,7 @@ import Alamofire
 class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     
+    @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -103,7 +104,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.customerDetailsViewConstraint.constant = 40
         self.addressDeatilsViewConstraint.constant = 40
         
-        
+        self.greenTick.isHidden = true
         self.customerDeatilsBtnConstrint.constant = 0
         self.addressDetailsBtnConstraint.constant = 0
         self.pancardBtnConstraint.constant = 46
@@ -135,11 +136,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-        if(dncFlag){
-            self.stepperImg.image = UIImage(named:"stepper_man_share_details")
-        }else{
-            self.stepperImg.image = UIImage(named:"stepper_share_details")
+        if(!dncFlag){
+            self.autoPayView.isHidden = true
         }
+
     }
     
     
@@ -734,9 +734,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            let token = UserDefaults.standard.string(forKey: "token")
-            print("token is \(token!)")
-            utils.requestGETURL("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":token!], viewCotroller: self, success: { res in
+            let token = UserDefaults.standard.string(forKey: "token") ?? ""
+            print("token is \(token)")
+            utils.requestGETURL("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":token], viewCotroller: self, success: { res in
                 print(res)
                 let refreshToken = res["token"].stringValue
                 print("refreshToken \(refreshToken)" )
@@ -1379,6 +1379,15 @@ extension CustomerDetailsViewController:PancardPopupDelegate {
 
 extension CustomerDetailsViewController : CloseAppDelegate {
     func closeApp(status: String) {
-        self.navigationController?.popToRootViewController(animated: true)
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: KhataViewController.self) {
+                let VC = controller as! KhataViewController
+                KhataViewController.comingFrom = status
+                VC.requestFrom = "failure"
+                self.navigationController!.popToViewController(VC, animated: true)
+                
+            }
+        }
+        //self.navigationController?.popToRootViewController(animated: true)
     }
 }

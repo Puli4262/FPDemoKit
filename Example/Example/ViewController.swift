@@ -27,8 +27,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = "9819064110"
             viewController.tokenId = "RrHyCdfsbSFZol6ik3kRnw==="
-            //viewController.mobileNumber = "9029344445"
-            //viewController.tokenId = "qZVy/Q7KfuTgLoMtFepAww=="
+            //viewController.mobileNumber = "9699044908"
+            //viewController.tokenId = "sBQIMuqFDSiMlFNf8oDCNw=="
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "01/01/1990"

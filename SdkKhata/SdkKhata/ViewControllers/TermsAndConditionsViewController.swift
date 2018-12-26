@@ -13,12 +13,13 @@ class TermsAndConditionsViewController: UIViewController,UIWebViewDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var closeImg: UIImageView!
     @IBOutlet weak var webView: UIWebView!
-    var url = "http://52.66.207.92/khata_files/t_c.html"
+    var url = ""
     var popupTitle = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.delegate = self
         titleLabel.text = popupTitle
+        print(self.url)
         let url = NSURL (string: self.url)
         let requestObj = NSURLRequest(url: url as! URL)
         self.webView.loadRequest(requestObj as URLRequest)

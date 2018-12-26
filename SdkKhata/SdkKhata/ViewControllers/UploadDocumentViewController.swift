@@ -432,10 +432,12 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 
                 textRecognizer.process(image) { ocrResult, error in
                     guard error == nil, let ocrResult = ocrResult else {
-                        print(error)
+                        print("error in OCR \(error)")
                         print(error.debugDescription)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                            alertController.dismiss(animated: true, completion: nil)
+                            alertController.dismiss(animated: true, completion: {
+                                self.openRetakeVC()
+                            })
                         })
                         return
                     }
@@ -522,9 +524,11 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                     textRecognizer.process(image) { ocrResult, error in
                         guard error == nil, let ocrResult = ocrResult else {
-                            
+                            print("error in OCR \(error)")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
                             })
                             return
                         }
@@ -574,9 +578,11 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                     textRecognizer.process(image) { ocrResult, error in
                         guard error == nil, let ocrResult = ocrResult else {
-                            print("error is :\(error)")
+                            print("error in OCR \(error)")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
-                                alertController.dismiss(animated: true, completion: nil)
+                                alertController.dismiss(animated: true, completion: {
+                                    self.openRetakeVC()
+                                })
                             })
                             return
                         }

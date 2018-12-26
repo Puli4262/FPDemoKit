@@ -9,6 +9,7 @@ import UIKit
 
 class AgreeViewController: UIViewController {
     
+    @IBOutlet weak var shareDetailsLabel: UILabel!
     @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var carryIDView: UIView!
@@ -86,6 +87,7 @@ class AgreeViewController: UIViewController {
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
+            self.shareDetailsLabel.backgroundColor = UIColor.lightGray
         }
 
     }
@@ -98,10 +100,10 @@ class AgreeViewController: UIViewController {
         
         if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: termsRange) {
             print("Tapped terms clicked")
-            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/t_c.html",popupTitle:"Terms & Conditions")
+            self.openTermsVC(url:"\(Utils().hostIP)/khata_files/t_c.html",popupTitle:"Terms & Conditions")
         }else if sender.didTapAttributedTextInLabel(label: termsAndConditionsLabel, inRange: privacyPolicyRange) {
             print("privacy policy clicked")
-            self.openTermsVC(url:"http://\(Utils().hostIP)/khata_files/privacy_policy.html",popupTitle:"Privacy Policy")
+            self.openTermsVC(url:"\(Utils().hostIP)/khata_files/privacy_policy.html",popupTitle:"Privacy Policy")
         }else {
             print("Tapped none")
         }

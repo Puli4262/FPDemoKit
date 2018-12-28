@@ -31,8 +31,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //viewController.tokenId = "XLfNjRMjFRbkfDXUsCG7/g=="
             
             //testing
-            viewController.mobileNumber = "8308702798"
-            viewController.tokenId = "I+IoTG+PPGck+CTHqh3XVg=="
+            viewController.mobileNumber = "9920597339"
+            viewController.tokenId = "XLfNjRMjFRbkfDXUsCG7/g=="
             
             //testing
             //viewController.mobileNumber = "9699044908"
@@ -40,7 +40,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
-            viewController.DOB = "01/01/1990"
+            viewController.DOB = "1990/01/01"
             viewController.mandateStatus = ""
             
             self.navigationController?.pushViewController(viewController, animated: true)

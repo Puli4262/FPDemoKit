@@ -32,6 +32,8 @@ class AadharOCR {
                     let aadharNumber = rawStrings[i].replacingOccurrences(of: " ", with: "")
                     
                     if(isAadharDataFetchedFromQRCode){
+                        print("Aadhar number from QR code \(QRScannerAadhanrNumber)")
+                        print("Aadhar number from OCR \(QRScannerAadhanrNumber)")
                         if(QRScannerAadhanrNumber == aadharNumber){
                             
                             flag = true

@@ -747,6 +747,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             let token = UserDefaults.standard.string(forKey: "token") ?? ""
             print("token is \(token)")
+            print("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)")
             utils.requestGETURL("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":token], viewCotroller: self, success: { res in
                 print(res)
                 let refreshToken = res["token"].stringValue
@@ -900,7 +901,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 customerPostData["dob"].stringValue = DOB!
             }
             
-            
+            //customerPostData["dob"].stringValue = DOB!
             
             if(customerPostData["gender"].stringValue == "M"){
                 customerPostData["salutation"].stringValue = "MR."
@@ -1271,8 +1272,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.emailIdTextField.text = emailID
         }
         let DOB = UserDefaults.standard.string(forKey: "DOB")
-        if(DOB != ""){
-           //self.dateOfBirthTextField.text = DOB
+        if(userData["dob"].stringValue == ""){
+           self.dateOfBirthTextField.text = DOB
         }
         
         self.fatherNameTextField.text = userData["fatherName"].stringValue

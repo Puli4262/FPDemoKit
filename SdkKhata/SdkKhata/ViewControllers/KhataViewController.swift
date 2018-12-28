@@ -60,6 +60,15 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
         //self.addBackButton()
+        print("receiving data")
+        print("mobileNumber: \(mobileNumber)")
+        print("emailID: \(emailID)")
+        print("DOB: \(DOB)")
+        print("mandateStatus \(mandateStatus)")
+        print("txnid: \(txnid)")
+        print("amount: \(amount)")
+        print("productinfo \(productinfo)")
+        print("firstname \(firstname)")
         
         if(self.requestFrom == "Call Payu"){
             
@@ -75,7 +84,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-                //self.openAgreeVC()
+                //self.openUploadDocumentsVC()
             })
         }
         

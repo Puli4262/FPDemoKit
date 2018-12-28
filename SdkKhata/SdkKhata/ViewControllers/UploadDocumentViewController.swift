@@ -245,9 +245,6 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
        
         let utils = Utils()
-        if(ocrPostData["gender"].stringValue == ""){
-            ocrPostData["gender"].stringValue = "M"
-        }
         let token = UserDefaults.standard.string(forKey: "token")
         let headers = ["accessToken":token!]
         print("headers \(headers)")
@@ -319,18 +316,21 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
 extension UploadDocumentViewController: QRScannerCodeDelegate {
     func qrScanner(_ controller: UIViewController, scanDidComplete result: String) {
         
-        isAadharDataFetchedFromQRCode = true
+        
         QRCodeResult = result
+        print(result)
         let xml = SWXMLHash.parse(result)
-        self.ocrPostData["docType"].stringValue = "Aadhaar Card"
-        UserDefaults.standard.set("Aadhaar Card", forKey: "docType")
-        self.ocrPostData["raw_front"].stringValue = result
+        
         
         //        <PrintLetterBarcodeData uid="236854735724" name="Swati Kailash Dipake" gender="F" yob="1993" loc="salipura" vtc="Malkapur" po="Malkapur" dist="Buldhana" subdist="Malkapur" state="Maharashtra" pc="443101" dob="03/04/1993"/>
         
         
         if let uid = xml["PrintLetterBarcodeData"].element?.attribute(by:"uid"){
             self.ocrPostData["doc_number"].stringValue = uid.text
+            isAadharDataFetchedFromQRCode = true
+            self.ocrPostData["docType"].stringValue = "Aadhaar Card"
+            UserDefaults.standard.set("Aadhaar Card", forKey: "docType")
+            self.ocrPostData["raw_front"].stringValue = result
         }
         if let name = xml["PrintLetterBarcodeData"].element?.attribute(by:"name"){
             

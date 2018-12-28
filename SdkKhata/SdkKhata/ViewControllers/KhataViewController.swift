@@ -138,8 +138,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                             status = "editMandate"
                         }else{
                             if(!dncFlag){
-                                UserDefaults.standard.set("editMandate",forKey: "status")
-                                status = "editMandate"
+                                UserDefaults.standard.set("kycPending",forKey: "status")
+                                status = "kycPending"
                             }else{
                                 UserDefaults.standard.set("nonMandatory",forKey: "status")
                                 status = "nonMandatory"

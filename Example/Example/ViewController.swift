@@ -41,7 +41,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "1990/01/01"
-            viewController.mandateStatus = ""
+            viewController.mandateStatus = "changeMandate"
             
             self.navigationController?.pushViewController(viewController, animated: true)
         }

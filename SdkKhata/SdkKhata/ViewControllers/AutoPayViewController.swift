@@ -73,6 +73,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
         if(status == "editMandate"){
             viewController.title = "Change Bank Mandate"
+        }else if(status == "kycPending"){
+            viewController.title = "Set Auto Pay"
         }else{
             viewController.title = "Khaata Application"
         }

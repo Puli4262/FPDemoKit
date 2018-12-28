@@ -969,8 +969,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 }else{
                                     self.openAgreeVC()
                                 }
-                                
                             }
+                        }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
+                            utils.showToast(context: self, msg: "Please try again", showToastFrom: 30.0)
                         }
                     }
                     else if(refreshToken == "InvalidToken"){
@@ -1272,8 +1273,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.emailIdTextField.text = emailID
         }
         let DOB = UserDefaults.standard.string(forKey: "DOB")
-        if(userData["dob"].stringValue == ""){
-           self.dateOfBirthTextField.text = DOB
+        if(userData["dob"].stringValue != ""){
+           self.dateOfBirthTextField.text = userData["dob"].stringValue
+            self.customerPostData["dob"].stringValue = userData["dob"].stringValue
+        }else{
+            self.dateOfBirthTextField.text = DOB!
+            self.customerPostData["dob"].stringValue = DOB!
         }
         
         self.fatherNameTextField.text = userData["fatherName"].stringValue

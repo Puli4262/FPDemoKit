@@ -70,7 +70,7 @@
                                                     <constraint firstAttribute="width" constant="30" id="j6N-sB-Zvd"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqI-fT-w6j">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqI-fT-w6j">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="idu-QS-Som"/>
@@ -122,7 +122,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="qxj-Eb-cwu"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zB9-QS-vNc">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zB9-QS-vNc">
                                                 <rect key="frame" x="8" y="40" width="64.5" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="foz-jd-noq"/>
@@ -232,7 +232,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="djW-cY-zLh"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="qyk-Mc-MI1">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="qyk-Mc-MI1">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="0Mc-SZ-4jF"/>
@@ -478,6 +478,8 @@
                         <viewLayoutGuide key="safeArea" id="Lvi-hE-Xod"/>
                     </view>
                     <connections>
+                        <outlet property="acceptTermsTextLabel" destination="qyk-Mc-MI1" id="g35-AX-uxa"/>
+                        <outlet property="autoPayTextLabel" destination="riQ-KR-JMn" id="4rU-qy-EXl"/>
                         <outlet property="autoPayView" destination="0bv-sr-QhD" id="UgX-JJ-fTa"/>
                         <outlet property="backImage" destination="A5X-R7-pXZ" id="7MN-1P-CXN"/>
                         <outlet property="backView" destination="xpz-TC-Rjd" id="kc6-Zs-Pxq"/>
@@ -490,6 +492,8 @@
                         <outlet property="lastPageImg" destination="ovq-Gx-dnN" id="hLl-W9-htB"/>
                         <outlet property="pictureClearLabel" destination="IFH-GZ-lfM" id="M4r-Sm-iqM"/>
                         <outlet property="selectDoumemtTextFeild" destination="h74-h4-eCQ" id="B6h-g7-yqT"/>
+                        <outlet property="shareDetailsTextLabel" destination="zB9-QS-vNc" id="Nnd-VK-4Ec"/>
+                        <outlet property="submitIdTextLabel" destination="cqI-fT-w6j" id="8aF-bj-8tJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S0b-Yu-Qro" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -533,13 +537,13 @@
                                                     <constraint firstAttribute="height" constant="30" id="ovQ-Xz-UFq"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQQ-Iz-GnB">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQQ-Iz-GnB">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="qgz-NA-Trl"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aax-E3-LnP">
@@ -585,8 +589,8 @@
                                                     <constraint firstAttribute="width" secondItem="yDM-xe-X1b" secondAttribute="height" multiplier="1:1" id="y3J-NQ-wcd"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="IWC-ag-DTZ">
-                                                <rect key="frame" x="8" y="40" width="64" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="IWC-ag-DTZ">
+                                                <rect key="frame" x="8" y="40" width="64" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="Gmj-R3-zl3"/>
                                                 </constraints>
@@ -646,7 +650,7 @@
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="Mpo-lD-S4j"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hmh-fy-aeM">
@@ -695,13 +699,13 @@
                                                     <constraint firstAttribute="height" constant="30" id="v46-cx-Dj9"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h2P-hq-sSG">
-                                                <rect key="frame" x="8" y="40" width="64" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h2P-hq-sSG">
+                                                <rect key="frame" x="8" y="40" width="64" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="w30-14-zfM"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -821,10 +825,14 @@
                         <viewLayoutGuide key="safeArea" id="uev-GC-Fke"/>
                     </view>
                     <connections>
+                        <outlet property="acceptTermsTextLabel" destination="h2P-hq-sSG" id="09u-h4-2Pb"/>
+                        <outlet property="autoPayTextLabel" destination="ZzE-au-8WD" id="rNu-7C-J4G"/>
                         <outlet property="autoPayView" destination="E32-tK-BkK" id="J4c-Gv-6mt"/>
                         <outlet property="cameraIcon" destination="JcA-M1-ZDu" id="b8w-cJ-7cv"/>
                         <outlet property="continueBtn" destination="hbE-11-sle" id="s3f-nc-BGy"/>
                         <outlet property="selfieImageView" destination="HPq-Fu-n5d" id="AdE-tS-PNh"/>
+                        <outlet property="shareDetailsTextLabel" destination="IWC-ag-DTZ" id="3j0-9N-Kdh"/>
+                        <outlet property="submitIdTextLabel" destination="aQQ-Iz-GnB" id="aMb-Yx-HlN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iGq-nw-ABh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1209,6 +1217,7 @@
                                                             <segment title="Female"/>
                                                             <segment title="Other"/>
                                                         </segments>
+                                                        <color key="tintColor" red="0.058823529409999999" green="0.35686274509999999" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
                                                             <action selector="handleGenderChange:" destination="xPr-ID-4gL" eventType="valueChanged" id="IZj-ix-FZd"/>
                                                         </connections>
@@ -1231,6 +1240,7 @@
                                                             <segment title="Single"/>
                                                             <segment title="Married"/>
                                                         </segments>
+                                                        <color key="tintColor" red="0.058823529409999999" green="0.35686274509999999" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
                                                             <action selector="handleMaritalStatus:" destination="xPr-ID-4gL" eventType="valueChanged" id="rXT-uY-sTL"/>
                                                         </connections>
@@ -1253,6 +1263,7 @@
                                                             <segment title="Salaried"/>
                                                             <segment title="Self-Employed"/>
                                                         </segments>
+                                                        <color key="tintColor" red="0.058823529409999999" green="0.35686274509999999" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
                                                             <action selector="handleEmploymentChange:" destination="xPr-ID-4gL" eventType="valueChanged" id="5wP-hO-zga"/>
                                                         </connections>
@@ -1553,6 +1564,8 @@
                                                             <constraint firstAttribute="height" constant="40" id="16g-K8-fGl"/>
                                                             <constraint firstAttribute="width" constant="60" id="NHk-sf-cBe"/>
                                                         </constraints>
+                                                        <color key="onTintColor" red="0.87450980389999999" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="thumbTintColor" red="0.058823529409999999" green="0.35686274509999999" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
                                                             <action selector="handleAddressSwichChange:" destination="xPr-ID-4gL" eventType="valueChanged" id="udz-8Y-dGb"/>
                                                         </connections>
@@ -1809,13 +1822,13 @@
                                                     <constraint firstAttribute="height" constant="30" id="mGV-8Y-tpx"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zlf-nQ-eI2">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zlf-nQ-eI2">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="3l9-3Q-jL9"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <color key="textColor" red="0.058823529411764705" green="0.35686274509803922" blue="0.6470588235294118" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.52156862745098043" green="0.52156862745098043" blue="0.52156862745098043" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rDL-RK-ZNw">
@@ -1861,7 +1874,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="qYa-6n-d0N"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="rrt-l9-81s">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Detail" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="rrt-l9-81s">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="fNq-jg-i1b"/>
@@ -1922,7 +1935,7 @@
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="lZ4-aK-HKg"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eES-02-34T">
@@ -1971,13 +1984,13 @@
                                                     <constraint firstAttribute="width" secondItem="yAz-rM-ki4" secondAttribute="height" multiplier="1:1" id="prO-Cw-Egn"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fiM-Su-cFX">
-                                                <rect key="frame" x="8" y="40" width="64" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fiM-Su-cFX">
+                                                <rect key="frame" x="8" y="40" width="64" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="f7q-aA-aUN"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -2024,12 +2037,14 @@
                     </view>
                     <size key="freeformSize" width="320" height="1768"/>
                     <connections>
+                        <outlet property="acceptTermsTextLabel" destination="fiM-Su-cFX" id="kie-xT-ZSd"/>
                         <outlet property="addressDeatilsViewConstraint" destination="qgT-FJ-BcI" id="c7D-PN-Bhs"/>
                         <outlet property="addressDetailsBtn" destination="bl3-5a-Rzz" id="3py-at-CAA"/>
                         <outlet property="addressDetailsBtnConstraint" destination="Sb2-GE-eQS" id="Vpg-gN-SZv"/>
                         <outlet property="addressDetailsDropdownImg" destination="S4L-56-PnE" id="U70-TE-SAP"/>
                         <outlet property="addressDetailsView" destination="2iR-Pq-fLT" id="bVt-CK-OPj"/>
                         <outlet property="addressTitleTextField" destination="LGU-0C-JDf" id="xsS-mc-p85"/>
+                        <outlet property="autoPayTextLabel" destination="PG8-oM-nhF" id="KUV-9B-JnL"/>
                         <outlet property="autoPayView" destination="NGP-WQ-Wsr" id="a3I-5l-gzi"/>
                         <outlet property="checkboxImg" destination="G9v-M2-sA1" id="1ob-Kt-eMr"/>
                         <outlet property="communicationAddCityTextField" destination="bha-ki-3pk" id="NFV-tS-KpY"/>
@@ -2075,6 +2090,8 @@
                         <outlet property="personalDetailsTextField" destination="A6x-Rf-3iy" id="dc8-1A-qUO"/>
                         <outlet property="personalDetailsView" destination="3sn-AW-1c7" id="ge8-9l-d1a"/>
                         <outlet property="scrollView" destination="bGg-6l-uqh" id="Y4C-hn-VqA"/>
+                        <outlet property="shareDetailsTextLabel" destination="rrt-l9-81s" id="52v-bH-6f5"/>
+                        <outlet property="submitIdTextLabel" destination="Zlf-nQ-eI2" id="Qyj-UA-1W3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zae-To-b3z" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2128,7 +2145,7 @@
                                                     <constraint firstAttribute="width" constant="30" id="mck-UQ-Y1j"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJ3-p5-9xO">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJ3-p5-9xO">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="l1Q-1w-ulD"/>
@@ -2180,7 +2197,7 @@
                                                     <constraint firstAttribute="width" secondItem="XCK-Aj-UZj" secondAttribute="height" multiplier="1:1" id="cok-za-wce"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="oRy-2g-ejU">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="oRy-2g-ejU">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="lQO-3Z-tJf"/>
@@ -2290,7 +2307,7 @@
                                                     <constraint firstAttribute="width" secondItem="uUD-NZ-2VQ" secondAttribute="height" multiplier="1:1" id="vHX-xK-YNP"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Jy9-4E-Bui">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Jy9-4E-Bui">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="0Ix-34-ZE1"/>
@@ -2703,7 +2720,10 @@
                         <viewLayoutGuide key="safeArea" id="dQb-1A-4EE"/>
                     </view>
                     <connections>
+                        <outlet property="acceptTermsTextLabel" destination="Jy9-4E-Bui" id="Wz0-2X-SGc"/>
                         <outlet property="accountNumberTextFeild" destination="3Zk-yc-kbI" id="cCy-tS-8eU"/>
+                        <outlet property="autoPayTextLabel" destination="Vch-eo-Y12" id="AOC-2w-PGj"/>
+                        <outlet property="autoPayView" destination="gIS-9T-Z5e" id="joj-dn-k7i"/>
                         <outlet property="axisRadioImg" destination="IsL-ic-mBi" id="Rji-sz-ihv"/>
                         <outlet property="axisView" destination="5GI-AT-alW" id="CM3-57-U5I"/>
                         <outlet property="continueBtn" destination="Xk4-gn-0NU" id="XFU-mM-59k"/>
@@ -2716,6 +2736,12 @@
                         <outlet property="noBankView" destination="XEE-0e-dI2" id="eyX-g2-aEM"/>
                         <outlet property="sbiRadioImg" destination="gKn-f0-2fF" id="iCz-Be-kvD"/>
                         <outlet property="sbiView" destination="kqK-cv-PFa" id="nuS-EU-lZv"/>
+                        <outlet property="shareDetailView" destination="SOA-8d-fOL" id="mdH-YT-QO4"/>
+                        <outlet property="shareDetailsTextLabel" destination="oRy-2g-ejU" id="tcQ-UZ-n4u"/>
+                        <outlet property="stackViewHeightConstraint" destination="A0v-W8-aEg" id="1aM-Ff-mea"/>
+                        <outlet property="submitIDView" destination="qYa-PK-U4o" id="G01-F8-pcM"/>
+                        <outlet property="submitIdTextLabel" destination="JJ3-p5-9xO" id="AKp-Ki-AjR"/>
+                        <outlet property="termsView" destination="9pW-ZN-Ur0" id="JCN-H0-7dQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zej-EW-Z57" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2872,7 +2898,7 @@
                                                     <constraint firstAttribute="width" constant="30" id="m4Y-3K-hhL"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b0e-In-2CG">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b0e-In-2CG">
                                                 <rect key="frame" x="8" y="40" width="64" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="9OG-YR-Ibv"/>
@@ -2924,8 +2950,8 @@
                                                     <constraint firstAttribute="width" constant="30" id="mh0-qM-fUb"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="gY5-GB-vXb">
-                                                <rect key="frame" x="8" y="40" width="64" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share Details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="gY5-GB-vXb">
+                                                <rect key="frame" x="8" y="40" width="64" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="bV4-gN-j7c"/>
                                                 </constraints>
@@ -2985,7 +3011,7 @@
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="WEu-HT-42c"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="OpenSans-Regular" family="Open Sans" pointSize="11"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TyV-0w-Z5r">
@@ -3034,8 +3060,8 @@
                                                     <constraint firstAttribute="height" constant="30" id="SgZ-XE-o3A"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="hMM-0Q-GXk">
-                                                <rect key="frame" x="8" y="40" width="64" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accept Terms" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="hMM-0Q-GXk">
+                                                <rect key="frame" x="8" y="40" width="64" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="B5Z-Jn-rkU"/>
                                                 </constraints>
@@ -3219,11 +3245,15 @@
                         <viewLayoutGuide key="safeArea" id="eN9-DN-gWZ"/>
                     </view>
                     <connections>
+                        <outlet property="acceptTermsTextLabel" destination="hMM-0Q-GXk" id="cg6-C8-WmC"/>
+                        <outlet property="autoPayTextLabel" destination="znb-UD-gGu" id="haO-t6-dKB"/>
                         <outlet property="autoPayView" destination="oDs-TZ-xDY" id="hb4-YM-ueL"/>
                         <outlet property="carryIDLabel" destination="VEc-ij-9eT" id="YWX-yl-fvA"/>
                         <outlet property="carryIDView" destination="qVo-I4-iJQ" id="yJN-2h-xgn"/>
                         <outlet property="khataAcoountLabel" destination="WgA-ha-onf" id="Ur2-KX-pgV"/>
                         <outlet property="shareDetailsLabel" destination="w2T-fa-mo0" id="vEX-ZS-Drb"/>
+                        <outlet property="shareDetailsTextLabel" destination="gY5-GB-vXb" id="IvL-2L-GOC"/>
+                        <outlet property="submitIdTextLabel" destination="b0e-In-2CG" id="dh7-TJ-TPW"/>
                         <outlet property="termsAndConditionsLabel" destination="mtb-LY-e5U" id="Jxe-Zq-LO3"/>
                     </connections>
                 </viewController>

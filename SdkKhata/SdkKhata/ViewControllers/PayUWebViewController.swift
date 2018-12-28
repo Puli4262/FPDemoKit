@@ -60,7 +60,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                     print(res)
                     let token = res["token"].stringValue
 
-                    if(token == "" || token == "InvalidToken"){
+                    if(token == "InvalidToken"){
                         utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }else{
                         self.loadPayUWebview(payUData: res)

@@ -9,6 +9,8 @@ import UIKit
 
 class TermsAndConditionsViewController: UIViewController,UIWebViewDelegate {
     
+    
+
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var closeImg: UIImageView!

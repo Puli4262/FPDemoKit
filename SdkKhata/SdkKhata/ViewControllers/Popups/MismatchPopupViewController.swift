@@ -14,7 +14,7 @@ class MismatchPopupViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     var mismatcPopupDelegate:MismatcPopupDelegate?
     var requestFrom = ""
-    var titleDescription = "There is a mismatch between your details and ID document"
+    var titleDescription = "There is a mismatch between your ID type and uploaded document"
     var btnTitle = "Update ID"
     override func viewDidLoad() {
         super.viewDidLoad()

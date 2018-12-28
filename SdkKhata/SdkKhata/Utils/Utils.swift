@@ -29,7 +29,7 @@ class Utils {
     //let hostURL = "http://52.66.207.92:8080/KhataBackEnd"
     
     //Local Server
-    //let hostURL = "http://192.168.43.233:8080/KhataBackEnd"
+    //let hostURL = "http://192.168.1.181:8080/KhataBackEnd"
     
     public var screenWidth: CGFloat {
         return UIScreen.main.bounds.width

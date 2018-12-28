@@ -17,6 +17,11 @@ import CropViewController
 
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
+    @IBOutlet weak var acceptTermsTextLabel: UILabel!
+    @IBOutlet weak var autoPayTextLabel: UILabel!
+    @IBOutlet weak var shareDetailsTextLabel: UILabel!
+    @IBOutlet weak var submitIdTextLabel: UILabel!
+    
     @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     
@@ -80,6 +85,11 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
+        }else{
+            self.submitIdTextLabel.text = "Submit\nID"
+            self.shareDetailsTextLabel.text = "Share\nDetail"
+            self.autoPayTextLabel.text = "Auto\nPay"
+            self.acceptTermsTextLabel.text = "Accept\nTerms"
         }
     }
     

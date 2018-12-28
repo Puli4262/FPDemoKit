@@ -19,6 +19,9 @@ class PopupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = titleDescription
+        if(self.titleLabel.text?.containsIgnoringCase(find: "already exists"))!{
+            self.gobackBtn.setTitle("OK", for: .normal)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,7 +35,7 @@ class PopupViewController: UIViewController {
         self.dismiss(animated: true, completion: {
             if(self.titleLabel.text?.containsIgnoringCase(find: "eligible"))!{
                 self.closeAppDelegate?.closeApp(status: "notEligible")
-            }else if(self.titleLabel.text?.containsIgnoringCase(find: "already in use"))!{
+            }else if(self.titleLabel.text?.containsIgnoringCase(find: "already exists"))!{
                 self.closeAppDelegate?.closeApp(status: "alreadyCustomer")
             }else{
                 self.closeAppDelegate?.closeApp(status: "")

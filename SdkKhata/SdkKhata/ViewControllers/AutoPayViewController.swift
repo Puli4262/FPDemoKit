@@ -12,6 +12,16 @@ import SkyFloatingLabelTextField
 
 class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
+    @IBOutlet weak var acceptTermsTextLabel: UILabel!
+    @IBOutlet weak var autoPayTextLabel: UILabel!
+    @IBOutlet weak var shareDetailsTextLabel: UILabel!
+    @IBOutlet weak var submitIdTextLabel: UILabel!
+    
+    @IBOutlet weak var submitIDView: UIView!
+    @IBOutlet weak var shareDetailView: UIView!
+    @IBOutlet weak var autoPayView: UIView!
+    @IBOutlet weak var termsView: UIView!
+    @IBOutlet weak var stackViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var ifscCodeTextFeild: SkyFloatingLabelTextField!
@@ -32,19 +42,62 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var sbiRadioImg: UIImageView!
     
     @IBOutlet weak var noBankRadiImg: UIImageView!
-    let bankNames = ["HDFC Bank","ICICI Bank","Axix Bank", "SBI","Bank is not listed"]
-    let iconsArray = ["radio_button_checked"]
+    
     var selectedBankIndex = 0
+    var firstName = ""
+    var lastNmae = ""
     override func viewDidLoad() {
         super.viewDidLoad()
-        Utils().setupTopBar(viewController: self)
+        
+        self.setupTopBar(viewController: self)
         self.hideKeyboardWhenTappedAround()
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         self.setDelegates()
+        self.setStepperIcon()
         
+    }
+    
+    func setupTopBar(viewController: UIViewController){
+        
+        let status = UserDefaults.standard.string(forKey: "status")
+        print("status is \(status)")
+        
+        viewController.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
+        viewController.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        viewController.navigationController?.navigationBar.layer.shadowRadius = 4.0
+        viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
+        viewController.navigationController?.navigationBar.layer.masksToBounds = false
+        if(status == "editMandate"){
+            viewController.title = "Change Bank Mandate"
+        }else{
+            viewController.title = "Khaata Application"
+        }
+        
+        let nav = viewController.navigationController?.navigationBar
+        nav?.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.orange]
+        
+        viewController.navigationItem.setHidesBackButton(true, animated:true);
+    }
+    
+    func setStepperIcon(){
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        
+        if(!dncFlag){
+            self.stackViewHeightConstraint.constant = 0
+            self.submitIDView.isHidden = true
+            self.shareDetailView.isHidden = true
+            self.autoPayView.isHidden = true
+            self.termsView.isHidden = true
+        }else{
+            self.submitIdTextLabel.text = "Submit\nID"
+            self.shareDetailsTextLabel.text = "Share\nDetail"
+            self.autoPayTextLabel.text = "Auto\nPay"
+            self.acceptTermsTextLabel.text = "Accept\nTerms"
+        }
         
     }
     
@@ -117,8 +170,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         let utils = Utils()
         let hostUrl = utils.hostURL
+        let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
+        let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
         var featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
-        var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"\(hostUrl)/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
+        var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"\(hostUrl)/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"\(firstName) \(lastName)","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
         
         
         

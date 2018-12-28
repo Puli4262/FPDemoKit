@@ -12,6 +12,10 @@ import Alamofire
 
 class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
+    @IBOutlet weak var acceptTermsTextLabel: UILabel!
+    @IBOutlet weak var autoPayTextLabel: UILabel!
+    @IBOutlet weak var shareDetailsTextLabel: UILabel!
+    @IBOutlet weak var submitIdTextLabel: UILabel!
     
     @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
@@ -138,6 +142,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
+        }else{
+            self.submitIdTextLabel.text = "Submit\nID"
+            self.shareDetailsTextLabel.text = "Share\nDetail"
+            self.autoPayTextLabel.text = "Auto\nPay"
+            self.acceptTermsTextLabel.text = "Accept\nTerms"
         }
 
     }
@@ -595,21 +604,22 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             DispatchQueue.main.async {
                                 utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                             }
-                        }else if(res["panNumber"].stringValue == "Invalid PAN"){
+                        }else if(res["response"].stringValue == "success"){
+                            if(res["panNumber"].stringValue == "Invalid PAN"){
                                 
                                 self.pancardInValidLabel.isHidden = false
                                 
                                 
-                        }else if(res["panNumber"].stringValue == "noMatch"){
+                            }else if(res["panNumber"].stringValue == "noMatch"){
                                 
                                 self.openPanMismatchPopupVC()
-                        }else if(res["panNumber"].stringValue == "absent"){
+                            }else if(res["panNumber"].stringValue == "absent"){
                                 UserDefaults.standard.set("Pan valided", forKey: "status")
                                 print("handle absent pin")
                                 KhataViewController.panStatus = "Absent"
                                 
                                 self.pancardTextField.text = ""
-                            
+                                
                                 if(res["firstName"].exists() && res["firstName"].stringValue != "" && JSON(res["firstName"]) != JSON.null  ){
                                     self.customerPostData["firstName"].stringValue = res["firstName"].stringValue
                                 }
@@ -638,7 +648,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 
                                 
                                 
-                        }else {
+                            }else {
                                 UserDefaults.standard.set("Pan valided", forKey: "status")
                                 
                                 if(res["firstName"].exists() && res["firstName"].stringValue != "" ){
@@ -700,6 +710,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                     
                                     
                                 }
+                        }
                             
                             
                         }
@@ -805,7 +816,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         
                         if(self.isCommunicationAddSameSwitch.isOn){
                             self.customerDetailsView.constant = 800
-                            self.view.frame.size.height = 600
+                            self.view.frame.size.height = 900
                             self.addressDeatilsViewConstraint.constant = 400
                         }else{
                             self.customerDetailsView.constant = 900
@@ -825,8 +836,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.addressTitleTextField.isUserInteractionEnabled = true
                         
                         if(self.isCommunicationAddSameSwitch.isOn){
-                            self.customerDetailsView.constant = 800
-                            self.view.frame.size.height = 600
+                            self.customerDetailsView.constant = Utils().screenHeight + 200
+                            self.view.frame.size.height = Utils().screenHeight
                             self.addressDeatilsViewConstraint.constant = 400
                         }else{
                             self.customerDetailsView.constant = 900
@@ -873,7 +884,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 customerPostData["gender"].stringValue  = "M"
             }
             if(self.customerPostData["maritialStatus"].stringValue == ""){
-                customerPostData["maritialStatus"].stringValue  = "Single"
+                customerPostData["maritialStatus"].stringValue  = "S"
             }
             if(self.customerPostData["employmentstatus"].stringValue == ""){
                 customerPostData["employmentstatus"].stringValue  = "Salary"
@@ -889,16 +900,43 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 customerPostData["dob"].stringValue = DOB!
             }
             
+            
+            
+            if(customerPostData["gender"].stringValue == "M"){
+                customerPostData["salutation"].stringValue = "MR."
+            }else if(customerPostData["gender"].stringValue == "F" && customerPostData["maritialStatus"].stringValue  == "M"){
+                customerPostData["salutation"].stringValue = "MRS."
+            }else if(customerPostData["gender"].stringValue == "F" && customerPostData["maritialStatus"].stringValue  == "S"){
+                customerPostData["salutation"].stringValue = "MS."
+            }else{
+                customerPostData["salutation"].stringValue = "MR."
+            }
+            
+            customerPostData["stateCorrespondence"].stringValue = ""
+            customerPostData["cityCorrespondence"].stringValue = ""
+            customerPostData["cityPermanent"].stringValue = ""
+            customerPostData["statePermanent"].stringValue = ""
+            
+            if(customerPostData["maritialStatus"].stringValue  == "S"){
+                customerPostData["maritialStatus"].stringValue = "S"
+            }else{
+                customerPostData["maritialStatus"].stringValue = "M"
+            }
+//            customerPostData["firstName"].stringValue = "Cghfjh"
+//            customerPostData["lastName"].stringValue = "Puliddgjhd"
+            
+            UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "firstName")
+            UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "lastName")
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
-            
+                print(res)
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
                         //UserDefaults.standard.set(refreshToken, forKey: "token")
-                        
-                        if(status.containsIgnoringCase(find: "Customer dedup found")){
-                            self.openPopupVC(titleDescription: "We are unable to create your account as details provided by you already in use")
+                        let resPonseStatus = res["status"].stringValue
+                        if(resPonseStatus.containsIgnoringCase(find: "Customer dedup found")){
+                            self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document")
                         }else if(res["response"].stringValue == "success"){
                             
                             if(status == "personaldetail"){
@@ -943,7 +981,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     
                 })
             }, failure: {error in
-                
+                print(error.localizedDescription)
                 alertController.dismiss(animated: true, completion: {
                     Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
                 })
@@ -1199,15 +1237,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }else if(sender.selectedSegmentIndex == 1){
             self.customerPostData["gender"].stringValue = "F"
         }else if(sender.selectedSegmentIndex == 2){
-            self.customerPostData["gender"].stringValue = "O"
+            self.customerPostData["gender"].stringValue = "OT"
         }
     }
     
     @IBAction func handleMaritalStatus(_ sender: UISegmentedControl) {
         if(sender.selectedSegmentIndex == 0 ){
-            self.customerPostData["maritialStatus"].stringValue = "Married"
+            self.customerPostData["maritialStatus"].stringValue = "M"
         }else if(sender.selectedSegmentIndex == 1){
-            self.customerPostData["maritialStatus"].stringValue = "Single"
+            self.customerPostData["maritialStatus"].stringValue = "S"
         }
     }
     @IBAction func handleEmploymentChange(_ sender: UISegmentedControl) {
@@ -1254,7 +1292,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             customerPostData["gender"].stringValue  = "M"
         }
         if(JSON(userData["maritialStatus"]) == JSON.null || userData["maritialStatus"].stringValue == ""){
-            customerPostData["maritialStatus"].stringValue  = "Single"
+            customerPostData["maritialStatus"].stringValue  = "S"
         }
         if(JSON(userData["employmentstatus"]) == JSON.null || userData["employmentstatus"].stringValue == ""){
             customerPostData["employmentstatus"].stringValue  = "Salary"
@@ -1264,13 +1302,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.genderSegment.selectedSegmentIndex = 0
         }else if(userData["gender"].stringValue.containsIgnoringCase(find: "F") || userData["gender"].stringValue.containsIgnoringCase(find: "female")){
             self.genderSegment.selectedSegmentIndex = 1
-        }else if(userData["gender"].stringValue.containsIgnoringCase(find: "O") || userData["gender"].stringValue.containsIgnoringCase(find: "other")){
+        }else if(userData["gender"].stringValue.containsIgnoringCase(find: "OT") || userData["gender"].stringValue.containsIgnoringCase(find: "other")){
             self.genderSegment.selectedSegmentIndex = 2
         }else{
             self.genderSegment.selectedSegmentIndex = 0
         }
         print(userData["maritialStatus"].stringValue)
-        if(userData["maritialStatus"].stringValue.containsIgnoringCase(find: "Married")){
+        if(userData["maritialStatus"].stringValue.containsIgnoringCase(find: "M")){
             self.maritalStatusSegment.selectedSegmentIndex = 1
         }else{
             self.maritalStatusSegment.selectedSegmentIndex = 0

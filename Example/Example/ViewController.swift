@@ -25,10 +25,19 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             
             viewController.sendFPSDKResponseDelegate = self
-            viewController.mobileNumber = "9819064110"
-            viewController.tokenId = "RrHyCdfsbSFZol6ik3kRnw==="
+            
+            //development
+            //viewController.mobileNumber = "9920597339"
+            //viewController.tokenId = "XLfNjRMjFRbkfDXUsCG7/g=="
+            
+            //testing
+            viewController.mobileNumber = "8308702798"
+            viewController.tokenId = "I+IoTG+PPGck+CTHqh3XVg=="
+            
+            //testing
             //viewController.mobileNumber = "9699044908"
             //viewController.tokenId = "sBQIMuqFDSiMlFNf8oDCNw=="
+            
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "01/01/1990"
@@ -87,7 +96,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     }
     
     func KhaataSDKFailure(status: String) {
-        print("in Main app Failure")
+        
         print("status \(status)")
     }
     

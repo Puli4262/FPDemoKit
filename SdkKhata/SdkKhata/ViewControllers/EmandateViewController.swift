@@ -27,6 +27,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
     
     
     func loadHTMLString() -> Void {
+        print("Emandate data \(mandateTokenResponse)")
         let hostUrl = Utils().hostURL
         let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
         let htmlString = "<!doctype html>" +
@@ -138,7 +139,9 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             self.present(alertController, animated: false, completion: nil)
             let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
-            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":consumerData["accountType"].stringValue,"accNumber":consumerData["accountNo"].stringValue,"accHolderName":consumerData["accountHolderName"].stringValue,"mobileNumber":mobileNumber]
+            let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
+            let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
+            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":consumerData["accountType"].stringValue,"accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
             

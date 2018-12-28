@@ -287,8 +287,11 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
     }
     
     @objc func dismissVC() {
-        delegate?.qrScannerDidCancel(self)
-        self.dismiss(animated: true, completion: nil)
+        
+
+        self.dismiss(animated: true, completion: {
+            self.delegate?.qrScannerDidCancel(self)
+        })
         
     }
     
@@ -310,8 +313,10 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
         case .front:
             if let frontDeviceInput = frontCaptureInput {
                 if !captureSession.canAddInput(frontDeviceInput) {
-                    delegate?.qrScannerDidFail(self, error: "Failed to add Input")
-                    self.dismiss(animated: true, completion: nil)
+                    
+                    self.dismiss(animated: true, completion: {
+                        self.delegate?.qrScannerDidFail(self, error: "Failed to add Input")
+                    })
                     return
                 }
                 captureSession.addInput(frontDeviceInput)
@@ -320,8 +325,10 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
         case .back, .unspecified :
             if let defaultDeviceInput = defaultCaptureInput {
                 if !captureSession.canAddInput(defaultDeviceInput) {
-                    delegate?.qrScannerDidFail(self, error: "Failed to add Input")
-                    self.dismiss(animated: true, completion: nil)
+                    
+                    self.dismiss(animated: true, completion: {
+                        self.delegate?.qrScannerDidFail(self, error: "Failed to add Input")
+                    })
                     return
                 }
                 captureSession.addInput(defaultDeviceInput)
@@ -330,8 +337,10 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
         }
         
         if !captureSession.canAddOutput(dataOutput) {
-            delegate?.qrScannerDidFail(self, error: "Failed to add Output")
-            self.dismiss(animated: true, completion: nil)
+            
+            self.dismiss(animated: true, completion: {
+                self.delegate?.qrScannerDidFail(self, error: "Failed to add Output")
+            })
             return
         }
         

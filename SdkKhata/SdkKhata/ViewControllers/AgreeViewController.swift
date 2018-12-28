@@ -9,6 +9,12 @@ import UIKit
 
 class AgreeViewController: UIViewController {
     
+    
+    @IBOutlet weak var acceptTermsTextLabel: UILabel!
+    @IBOutlet weak var autoPayTextLabel: UILabel!
+    @IBOutlet weak var shareDetailsTextLabel: UILabel!
+    @IBOutlet weak var submitIdTextLabel: UILabel!
+    
     @IBOutlet weak var shareDetailsLabel: UILabel!
     @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
@@ -30,10 +36,12 @@ class AgreeViewController: UIViewController {
     
     func setkhaataAcountLabel(){
         
-        let dataString = "Your ₹ 5000 Khaata"
+        let preApprovedLimit = UserDefaults.standard.string(forKey: "preApprovedLimit")
+        print(preApprovedLimit!)
+        let dataString = "Your ₹ \(preApprovedLimit!) Khaata"
         
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: dataString,attributes: [ NSAttributedStringKey.font: UIFont.systemFont(ofSize: 25)])
-        attributedString.setColorForText(textForAttribute: "₹ 5000", withColor: Utils().hexStringToUIColor(hex: "#FF6803"))
+        attributedString.setColorForText(textForAttribute: "₹ \(preApprovedLimit!)", withColor: Utils().hexStringToUIColor(hex: "#FF6803"))
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
@@ -88,6 +96,11 @@ class AgreeViewController: UIViewController {
         if(!dncFlag){
             self.autoPayView.isHidden = true
             self.shareDetailsLabel.backgroundColor = UIColor.lightGray
+        }else{
+            self.submitIdTextLabel.text = "Submit\nID"
+            self.shareDetailsTextLabel.text = "Share\nDetail"
+            self.autoPayTextLabel.text = "Auto\nPay"
+            self.acceptTermsTextLabel.text = "Accept\nTerms"
         }
 
     }

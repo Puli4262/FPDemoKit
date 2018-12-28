@@ -13,6 +13,11 @@ import CropViewController
 
 class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
+    @IBOutlet weak var acceptTermsTextLabel: UILabel!
+    @IBOutlet weak var autoPayTextLabel: UILabel!
+    @IBOutlet weak var shareDetailsTextLabel: UILabel!
+    @IBOutlet weak var submitIdTextLabel: UILabel!
+    
     @IBOutlet weak var autoPayView: UIView!
     @IBOutlet weak var stepperImg: UIImageView!
     @IBOutlet weak var cameraIcon: UIImageView!
@@ -45,6 +50,11 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
+        }else{
+            self.submitIdTextLabel.text = "Submit\nID"
+            self.shareDetailsTextLabel.text = "Share\nDetail"
+            self.autoPayTextLabel.text = "Auto\nPay"
+            self.acceptTermsTextLabel.text = "Accept\nTerms"
         }
 
     }
@@ -110,7 +120,10 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             
                             
                         }else if(res["response"].stringValue == "fail" && status.containsIgnoringCase(find: "noMatch")){
-                            Utils().showToast(context: self, msg: "show pop up", showToastFrom: 20.0)
+                            DispatchQueue.main.async {
+                                self.openMismatchPopupVC(titleDescription: "There is a mismatch between your ID photograph and selfie")
+                            }
+                            
                         }
                     })
                 }, failure: {error in
@@ -149,8 +162,10 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             viewController.btnTitle = "Retake selfie"
-            viewController.titleDescription = "There is a mismatch between your ID photograph and selfie"
+            viewController.titleDescription = titleDescription
             viewController.requestFrom = "selfie"
+            viewController.btnTitle = "Retake selfie"
+            viewController.mismatcPopupDelegate = self
             self.present(viewController, animated: true)
         }
         
@@ -177,6 +192,7 @@ extension SelfieViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage croppedImage: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("handle image")
         self.dismiss(animated: true, completion: {
+            self.selfieImageView.isHidden = false
             self.selfieImageView.image = croppedImage
             self.selfieImageView.layer.cornerRadius = self.selfieImageView.frame.height / 2
             self.selfieImageView.clipsToBounds = true
@@ -191,6 +207,18 @@ extension SelfieViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didFinishCancelled cancelled: Bool) {
         
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+}
+
+extension SelfieViewController: MismatcPopupDelegate {
+    func resetDocument() {
+        print("Reset Images")
+        self.cameraIcon.isHidden = true
+        self.selfieImageView.image = UIImage(named:"selfieicon")
+        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+        self.continueBtn.isUserInteractionEnabled = false
     }
     
     

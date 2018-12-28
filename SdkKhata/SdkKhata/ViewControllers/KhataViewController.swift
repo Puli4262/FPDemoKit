@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-               //self.openAutopayVC()
+                //self.openAgreeVC()
             })
         }
         
@@ -120,8 +120,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     UserDefaults.standard.set(status,forKey: "status")
                     let dncFlag = res["dncFlag"].boolValue
                     UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
+                    UserDefaults.standard.set(res["firstName"].stringValue, forKey: "firstName")
+                    UserDefaults.standard.set(res["lastName"].stringValue, forKey: "lastName")
+                    UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "preApprovedLimit")
                     if(status == "kycPending"){
-                        if(self.mandateStatus == "editMandate"){
+                        if(self.mandateStatus == "changeMandate"){
                             UserDefaults.standard.set("editMandate",forKey: "status")
                             status = "editMandate"
                         }else{
@@ -198,7 +201,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         case "nonMandatory":
             Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                
+                //sendFPSDKResponseDelegate?.KhaataSDKFailure(status: "status")
                 self.navigationController?.popToRootViewController(animated: true)
             })
             break

@@ -112,10 +112,10 @@ class Utils {
                     
                     
                     if(isFromDocument){
-                        multipartFormData.append(frontImageData, withName: "filefront",fileName: "filefront.jpg", mimeType: "image/jpg")
-                        multipartFormData.append(backImageData, withName: "fileback",fileName: "fileback.jpg", mimeType: "image/jpg")
+                        multipartFormData.append(frontImageData, withName: "filefront",fileName: "filefront.png", mimeType: "image/jpg")
+                        multipartFormData.append(backImageData, withName: "fileback",fileName: "fileback.png", mimeType: "image/jpg")
                     }else{
-                        multipartFormData.append(frontImageData, withName: "selfie",fileName: "filefront.jpg", mimeType: "image/jpg")
+                        multipartFormData.append(frontImageData, withName: "selfie",fileName: "filefront.png", mimeType: "image/jpg")
                     }
                     
                     for (key, value) in params

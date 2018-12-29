@@ -71,10 +71,18 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         viewController.navigationController?.navigationBar.layer.shadowRadius = 4.0
         viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
+        let mandateRefId = UserDefaults.standard.string(forKey: "mandateRefId")
+        print(status!)
+        print(mandateRefId!)
         if(status == "editMandate"){
             viewController.title = "Change Bank Mandate"
-        }else if(status == "kycPending"){
+        }else if(status == "kycPending" ){
             viewController.title = "Set Auto Pay"
+        }else if(status == "MandateCreated"){
+             viewController.title = "Set Auto Pay"
+            if(JSON(mandateRefId) != JSON.null && mandateRefId != "0"){
+                self.handleEmandateCreationApi(mandateRef: mandateRefId!)
+            }
         }else{
             viewController.title = "Khaata Application"
         }
@@ -181,7 +189,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         
         if(selectedBankIndex == 4){
             
-            self.handleEmandateCreationApi()
+            self.handleEmandateCreationApi(mandateRef: "None of the above")
             
         }else{
             if(accountNumberTextFeild.text == ""){
@@ -389,18 +397,16 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     
-    func handleEmandateCreationApi(){
+    func handleEmandateCreationApi(mandateRef:String){
         
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
-            let poastData = ["mandateRef":"None of the above","ifsc":"","accType":"","accNumber":"","accHolderName":"","mobileNumber":mobileNumber]
+            let poastData = ["mandateRef":mandateRef,"ifsc":"","accType":"","accNumber":"","accHolderName":"","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
-            
-            
             let token = UserDefaults.standard.string(forKey: "token")
             print(token!)
             utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
@@ -457,8 +463,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                 
                                 
                             }
-                        }
-                    //}
+                    }else if(response.containsIgnoringCase(find: "fail")){
+                        utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    }
+                    
                     
                 })
                 

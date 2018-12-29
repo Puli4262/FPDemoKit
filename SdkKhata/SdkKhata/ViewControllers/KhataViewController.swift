@@ -70,6 +70,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         print("productinfo \(productinfo)")
         print("firstname \(firstname)")
         
+        
+        
         if(self.requestFrom == "Call Payu"){
             
             UserDefaults.standard.set(emailID, forKey: "emailID")
@@ -87,6 +89,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                 //self.openUploadDocumentsVC()
             })
         }
+        
+        
         
         
     }
@@ -132,7 +136,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     UserDefaults.standard.set(res["firstName"].stringValue, forKey: "firstName")
                     UserDefaults.standard.set(res["lastName"].stringValue, forKey: "lastName")
                     UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "preApprovedLimit")
-                    if(status == "kycPending"){
+                    UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "mandateRefId")
+                    print("status \(status)")
+                    if(status == "kycPending" || status == "MandateCreated"){
                         if(self.mandateStatus == "changeMandate"){
                             UserDefaults.standard.set("editMandate",forKey: "status")
                             status = "editMandate"

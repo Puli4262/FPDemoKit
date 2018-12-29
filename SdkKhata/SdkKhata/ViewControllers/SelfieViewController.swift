@@ -119,7 +119,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             self.openCustomerDetailsVC()
                             
                             
-                        }else if(res["response"].stringValue == "fail" && status.containsIgnoringCase(find: "noMatch")){
+                        }else if(res["response"].stringValue.containsIgnoringCase(find: "fail") && status.containsIgnoringCase(find: "noMatch")){
                             DispatchQueue.main.async {
                                 self.openMismatchPopupVC(titleDescription: "There is a mismatch between your ID photograph and selfie")
                             }
@@ -219,6 +219,8 @@ extension SelfieViewController: MismatcPopupDelegate {
         self.selfieImageView.image = UIImage(named:"selfieicon")
         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
         self.continueBtn.isUserInteractionEnabled = false
+        
+        Utils().openCamera(imagePicker: imagePicker, viewController: self, isFront: true)
     }
     
     

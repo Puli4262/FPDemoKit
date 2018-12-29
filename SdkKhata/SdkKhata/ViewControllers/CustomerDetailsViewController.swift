@@ -232,7 +232,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     self.getPincodeDetails(from: "communication", pincode: textField.text!)
                 }
                 
-            }else if(textField.text?.count == 0){
+            }else{
                 if(textField == permanentAddPincodeTextField){
                     self.permanentAddStateTextField.text = ""
                     self.permanentAddCityTextField.text = ""
@@ -1164,10 +1164,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             permanentAddPincodeTextField.becomeFirstResponder()
             
         }else if(permanentAddCityTextField.text == ""){
-            Utils().showToast(context: self, msg: "Please enter the city.", showToastFrom: 350.0)
+            Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)
             permanentAddCityTextField.becomeFirstResponder()
         }else if(permanentAddStateTextField.text == ""){
-            Utils().showToast(context: self, msg: "Please enter the state.", showToastFrom: 350.0)
+            Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)
             permanentAddStateTextField.becomeFirstResponder()
         }else {
             
@@ -1187,10 +1187,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     communicationAddPincodeTextField.becomeFirstResponder()
                     
                 }else if(communicationAddCityTextField.text == ""){
-                    Utils().showToast(context: self, msg: "Please enter the city.", showToastFrom: 350.0)
+                    Utils().showToast(context: self, msg: "Please enter the communication pincode.", showToastFrom: 350.0)
                     communicationAddCityTextField.becomeFirstResponder()
                 }else if(communicationAddStateTextField.text == ""){
-                    Utils().showToast(context: self, msg: "Please enter the state.", showToastFrom: 350.0)
+                    Utils().showToast(context: self, msg: "Please enter the communication pincode.", showToastFrom: 350.0)
                     communicationAddStateTextField.becomeFirstResponder()
                 }else{
                     self.handleCreateCustomer(status: "customercreated")

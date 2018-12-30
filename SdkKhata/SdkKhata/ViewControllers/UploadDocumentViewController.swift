@@ -136,7 +136,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         print(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType)
         if(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType){
             self.frontImage.image = UIImage(named:"front")
-            self.backImage.image = UIImage(named:"back")
+            self.backImage.image = UIImage(named:"sdk_back")
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
             self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
         }
@@ -869,7 +869,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
 extension UploadDocumentViewController: MismatcPopupDelegate {
     func resetDocument() {
         self.frontImage.image = UIImage(named:"front")
-        self.backImage.image = UIImage(named:"back")
+        self.backImage.image = UIImage(named:"sdk_back")
         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
         self.continueBtn.isUserInteractionEnabled = false
         let docType = self.ocrPostData["docType"].stringValue

@@ -404,6 +404,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             fatherNameTextField.isUserInteractionEnabled = false
             motherNameTextField.isUserInteractionEnabled = false
             personalDetailsBtn.isUserInteractionEnabled = false
+        }else if(status == "customercreated"){
+            personalDetailsBtn.isHidden = true
         }
         
         if(!visibility){
@@ -469,6 +471,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.addressDetailsBtnConstraint.constant = 0
             
         }
+        
+        
         
         self.handleIsCommunicationAddressSame(isVisiblity: visibility)
         
@@ -759,7 +763,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
 //                }else{
                     //UserDefaults.standard.set(refreshToken, forKey: "token")
                 
-        
+                let getCoustomerStatus = res["status"].stringValue
+                if(getCoustomerStatus == "personaldetail" || getCoustomerStatus == "customercreated"){
+                    UserDefaults.standard.set(getCoustomerStatus, forKey: "status")
+                }
+                let corAddressFlag = res["corAddressFlag"].boolValue
+                self.isCommunicationAddSameSwitch.isOn = corAddressFlag
+                
                 alertController.dismiss(animated: true, completion: {
                     
                     self.customerPostData = res
@@ -767,7 +777,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     let status = UserDefaults.standard.string(forKey: "status")
                     
                     
-                    if(JSON(res["pincodePermanent"]) != JSON.null && res["pincodePermanent"].stringValue != "" && res["pincodePermanent"].stringValue.count == 6){
+                    if(refreshToken == "InvalidToken"){
+                        DispatchQueue.main.async {
+                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                        }
+                    }else if(JSON(res["pincodePermanent"]) != JSON.null && res["pincodePermanent"].stringValue != "" && res["pincodePermanent"].stringValue.count == 6){
                         self.getPincodeDetails(from: "permanent", pincode: res["pincodePermanent"].stringValue)
                     }
                     if(JSON(res["pincodeCorrespondence"]) != JSON.null && res["pincodeCorrespondence"].stringValue != "" && res["pincodeCorrespondence"].stringValue.count == 6){
@@ -828,23 +842,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     }else if(status! == "customercreated"){
                         
                         self.handlePancardUIVisibility(visibility:true)
-                        self.handlePersonalDetailsUIVisibility(visibility: true)
-                        self.handleAddressDetailsUIVisibility(visibility:false)
+                        self.handlePersonalDetailsUIVisibility(visibility: false)
+                        self.handleAddressDetailsUIVisibility(visibility:true)
                         self.handleVCHeight()
                         
                         self.idDetailsTextField.isUserInteractionEnabled = true
                         self.personalDetailsTextField.isUserInteractionEnabled = true
                         self.addressTitleTextField.isUserInteractionEnabled = true
                         
-                        if(self.isCommunicationAddSameSwitch.isOn){
-                            self.customerDetailsView.constant = Utils().screenHeight + 200
-                            self.view.frame.size.height = Utils().screenHeight
-                            self.addressDeatilsViewConstraint.constant = 400
-                        }else{
-                            self.customerDetailsView.constant = 900
-                            self.view.frame.size.height = 700
-                            self.addressDeatilsViewConstraint.constant = 630
-                        }
+                        
                         
                     }
                     

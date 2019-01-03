@@ -484,6 +484,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     @IBAction func handleAddressSwichChange(_ sender: UISwitch) {
         
         self.handleIsCommunicationAddressSame(isVisiblity: !permanentAddressLabel.isHidden)
+        self.customerPostData["corAddressFlag"].boolValue = !isCommunicationAddSameSwitch.isOn
         if(sender.isOn){
             self.addressDeatilsViewConstraint.constant = 380
             
@@ -768,7 +769,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     UserDefaults.standard.set(getCoustomerStatus, forKey: "status")
                 }
                 let corAddressFlag = res["corAddressFlag"].boolValue
-                self.isCommunicationAddSameSwitch.isOn = corAddressFlag
+                print(corAddressFlag)
+                self.isCommunicationAddSameSwitch.isOn = !corAddressFlag
                 
                 alertController.dismiss(animated: true, completion: {
                     
@@ -785,6 +787,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         self.getPincodeDetails(from: "permanent", pincode: res["pincodePermanent"].stringValue)
                     }
                     if(JSON(res["pincodeCorrespondence"]) != JSON.null && res["pincodeCorrespondence"].stringValue != "" && res["pincodeCorrespondence"].stringValue.count == 6){
+                        self.getPincodeDetails(from: "correspondence", pincode: res["pincodeCorrespondence"].stringValue)
                         
                     }
                     

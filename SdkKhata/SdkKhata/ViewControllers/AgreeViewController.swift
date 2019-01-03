@@ -152,12 +152,13 @@ class AgreeViewController: UIViewController {
                 alertController.dismiss(animated: true, completion: {
                     
                     let token = res["token"].stringValue
-                    
+                    print(res)
                     if(token == "InvalidToken"){
                         DispatchQueue.main.async {
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                         }
-                    }else if(res["status"].stringValue == "kycPending"){
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
+                        if(res["status"].stringValue == "kycPending"){
                             for controller in self.navigationController!.viewControllers as Array {
                                 if controller.isKind(of: KhataViewController.self) {
                                     KhataViewController.comingFrom = "data"
@@ -171,6 +172,9 @@ class AgreeViewController: UIViewController {
                                 }
                             }
                         }
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
+                        utils.showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                    }
                     //}
                     
                     

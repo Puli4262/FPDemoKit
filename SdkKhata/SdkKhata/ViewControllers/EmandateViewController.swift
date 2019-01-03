@@ -113,7 +113,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         print(requestString)
         
         
-        if(requestString.containsIgnoringCase(find: "KhataBackEnd/khata_files/t_c.html?data=")){
+        if(requestString.containsIgnoringCase(find: "khata_files/t_c.html?data=")){
             //self.handleEmandateCreation()
             let dataString =  requestString.split(separator: "=")
             let mandateResponse = String(dataString[1]).replacingOccurrences(of: "%7C", with: "|")
@@ -141,7 +141,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
             let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
             let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
-            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":consumerData["accountType"].stringValue,"accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
+            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"11","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
             

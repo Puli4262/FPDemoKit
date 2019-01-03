@@ -328,6 +328,9 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     func selectBankView(index:Int){
         self.resetViews()
         selectedBankIndex = index
+        self.ifscCodeTextFeild.isUserInteractionEnabled = true
+        self.accountNumberTextFeild.isUserInteractionEnabled = true
+
         switch index {
         case 1:
             iciciView.backgroundColor = Utils().hexStringToUIColor(hex: "#DFE0E0")
@@ -343,6 +346,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             break
         case 4:
             self.continueBtn.isUserInteractionEnabled = true
+            self.ifscCodeTextFeild.text = ""
+            self.accountNumberTextFeild.text = ""
+            self.ifscCodeTextFeild.isUserInteractionEnabled = false
+            self.accountNumberTextFeild.isUserInteractionEnabled = false
             self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
             noBankView.backgroundColor = Utils().hexStringToUIColor(hex: "#DFE0E0")
             noBankRadiImg.image = UIImage(named:"radio_button_checked")

@@ -152,7 +152,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                             }
                         }
                     }
-                    self.handleStatus(status: status)
+                    self.handleStatus(status: status, leadResponse: res)
                     
                 }
             }, failure: {error in
@@ -195,7 +195,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     }
     
     
-    func handleStatus(status:String){
+    func handleStatus(status:String,leadResponse:JSON){
         print(status)
         switch(status) {
         case "KYCInitaited":
@@ -216,7 +216,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         case "nonMandatory":
             Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                //sendFPSDKResponseDelegate?.KhaataSDKFailure(status: "status")
+                self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: leadResponse["mandateId"].stringValue)
                 self.navigationController?.popToRootViewController(animated: true)
             })
             break

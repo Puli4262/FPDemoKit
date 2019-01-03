@@ -352,7 +352,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 self.pancardTextField.isUserInteractionEnabled = false
                 self.pancardBtnConstraint.constant = 0
                 self.pancardViewHeightConstraint.constant = 150
-                self.greenTick.isHidden = false
+                self.greenTick.isHidden = true
 
             }
             
@@ -706,7 +706,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                             self.pancardTextField.isUserInteractionEnabled = false
                                             self.pancardBtnConstraint.constant = 0
                                             self.pancardViewHeightConstraint.constant = 150
-                                            self.greenTick.isHidden = false
+                                            self.greenTick.isHidden = true
                                             
                                         }
                                         

@@ -141,7 +141,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
             let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
             let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
-            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"11","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
+            let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"10","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
             
@@ -165,7 +165,14 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                         if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                             
                             self.dismiss(animated: true, completion: {
-                                self.eMandateResponseDelegate?.gotoAgreeVC()
+                                let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+                                print(dncFlag)
+                                if(dncFlag){
+                                    self.eMandateResponseDelegate?.gotoAgreeVC()
+                                }else{
+                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                }
+                                
                             })
                         }else{
                             

@@ -85,7 +85,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var addressDetailsBtn: UIButton!
     
     
-    var customerPostData = JSON(["mobileNumber": "","salutation": "","firstName": "","dob": "","gender": "","pan": "","status": "","emailid": "","employmentstatus": "","permanentAddLine1": "","permanentAddLine2": "","correspondenceAddLine1": "","correspondenceAddLine2": "","pincodePermanent": "","pincodeCorrespondence": "","cityPermanent": "","cityCorrespondence": "","statePermanent": "","stateCorrespondence": "","fatherName": "","motherName": "","lastName": ""])
+    var customerPostData = JSON(["mobileNumber": "","salutation": "","firstName": "","dob": "","gender": "","pan": "","status": "","emailid": "","employmentstatus": "","permanentAddLine1": "","permanentAddLine2": "","correspondenceAddLine1": "","correspondenceAddLine2": "","pincodePermanent": "","pincodeCorrespondence": "","cityPermanent": "","cityCorrespondence": "","statePermanent": "","stateCorrespondence": "","fatherName": "","motherName": "","lastName": "","corAddressFlag":true])
     
     var handleTextFeilds = JSON([["name":"pan","height":60],["name":"firstName","height":90],["name":"lastName","height":90],["name":"dob","height":160],["name":"emailid","height":220],["name":"fatherName","height":550],["name":"motherName","height":600],["name":"permanentAddLine1","height":150],["name":"permanentAddLine2","height":200],["name":"pincodePermanent","height":250],["name":"cityPermanent","height":300],["name":"statePermanent","height":350],["name":"correspondenceAddLine1","height":500],["name":"correspondenceAddLine2","height":550],["name":"pincodeCorrespondence","height":600],["name":"cityCorrespondence","height":650],["name":"stateCorrespondence","height":700]])
     
@@ -610,6 +610,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                             }
                         }else if(res["response"].stringValue == "success"){
+                            
+                            let corAddressFlag = true
+                            self.customerPostData["corAddressFlag"].boolValue = corAddressFlag
+                            self.isCommunicationAddSameSwitch.isOn = corAddressFlag
+                            
                             if(res["panNumber"].stringValue == "Invalid PAN"){
                                 self.pancardInValidLabel.isHidden = false
                             }else if(res["panNumber"].stringValue == "noMatch"){
@@ -764,8 +769,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 if(getCoustomerStatus == "personaldetail" || getCoustomerStatus == "customercreated"){
                     UserDefaults.standard.set(getCoustomerStatus, forKey: "status")
                 }
+                
                 let corAddressFlag = res["corAddressFlag"].boolValue
-                print(corAddressFlag)
+                self.customerPostData["corAddressFlag"].boolValue = corAddressFlag
                 self.isCommunicationAddSameSwitch.isOn = corAddressFlag
                 
                 alertController.dismiss(animated: true, completion: {

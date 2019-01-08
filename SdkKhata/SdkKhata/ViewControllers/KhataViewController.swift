@@ -83,11 +83,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
             UserDefaults.standard.set(emailID, forKey: "emailID")
             UserDefaults.standard.set(DOB, forKey: "DOB")
-            //self.getLeadApi(mobileNumber: mobileNumber!)
+            self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-                self.openAutopayVC()
+                //self.openAutopayVC()
             })
         }
         
@@ -144,18 +144,13 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "preApprovedLimit")
                     UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "mandateRefId")
                     print("status \(status)")
-                    if(status == "kycPending" || status == "MandateCreated"){
-                        if(self.mandateStatus == "changeMandate"){
-                            UserDefaults.standard.set("editMandate",forKey: "status")
-                            status = "editMandate"
-                        }else if(self.mandateStatus == "mandatory"){
-                            UserDefaults.standard.set("MandateCreated",forKey: "status")
-                            status = "MandateCreated"
-                        }else if(self.mandateStatus == "nonMandatory"){
-                            UserDefaults.standard.set("nonMandatory",forKey: "status")
-                            status = "nonMandatory"
+                    if(status == "kycPending"){
+                        
+                        if(!dncFlag){
+                            UserDefaults.standard.set("kycPending",forKey: "status")
+                            status = "kycPending"
                         }else{
-                            if(!dncFlag){
+                            if(res["mandateRefId"].stringValue == "0"){
                                 UserDefaults.standard.set("kycPending",forKey: "status")
                                 status = "kycPending"
                             }else{
@@ -163,6 +158,24 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                                 status = "nonMandatory"
                             }
                         }
+//                        if(self.mandateStatus == "changeMandate"){
+//                            UserDefaults.standard.set("editMandate",forKey: "status")
+//                            status = "editMandate"
+//                        }else if(self.mandateStatus == "mandatory"){
+//                            UserDefaults.standard.set("MandateCreated",forKey: "status")
+//                            status = "MandateCreated"
+//                        }else if(self.mandateStatus == "nonMandatory"){
+//                            UserDefaults.standard.set("nonMandatory",forKey: "status")
+//                            status = "nonMandatory"
+//                        }else{
+//                            if(!dncFlag){
+//                                UserDefaults.standard.set("kycPending",forKey: "status")
+//                                status = "kycPending"
+//                            }else{
+//                                UserDefaults.standard.set("nonMandatory",forKey: "status")
+//                                status = "nonMandatory"
+//                            }
+//                        }
                     }
                     self.handleStatus(status: status, leadResponse: res)
                     
@@ -219,23 +232,44 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         case "SalfieUploaded","Pan valided","personaldetail","customercreated":
             self.openCustomerDetailsVC()
             break
-        case "kycPending","editMandate","MandateCreated":
+        case "kycPending","editMandate":
             self.openAutopayVC()
             break
+        case "MandateCreated":
+            self.handleMandateCreate(leadResponse: leadResponse)
+            break
         case "MandateCompleted":
-            self.openAgreeVC()
+            if(!leadResponse["dncFlag"].boolValue){
+                //self.openAutopayVC()
+                self.handleJournyComplete(leadResponse: leadResponse)
+            }else{
+              self.openAgreeVC()
+            }
             break
         case "nonMandatory":
-            Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: leadResponse["mandateId"].stringValue)
-                self.navigationController?.popToRootViewController(animated: true)
-            })
+            self.handleJournyComplete(leadResponse: leadResponse)
             break
         default:
             self.openUploadDocumentsVC()
             break
         }
+    }
+    
+    func handleJournyComplete(leadResponse:JSON){
+        Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: leadResponse["mandateId"].stringValue)
+            self.navigationController?.popToRootViewController(animated: true)
+        })
+    }
+    
+    func handleMandateCreate(leadResponse:JSON){
+        if(leadResponse["dncFlag"].boolValue && leadResponse["mandateRefId"].stringValue == "0" && leadResponse["lan"].stringValue == ""){
+            self.openAgreeVC()
+        }else{
+            self.openAutopayVC()
+        }
+        
     }
     
     func handnleGoBackPopup(titleDescription:String){

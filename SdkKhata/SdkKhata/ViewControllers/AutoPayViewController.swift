@@ -24,8 +24,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var stackViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var stepperImg: UIImageView!
-    @IBOutlet weak var ifscCodeTextFeild: SkyFloatingLabelTextField!
-    @IBOutlet weak var accountNumberTextFeild: SkyFloatingLabelTextField!
+    //@IBOutlet weak var ifscCodeTextFeild: SkyFloatingLabelTextField!
+    //@IBOutlet weak var accountNumberTextFeild: SkyFloatingLabelTextField!
     @IBOutlet weak var hdfcView: Cardview!
     @IBOutlet weak var iciciView: Cardview!
     @IBOutlet weak var axisView: Cardview!
@@ -46,6 +46,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     var selectedBankIndex = 0
     var firstName = ""
     var lastNmae = ""
+    var accountNumberArray = ["56789012345678","234567890123","789012345678901","67890123456"]
+    var ifscCodesArray = ["HDFC0000240","ICIC0000348","UTIB0000ETC","SBIN0000300"]
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,8 +58,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
-        self.setDelegates()
+        //self.setDelegates()
         self.setStepperIcon()
+        self.continueBtn.isUserInteractionEnabled = true
+        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+        //self.setupTopBar(viewController: self)
         
     }
     
@@ -80,9 +85,9 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             viewController.title = "Set Auto Pay"
         }else if(status == "MandateCreated"){
              viewController.title = "Set Auto Pay"
-            if(JSON(mandateRefId) != JSON.null && mandateRefId != "0"){
-                self.handleEmandateCreationApi(mandateRef: mandateRefId!)
-            }
+//            if(JSON(mandateRefId) != JSON.null && mandateRefId != "0"){
+//                self.handleEmandateCreationApi(mandateRef: mandateRefId!)
+//            }
         }else{
             viewController.title = "Khaata Application"
         }
@@ -112,11 +117,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func setDelegates(){
-        self.ifscCodeTextFeild.delegate = self
-        self.accountNumberTextFeild.delegate = self
-        
-        self.ifscCodeTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
-        self.accountNumberTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+//        self.ifscCodeTextFeild.delegate = self
+//        self.accountNumberTextFeild.delegate = self
+//
+//        self.ifscCodeTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+//        self.accountNumberTextFeild.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -133,42 +138,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         }
     }
     
-    @objc func textFieldDidChange(_ textField : UITextField){
-        
-        if(textField == ifscCodeTextFeild){
-            textField.autocapitalizationType = UITextAutocapitalizationType.allCharacters
-            textField.text = textField.text?.uppercased()
-            if((textField.text?.count)! < 5){
-                self.continueBtn.isUserInteractionEnabled = false
-                self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-            }else{
-                
-                if((accountNumberTextFeild.text?.count)! >= 5){
-                    self.continueBtn.isUserInteractionEnabled = true
-                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-                }else{
-                    self.continueBtn.isUserInteractionEnabled = false
-                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-                }
-                
-            }
-            
-        }else if(textField == accountNumberTextFeild){
-            if((textField.text?.count)! < 5){
-                self.continueBtn.isUserInteractionEnabled = false
-                self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-            }else{
-                if((ifscCodeTextFeild.text?.count)! >= 5){
-                    self.continueBtn.isUserInteractionEnabled = true
-                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-                }else{
-                    self.continueBtn.isUserInteractionEnabled = false
-                    self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-                }
-                
-            }
-        }
-    }
+  
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -177,6 +147,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     
     @IBAction func handleAutopayBtn(_ sender: Any) {
+        
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         let utils = Utils()
         let hostUrl = utils.hostURL
@@ -187,28 +158,21 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         
         
         
-        if(selectedBankIndex == 4){
-            
+        let mandateRefId = UserDefaults.standard.string(forKey: "mandateRefId")
+        if(mandateRefId! != "" && mandateRefId! != "0"){
+            self.handleEmandateCreationApi(mandateRef: mandateRefId!)
+        }else if(selectedBankIndex == 4){
             self.handleEmandateCreationApi(mandateRef: "None of the above")
-            
         }else{
-            if(accountNumberTextFeild.text == ""){
-                utils.showToast(context: self, msg: "Please enter account number", showToastFrom: utils.screenHeight/2)
-            }else if(ifscCodeTextFeild.text == ""){
-                utils.showToast(context: self, msg: "Please enter bank IFSC CODE", showToastFrom: utils.screenHeight/2)
-            }else{
-                
+                print(selectedBankIndex)
                 let emailID = UserDefaults.standard.string(forKey: "emailID")
                 consumerDataDict["consumerEmailId"].stringValue = emailID!
-                consumerDataDict["accountNo"].stringValue = accountNumberTextFeild.text!
+                consumerDataDict["accountNo"].stringValue = self.accountNumberArray[selectedBankIndex]
                 consumerDataDict["accountHolderName"].stringValue = ""
-                consumerDataDict["ifscCode"].stringValue = ifscCodeTextFeild.text!
+                consumerDataDict["ifscCode"].stringValue = self.ifscCodesArray[selectedBankIndex]
                 
                 var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
                 self.getMandateTokenApi(params:JSON(mandateDict))
-                
-                
-            }
         }
         
         
@@ -328,9 +292,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     func selectBankView(index:Int){
         self.resetViews()
         selectedBankIndex = index
-        self.ifscCodeTextFeild.isUserInteractionEnabled = true
-        self.accountNumberTextFeild.isUserInteractionEnabled = true
-
+        //self.ifscCodeTextFeild.isUserInteractionEnabled = true
+        //self.accountNumberTextFeild.isUserInteractionEnabled = true
+        self.continueBtn.isUserInteractionEnabled = true
+        self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
         switch index {
         case 1:
             iciciView.backgroundColor = Utils().hexStringToUIColor(hex: "#DFE0E0")
@@ -345,11 +310,12 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             sbiRadioImg.image = UIImage(named:"radio_button_checked")
             break
         case 4:
+            
+            //self.ifscCodeTextFeild.text = ""
+            //self.accountNumberTextFeild.text = ""
+            //self.ifscCodeTextFeild.isUserInteractionEnabled = false
+            //self.accountNumberTextFeild.isUserInteractionEnabled = false
             self.continueBtn.isUserInteractionEnabled = true
-            self.ifscCodeTextFeild.text = ""
-            self.accountNumberTextFeild.text = ""
-            self.ifscCodeTextFeild.isUserInteractionEnabled = false
-            self.accountNumberTextFeild.isUserInteractionEnabled = false
             self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
             noBankView.backgroundColor = Utils().hexStringToUIColor(hex: "#DFE0E0")
             noBankRadiImg.image = UIImage(named:"radio_button_checked")
@@ -411,7 +377,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
-            let poastData = ["mandateRef":mandateRef,"ifsc":"","accType":"","accNumber":"","accHolderName":"","mobileNumber":mobileNumber]
+            let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
+            let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
+            print(self.selectedBankIndex)
+            let poastData = ["mandateRef":mandateRef,"ifsc":"","accType":"10","accNumber":"","accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
             let token = UserDefaults.standard.string(forKey: "token")
@@ -431,44 +400,89 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                             let status = UserDefaults.standard.string(forKey: "status")!
                             print(status)
                             if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
+                                
+                                if(mandateRef.containsIgnoringCase(find: "None of the above")){
+                                    let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+                                    print(dncFlag)
+                                    if(dncFlag){
+                                        self.openAgreeVC()
+                                    }else{
+                                            for controller in self.navigationController!.viewControllers as Array {
+                                                if controller.isKind(of: KhataViewController.self) {
+                                                    KhataViewController.comingFrom = "data"
+                                                    KhataViewController.sanctionAmount = res["amount"].intValue
+                                                    KhataViewController.CIF = res["cif"].stringValue
+                                                    KhataViewController.LAN  = res["lan"].stringValue
+                                                    KhataViewController.status = "MandateCompleted"
+                                                    KhataViewController.mandateId = "None of the above"
+                                                    self.navigationController!.popToViewController(controller, animated: true)
+                                                    break
+                                                }
+                                            }
+                                        
+                                        
+                                    }
+                                    
+                                }else{
+                                    let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+                                    
+                                    self.present(alert, animated: true, completion: nil)
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                        self.dismiss(animated: true, completion: {
+                                            
+                                            
+                                            let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+                                            print(dncFlag)
+                                            if(dncFlag){
+                                                self.openAgreeVC()
+                                            }else{
+                                                for controller in self.navigationController!.viewControllers as Array {
+                                                    if controller.isKind(of: KhataViewController.self) {
+                                                        KhataViewController.comingFrom = "data"
+                                                        KhataViewController.sanctionAmount = res["amount"].intValue
+                                                        KhataViewController.CIF = res["cif"].stringValue
+                                                        KhataViewController.LAN  = res["lan"].stringValue
+                                                        KhataViewController.status = "MandateCompleted"
+                                                        KhataViewController.mandateId = res["mandateId"].stringValue
+                                                        self.navigationController!.popToViewController(controller, animated: true)
+                                                        break
+                                                    }
+                                                }
+                                                
+                                                
+                                            }
+                                        })
+                                        
+                                    })
+                                }
+                                
+                                
+                            }else{
+                                
                                 let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
                                 
                                 self.present(alert, animated: true, completion: nil)
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                                     self.dismiss(animated: true, completion: {
-                                        self.openAgreeVC()
-                                    })
-                                    
-                                })
-                                
-                            }else{
-                                //self.openAgreeVC()
-                                
-//                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
-//
-//                                self.present(alert, animated: true, completion: nil)
-//
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-//
-//
-//                                })
-                                
-                                self.dismiss(animated: true, completion: {
-                                    
-                                    for controller in self.navigationController!.viewControllers as Array {
-                                        if controller.isKind(of: KhataViewController.self) {
-                                            KhataViewController.comingFrom = "data"
-                                            KhataViewController.sanctionAmount = res["amount"].intValue
-                                            KhataViewController.CIF = res["cif"].stringValue
-                                            KhataViewController.LAN  = res["lan"].stringValue
-                                            KhataViewController.status = "MandateCompleted"
-                                            KhataViewController.mandateId = "None of the above"
-                                            self.navigationController!.popToViewController(controller, animated: true)
-                                            break
+                                        for controller in self.navigationController!.viewControllers as Array {
+                                            if controller.isKind(of: KhataViewController.self) {
+                                                KhataViewController.comingFrom = "data"
+                                                KhataViewController.sanctionAmount = res["amount"].intValue
+                                                KhataViewController.CIF = res["cif"].stringValue
+                                                KhataViewController.LAN  = res["lan"].stringValue
+                                                KhataViewController.status = "MandateCompleted"
+                                                KhataViewController.mandateId = res["mandateId"].stringValue
+                                                self.navigationController!.popToViewController(controller, animated: true)
+                                                break
+                                            }
                                         }
-                                    }
+                                    })
                                 })
+                                
+                                
+                                
                                 
                                 
                             }

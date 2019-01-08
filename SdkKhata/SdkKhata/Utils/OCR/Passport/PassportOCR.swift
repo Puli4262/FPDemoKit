@@ -10,7 +10,7 @@ import SwiftyJSON
 
 
 class PassportOCR {
-    var passportOcrData = JSON(["isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":""])
+    var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":""])
     
     public func checkPassportFront(rawText:String) -> JSON {
         
@@ -23,7 +23,7 @@ class PassportOCR {
         if(rawStrings[i].replacingOccurrences(of: " ", with: "").count == 44  && rawStrings[i-1].replacingOccurrences(of: " ", with: "").count == 44 ){
             passportOcrData["doc_number"].stringValue = "\(rawStrings[i].prefix(8))"
             self.extractPassportName(rawString: rawStrings)
-            self.dateValidator(date: rawText)
+            self.dateValidator(date: rawText, lastLineString: rawStrings[i].replacingOccurrences(of: " ", with: ""))
             passportOcrData["isValidPassportFront"].boolValue = true
             
         }else{
@@ -187,22 +187,66 @@ class PassportOCR {
     
     
     
-    func dateValidator(date:String){
+    func dateValidator(date:String,lastLineString:String){
+        print(lastLineString)
         
-        let dobRegex = "((0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4})"
+        let data = lastLineString
         
-        let allDOBNumberMatches = Utils().matches(for: dobRegex, in: date as String)
-        if(allDOBNumberMatches.count > 0){
-            
-            
-            if(Utils().ageDifferenceFromNow(birthday: allDOBNumberMatches[0]) > 18){
-                let dobArray = allDOBNumberMatches[0].split(separator: "/")
-                passportOcrData["dob"].stringValue = dobArray[2]+"/"+dobArray[1]+"/"+dobArray[0]
-                
-            }else{
-                passportOcrData["dob"].stringValue = ""
-            }
-            
+        
+//        print(data[21 ..< 23])
+//        print(data[23 ..< 25])
+//        print(data[25 ..< 27])
+        var dobYear = Int("20"+lastLineString[13 ..< 15])
+        let dobMonth = Int(lastLineString[15 ..< 17])
+        let dobDate = Int(lastLineString[17 ..< 19])
+        
+    
+        print(Utils().getCurrentYear())
+        let currentYear = Utils().getCurrentYear()
+        if(dobYear! > currentYear){
+            dobYear = dobYear! - 100
+        }
+        
+        passportOcrData["dob"].stringValue = String(dobYear!)+"/"+String(format: "%02d",dobMonth!)+"/"+String(format: "%02d",dobDate!)
+        print(passportOcrData["dob"].stringValue)
+        passportOcrData["gender"].stringValue = String(lastLineString[20])
+//        let dobRegex = "((0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4})"
+//
+//        let allDOBNumberMatches = Utils().matches(for: dobRegex, in: date as String)
+//        if(allDOBNumberMatches.count > 0){
+//
+//
+//            if(Utils().ageDifferenceFromNow(birthday: allDOBNumberMatches[0]) > 18){
+//                let dobArray = allDOBNumberMatches[0].split(separator: "/")
+//                passportOcrData["dob"].stringValue = dobArray[2]+"/"+dobArray[1]+"/"+dobArray[0]
+//
+//            }else{
+//                passportOcrData["dob"].stringValue = ""
+//            }
+//
+//        }
+        self.issuedAndExpiryDates(lastLineString:lastLineString)
+        
+    }
+    
+    func issuedAndExpiryDates(lastLineString:String){
+        
+        let expiryYear = Int("20"+lastLineString[21 ..< 23])
+        let expiryMonth = Int(lastLineString[23 ..< 25])
+        let expiryDate = Int(lastLineString[25 ..< 27])
+        
+        let issuedYear = expiryYear! - 10
+        let issuedMonth = expiryMonth
+        let issuedDate = expiryDate! + 1
+        let currentYear = Utils().getCurrentYear()
+        if(expiryYear! > currentYear){
+            let passportExpiryDate =  String(describing: expiryYear!)+"/"+String(format: "%02d", expiryMonth!)+"/"+String(format: "%02d", expiryDate!)
+            let passportIssuedDate = String(describing: issuedYear)+"/"+String(format: "%02d", issuedMonth!)+"/"+String(format: "%02d", issuedDate)
+            print(passportIssuedDate)
+            print(passportExpiryDate)
+            self.passportOcrData["isPassportExpired"].boolValue = false
+        }else{
+            self.passportOcrData["isPassportExpired"].boolValue = true
         }
         
     }

@@ -64,6 +64,8 @@ class Utils {
         
     }
     
+    
+    
     func requestGETURL(_ strURL: String,headers:[String:String], viewCotroller:UIViewController, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void) {
         
         
@@ -99,6 +101,14 @@ class Utils {
         }else{
             return false
         }
+    }
+    
+    func getCurrentYear() -> Int {
+        let date = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        let year =  components.year
+        return year!
     }
     
     

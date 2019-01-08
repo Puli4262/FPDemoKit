@@ -27,12 +27,12 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.sendFPSDKResponseDelegate = self
             
             //development
-            //viewController.mobileNumber = "9920597339"
-            //viewController.tokenId = "XLfNjRMjFRbkfDXUsCG7/g=="
+            //viewController.mobileNumber = "8424882592"
+            //viewController.tokenId = "xu5Nx+E0/eCaU3gLlivTyw=="
             
             //testing
-            viewController.mobileNumber = "8424882592"
-            viewController.tokenId = "xu5Nx+E0/eCaU3gLlivTyw=="
+            viewController.mobileNumber = "9920597339"
+            viewController.tokenId = "7tzmY1+N3F74rbzhyyaFlA=="
             
             //testing
             //viewController.mobileNumber = "9699044908"

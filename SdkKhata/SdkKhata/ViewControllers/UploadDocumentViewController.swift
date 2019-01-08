@@ -458,8 +458,12 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         let passportData = PassportOCR().checkPassportFront(rawText: resultText)
                         print(passportData)
                         //let isValidPassportFront = self.checkPassportFront(rawText: resultText)
-                        
                         if(passportData["isValidPassportFront"].boolValue){
+                            alertController.dismiss(animated: true, completion: {
+                                Utils().showToast(context: self, msg: "Document validity is expired.\nPlease use another document", showToastFrom: 20.0)
+                            })
+                            
+                        }else if(passportData["isValidPassportFront"].boolValue){
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.setFrontImage(croppedImage: croppedImage)
@@ -470,6 +474,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                     self.ocrPostData["midelName"].stringValue = passportData["midelName"].stringValue
                                     self.ocrPostData["doc_number"].stringValue = passportData["doc_number"].stringValue
                                     self.ocrPostData["dob"].stringValue = passportData["dob"].stringValue
+                                    self.ocrPostData["gender"].stringValue = passportData["gender"].stringValue
                                 })
                             }
                             

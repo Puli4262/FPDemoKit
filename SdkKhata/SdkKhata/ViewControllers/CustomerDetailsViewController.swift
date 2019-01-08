@@ -484,7 +484,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     @IBAction func handleAddressSwichChange(_ sender: UISwitch) {
         
         self.handleIsCommunicationAddressSame(isVisiblity: !permanentAddressLabel.isHidden)
-        self.customerPostData["corAddressFlag"].boolValue = !isCommunicationAddSameSwitch.isOn
+        self.customerPostData["corAddressFlag"].boolValue = isCommunicationAddSameSwitch.isOn
         if(sender.isOn){
             self.addressDeatilsViewConstraint.constant = 380
             
@@ -611,12 +611,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             }
                         }else if(res["response"].stringValue == "success"){
                             if(res["panNumber"].stringValue == "Invalid PAN"){
-                                
                                 self.pancardInValidLabel.isHidden = false
-                                
-                                
                             }else if(res["panNumber"].stringValue == "noMatch"){
-                                
                                 self.openPanMismatchPopupVC()
                             }else if(res["panNumber"].stringValue == "absent"){
                                 UserDefaults.standard.set("Pan valided", forKey: "status")
@@ -770,7 +766,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 }
                 let corAddressFlag = res["corAddressFlag"].boolValue
                 print(corAddressFlag)
-                self.isCommunicationAddSameSwitch.isOn = !corAddressFlag
+                self.isCommunicationAddSameSwitch.isOn = corAddressFlag
                 
                 alertController.dismiss(animated: true, completion: {
                     
@@ -834,11 +830,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         
                         if(self.isCommunicationAddSameSwitch.isOn){
                             self.customerDetailsView.constant = 800
-                            self.view.frame.size.height = 900
+                            self.view.frame.size.height = Utils().screenHeight
                             self.addressDeatilsViewConstraint.constant = 400
                         }else{
                             self.customerDetailsView.constant = 900
-                            self.view.frame.size.height = 700
+                            self.view.frame.size.height = Utils().screenHeight
                             self.addressDeatilsViewConstraint.constant = 630
                         }
                         
@@ -932,8 +928,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             }else{
                 customerPostData["maritialStatus"].stringValue = "M"
             }
-//            customerPostData["firstName"].stringValue = "Cghfjh"
-//            customerPostData["lastName"].stringValue = "Puliddgjhd"
+
             
             UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "firstName")
             UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "lastName")
@@ -1054,12 +1049,18 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         let year =  components.year
        
-        
+        let utils = Utils()
         if(firstNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the first name.", showToastFrom: 350.0)
             firstNameTextField.becomeFirstResponder()
+        }else if(utils.isStringContainsNumbers(name: firstNameTextField.text!)){
+            Utils().showToast(context: self, msg: "Invalid first name", showToastFrom: 350.0)
+            firstNameTextField.becomeFirstResponder()
         }else if(lastNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the last name.", showToastFrom: 350.0)
+            lastNameTextField.becomeFirstResponder()
+        }else if(utils.isStringContainsNumbers(name: lastNameTextField.text!)){
+            Utils().showToast(context: self, msg: "Invalid last name", showToastFrom: 350.0)
             lastNameTextField.becomeFirstResponder()
         }else if((dateOfBirthTextField.text?.count)! < 10){
             Utils().showToast(context: self, msg: "Please enter the valid date.", showToastFrom: 350.0)
@@ -1156,10 +1157,15 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     
     @IBAction func handleCreateCustomerApi(_ sender: Any) {
+        let utils = Utils()
         
-        
-        
-        if(permanentAddressLine1TextField.text == ""){
+        if(utils.isStringContainsNumbers(name: firstNameTextField.text!)){
+            Utils().showToast(context: self, msg: "Invalid first name", showToastFrom: 350.0)
+            firstNameTextField.becomeFirstResponder()
+        }else if(lastNameTextField.text == ""){
+            Utils().showToast(context: self, msg: "Please enter the last name.", showToastFrom: 350.0)
+            lastNameTextField.becomeFirstResponder()
+        }else if(permanentAddressLine1TextField.text == ""){
             
             Utils().showToast(context: self, msg: "Please enter the permanent address1.", showToastFrom: 350.0)
             permanentAddressLine1TextField.becomeFirstResponder()

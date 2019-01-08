@@ -88,6 +88,19 @@ class Utils {
         }
     }
     
+    func isStringContainsNumbers(name:String) -> Bool{
+        
+        let decimalCharacters = CharacterSet.decimalDigits
+        
+        let decimalRange = name.rangeOfCharacter(from: decimalCharacters)
+        
+        if decimalRange != nil {
+            return true
+        }else{
+            return false
+        }
+    }
+    
     
     func postWithImageApi(strURL: String,headers:[String: String],params:JSON,forntImage:UIImage,backImage:UIImage,viewController:UIViewController,isFromDocument:Bool, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void){
         guard let frontImageData = UIImageJPEGRepresentation(forntImage, 0.5) else {
@@ -195,6 +208,8 @@ class Utils {
         }))
         viewController.present(alert, animated: true, completion: nil)
     }
+    
+    
     
     func isConnectedToNetwork() -> Bool {
         

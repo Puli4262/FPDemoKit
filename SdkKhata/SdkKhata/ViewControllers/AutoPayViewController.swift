@@ -445,27 +445,29 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                             }else{
                                 //self.openAgreeVC()
                                 
-                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+//                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+//
+//                                self.present(alert, animated: true, completion: nil)
+//
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+//
+//
+//                                })
                                 
-                                self.present(alert, animated: true, completion: nil)
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                    self.dismiss(animated: true, completion: {
-                                        
-                                        for controller in self.navigationController!.viewControllers as Array {
-                                            if controller.isKind(of: KhataViewController.self) {
-                                                KhataViewController.comingFrom = "data"
-                                                KhataViewController.sanctionAmount = res["amount"].intValue
-                                                KhataViewController.CIF = res["cif"].stringValue
-                                                KhataViewController.LAN  = res["lan"].stringValue
-                                                KhataViewController.status = "MandateCompleted"
-                                                KhataViewController.mandateId = "None of the above"
-                                                self.navigationController!.popToViewController(controller, animated: true)
-                                                break
-                                            }
+                                self.dismiss(animated: true, completion: {
+                                    
+                                    for controller in self.navigationController!.viewControllers as Array {
+                                        if controller.isKind(of: KhataViewController.self) {
+                                            KhataViewController.comingFrom = "data"
+                                            KhataViewController.sanctionAmount = res["amount"].intValue
+                                            KhataViewController.CIF = res["cif"].stringValue
+                                            KhataViewController.LAN  = res["lan"].stringValue
+                                            KhataViewController.status = "MandateCompleted"
+                                            KhataViewController.mandateId = "None of the above"
+                                            self.navigationController!.popToViewController(controller, animated: true)
+                                            break
                                         }
-                                    })
-                                   
+                                    }
                                 })
                                 
                                 

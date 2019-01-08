@@ -60,6 +60,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
         //self.addBackButton()
+        
         print("receiving data")
         print("mobileNumber: \(mobileNumber)")
         print("emailID: \(emailID)")
@@ -82,11 +83,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
             UserDefaults.standard.set(emailID, forKey: "emailID")
             UserDefaults.standard.set(DOB, forKey: "DOB")
-            self.getLeadApi(mobileNumber: mobileNumber!)
+            //self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 
-                //self.openUploadDocumentsVC()
+                self.openAutopayVC()
             })
         }
         
@@ -114,10 +115,15 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             //            self.present(alertController, animated: false, completion: nil)
             
             
-            utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":self.tokenId], viewCotroller: self, success: {res in
+            utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":self.tokenId], viewCotroller: self, success: { res in
                 print(res)
                 let token = res["token"].stringValue
                 let constantToken = res["constantToken"].stringValue
+                let emaiId = res["email"].stringValue
+                
+                if(emaiId != ""){
+                    UserDefaults.standard.set(emaiId, forKey: "emailID")
+                }
                 
                 if(constantToken == "InvalidToken"){
                     self.handnleGoBackPopup(titleDescription: "We are unable to open your Khaata at the moment as you are not eligible")
@@ -142,6 +148,12 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                         if(self.mandateStatus == "changeMandate"){
                             UserDefaults.standard.set("editMandate",forKey: "status")
                             status = "editMandate"
+                        }else if(self.mandateStatus == "mandatory"){
+                            UserDefaults.standard.set("MandateCreated",forKey: "status")
+                            status = "MandateCreated"
+                        }else if(self.mandateStatus == "nonMandatory"){
+                            UserDefaults.standard.set("nonMandatory",forKey: "status")
+                            status = "nonMandatory"
                         }else{
                             if(!dncFlag){
                                 UserDefaults.standard.set("kycPending",forKey: "status")

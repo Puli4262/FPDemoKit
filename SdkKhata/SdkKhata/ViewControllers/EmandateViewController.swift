@@ -175,6 +175,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                             })
                             
                         }
+                    }else{
+                        utils.showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
                     }
                     
                 })

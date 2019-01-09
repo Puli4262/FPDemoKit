@@ -51,7 +51,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     
     
-    func sendResponse(sanctionAmount: Int, LAN: String,status:String,CIF:String,mandateId:String) {
+    func sendResponse(sanctionAmount: Int, LAN: String,status:String,CIF:String,mandateId:Int) {
         print("Main APP")
         print("SanctionAmount : \(sanctionAmount)")
         print("LAN ID : \(LAN)")

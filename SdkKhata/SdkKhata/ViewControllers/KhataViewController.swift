@@ -205,7 +205,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         self.activityIndicatior.isHidden = false
         print(KhataViewController.comingFrom == "unauthorised")
         if(KhataViewController.comingFrom == "data"){
-            sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF, mandateId: KhataViewController.mandateId)
+            sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF, mandateId: Int(KhataViewController.mandateId)!)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
         }else if(KhataViewController.comingFrom == "payU"){
@@ -258,7 +258,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     func handleJournyComplete(leadResponse:JSON){
         Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: leadResponse["mandateId"].stringValue)
+            self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: Int(leadResponse["mandateId"].stringValue)!)
             self.navigationController?.popToRootViewController(animated: true)
         })
     }
@@ -373,7 +373,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
 }
 
 public protocol SendFPSDKResponseDelegate {
-    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
+    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:Int)
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
     func KhaataSDKFailure(status:String)
 }

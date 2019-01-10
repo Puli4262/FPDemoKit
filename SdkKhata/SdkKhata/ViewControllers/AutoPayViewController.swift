@@ -398,92 +398,13 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                     }else if(response.containsIgnoringCase(find: "success")){
                             
                             let status = UserDefaults.standard.string(forKey: "status")!
-                            print(status)
+                        
                             if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                                 
-                                if(mandateRef.containsIgnoringCase(find: "None of the above")){
-                                    let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-                                    print(dncFlag)
-                                    if(dncFlag){
-                                        self.openAgreeVC()
-                                    }else{
-                                            for controller in self.navigationController!.viewControllers as Array {
-                                                if controller.isKind(of: KhataViewController.self) {
-                                                    KhataViewController.comingFrom = "data"
-                                                    KhataViewController.sanctionAmount = res["amount"].intValue
-                                                    KhataViewController.CIF = res["cif"].stringValue
-                                                    KhataViewController.LAN  = res["lan"].stringValue
-                                                    KhataViewController.status = "MandateCompleted"
-                                                    KhataViewController.mandateId = "None of the above"
-                                                    self.navigationController!.popToViewController(controller, animated: true)
-                                                    break
-                                                }
-                                            }
-                                        
-                                        
-                                    }
-                                    
-                                }else{
-                                    let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
-                                    
-                                    self.present(alert, animated: true, completion: nil)
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                        self.dismiss(animated: true, completion: {
-                                            
-                                            
-                                            let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-                                            print(dncFlag)
-                                            if(dncFlag){
-                                                self.openAgreeVC()
-                                            }else{
-                                                for controller in self.navigationController!.viewControllers as Array {
-                                                    if controller.isKind(of: KhataViewController.self) {
-                                                        KhataViewController.comingFrom = "data"
-                                                        KhataViewController.sanctionAmount = res["amount"].intValue
-                                                        KhataViewController.CIF = res["cif"].stringValue
-                                                        KhataViewController.LAN  = res["lan"].stringValue
-                                                        KhataViewController.status = "MandateCompleted"
-                                                        KhataViewController.mandateId = res["mandateId"].stringValue
-                                                        self.navigationController!.popToViewController(controller, animated: true)
-                                                        break
-                                                    }
-                                                }
-                                                
-                                                
-                                            }
-                                        })
-                                        
-                                    })
-                                }
-                                
-                                
+                                self.handleMandateRef(mandateRef: mandateRef, mandateResponse: res)
                             }else{
-                                
-                                let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
-                                
-                                self.present(alert, animated: true, completion: nil)
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                    self.dismiss(animated: true, completion: {
-                                        for controller in self.navigationController!.viewControllers as Array {
-                                            if controller.isKind(of: KhataViewController.self) {
-                                                KhataViewController.comingFrom = "data"
-                                                KhataViewController.sanctionAmount = res["amount"].intValue
-                                                KhataViewController.CIF = res["cif"].stringValue
-                                                KhataViewController.LAN  = res["lan"].stringValue
-                                                KhataViewController.status = "MandateCompleted"
-                                                KhataViewController.mandateId = res["mandateId"].stringValue
-                                                self.navigationController!.popToViewController(controller, animated: true)
-                                                break
-                                            }
-                                        }
-                                    })
-                                })
-                                
-                                
-                                
-                                
+                                //TODO handle another situations
+                                self.handleMandateRef(mandateRef: mandateRef, mandateResponse: res)
                                 
                             }
                     }else if(response.containsIgnoringCase(find: "fail")){
@@ -508,6 +429,56 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
             
             
+        }
+    }
+    
+    func handleMandateRef(mandateRef:String,mandateResponse:JSON){
+        if(mandateRef.containsIgnoringCase(find: "None of the above")){
+            self.handleDncFlag(mandateResponse: mandateResponse)
+        }else{
+            self.showAutoPayCompletedDailog(mandateResponse: mandateResponse)
+        }
+    }
+    
+    func showAutoPayCompletedDailog(mandateResponse:JSON){
+        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            self.dismiss(animated: true, completion: {
+                self.handleDncFlag(mandateResponse: mandateResponse)
+            })
+            
+        })
+    }
+    
+    
+    func handleDncFlag(mandateResponse:JSON){
+        
+        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        print(dncFlag)
+        if(dncFlag){
+            self.openAgreeVC()
+        }else{
+            self.gotoKhataVC(mandateResponse: mandateResponse)
+        }
+    }
+    
+    
+    func gotoKhataVC(mandateResponse:JSON){
+        
+        for controller in self.navigationController!.viewControllers as Array {
+            if controller.isKind(of: KhataViewController.self) {
+                KhataViewController.comingFrom = "data"
+                KhataViewController.sanctionAmount = mandateResponse["amount"].intValue
+                KhataViewController.CIF = mandateResponse["cif"].stringValue
+                KhataViewController.LAN  = mandateResponse["lan"].stringValue
+                KhataViewController.status = "MandateCompleted"
+                KhataViewController.mandateId = mandateResponse["mandateId"].stringValue
+                self.navigationController!.popToViewController(controller, animated: true)
+                break
+            }
         }
     }
     

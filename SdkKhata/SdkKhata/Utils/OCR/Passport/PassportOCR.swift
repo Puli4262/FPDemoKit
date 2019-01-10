@@ -239,6 +239,8 @@ class PassportOCR {
         let issuedMonth = expiryMonth
         let issuedDate = expiryDate! + 1
         let currentYear = Utils().getCurrentYear()
+        print(expiryYear! > currentYear)
+        
         if(expiryYear! > currentYear){
             let passportExpiryDate =  String(describing: expiryYear!)+"/"+String(format: "%02d", expiryMonth!)+"/"+String(format: "%02d", expiryDate!)
             let passportIssuedDate = String(describing: issuedYear)+"/"+String(format: "%02d", issuedMonth!)+"/"+String(format: "%02d", issuedDate)

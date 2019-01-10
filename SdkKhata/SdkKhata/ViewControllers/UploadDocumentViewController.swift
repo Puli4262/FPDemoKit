@@ -458,7 +458,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         let passportData = PassportOCR().checkPassportFront(rawText: resultText)
                         print(passportData)
                         //let isValidPassportFront = self.checkPassportFront(rawText: resultText)
-                        if(passportData["isValidPassportFront"].boolValue){
+                        if(passportData["isPassportExpired"].boolValue){
                             alertController.dismiss(animated: true, completion: {
                                 Utils().showToast(context: self, msg: "Document validity is expired.\nPlease use another document", showToastFrom: 20.0)
                             })

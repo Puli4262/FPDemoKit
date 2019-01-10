@@ -425,7 +425,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     }
     
     func handleAddressDetailsUIVisibility(visibility:Bool){
-        
+        print("handleAddressDetailsUIVisibility \(visibility)")
         permanentAddressLabel.isHidden = visibility
         permanentAddressLine1TextField.isHidden = visibility
         permanentAddressLine2TextField.isHidden = visibility
@@ -513,8 +513,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     func handleIsCommunicationAddressSame(isVisiblity:Bool){
         
-        
-        if(isCommunicationAddSameSwitch.isOn){
+        print(self.addressDetailsDropdownImg.image == UIImage(named:"accordian_uparrow"),isVisiblity,isCommunicationAddSameSwitch.isOn)
+        if(isCommunicationAddSameSwitch.isOn ){
             
             communicationAddressLine1TextField.isHidden = true
             communicationAddLine2TextField.isHidden = true
@@ -532,18 +532,21 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             
         }else{
-            communicationAddressLine1TextField.isHidden = false
-            communicationAddLine2TextField.isHidden = false
-            communicationAddPincodeTextField.isHidden = false
-            communicationAddCityTextField.isHidden = false
-            communicationAddStateTextField.isHidden = false
-            customerDetailsView.constant = 1500
-            self.view.frame.size.height = 1100
-            if(isVisiblity){
-                //self.addressDeatilsViewConstraint.constant = 40
-            }else{
-                self.addressDeatilsViewConstraint.constant = 630
+            if(!isVisiblity){
+                communicationAddressLine1TextField.isHidden = false
+                communicationAddLine2TextField.isHidden = false
+                communicationAddPincodeTextField.isHidden = false
+                communicationAddCityTextField.isHidden = false
+                communicationAddStateTextField.isHidden = false
+                customerDetailsView.constant = 1500
+                self.view.frame.size.height = 1100
+                if(isVisiblity){
+                    //self.addressDeatilsViewConstraint.constant = 40
+                }else{
+                    self.addressDeatilsViewConstraint.constant = 630
+                }
             }
+            
             
         }
         
@@ -1427,6 +1430,7 @@ extension CustomerDetailsViewController: DateOfBirthDelegate {
     
     func selectedDateOfBirth(day: String, month: String, year: String) {
         self.dateOfBirthTextField.text = "\(year)/\(month)/\(day)"
+        self.customerPostData["dob"].stringValue = "\(year)/\(month)/\(day)"
     }
     
     

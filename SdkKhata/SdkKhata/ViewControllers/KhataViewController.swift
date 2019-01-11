@@ -11,9 +11,6 @@ import SwiftyJSON
 
 open class KhataViewController: UIViewController,UIApplicationDelegate,PayUResponseDelegate {
     
-    
-    
-    
     @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     public var mobileNumber = ""
     public var emailID = ""
@@ -86,7 +83,6 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                
                 //self.openUploadDocumentsVC()
             })
         }
@@ -136,7 +132,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     var status = res["status"].stringValue
                     KhataViewController.panStatus = res["docType"].stringValue
                     UserDefaults.standard.set(res["docType"].stringValue, forKey: "docType")
-                    UserDefaults.standard.set(status,forKey: "status")
+                    UserDefaults.standard.set("Pan valided",forKey: "status")
                     let dncFlag = res["dncFlag"].boolValue
                     UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
                     UserDefaults.standard.set(res["firstName"].stringValue, forKey: "firstName")
@@ -158,24 +154,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                                 status = "nonMandatory"
                             }
                         }
-//                        if(self.mandateStatus == "changeMandate"){
-//                            UserDefaults.standard.set("editMandate",forKey: "status")
-//                            status = "editMandate"
-//                        }else if(self.mandateStatus == "mandatory"){
-//                            UserDefaults.standard.set("MandateCreated",forKey: "status")
-//                            status = "MandateCreated"
-//                        }else if(self.mandateStatus == "nonMandatory"){
-//                            UserDefaults.standard.set("nonMandatory",forKey: "status")
-//                            status = "nonMandatory"
-//                        }else{
-//                            if(!dncFlag){
-//                                UserDefaults.standard.set("kycPending",forKey: "status")
-//                                status = "kycPending"
-//                            }else{
-//                                UserDefaults.standard.set("nonMandatory",forKey: "status")
-//                                status = "nonMandatory"
-//                            }
-//                        }
+
                     }
                     self.handleStatus(status: status, leadResponse: res)
                     

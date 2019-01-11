@@ -56,14 +56,23 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         super.viewDidLoad()
         
         Utils().setupTopBar(viewController: self)
-        //self.addBackButton()
+        self.setDelegates()
+        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        ocrPostData["mobileNumber"].stringValue = mobileNumber!
+        self.setAndHandleDropdown()
+        self.setStepperIcon()
+        
+        
+    }
+    
+    func setDelegates(){
         imagePicker.delegate = self
         imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
         imagePicker.allowsEditing = true
         continueBtn.isUserInteractionEnabled = false
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-        ocrPostData["mobileNumber"].stringValue = mobileNumber!
-        
+    }
+    
+    func setAndHandleDropdown(){
         dropDown.dataSource = ["Aadhaar Card", "Passport", "Driving License","Voter ID"]
         dropDown.anchorView = selectDoumemtTextFeild
         dropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
@@ -75,10 +84,6 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             self.dropDown.hide()
             self.handleDocument(documentType: item)
         }
-        
-        self.setStepperIcon()
-        
-        
     }
     
     func setStepperIcon(){
@@ -105,40 +110,19 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         backImage.isHidden = true
         lastPageImg.isHidden = true
     }
-    
-    func addBackButton(){
-        let bundle = Bundle(for: type(of: self))
-        let image: UIImage = UIImage(named: "backarrow", in: bundle, compatibleWith: nil)!
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleBackTap))
-        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.orange
-    }
-    
-    @objc func handleBackTap() {
-        print("tapped")
-    }
-    
-    
-    
+
     func handleDocument(documentType:String){
-        self.frontView.isHidden = false
-        self.backView.isHidden  = false
-        self.ensureLabel.isHidden = false
-        self.pictureClearLabel.isHidden = false
-        self.cornersVisibleLabel.isHidden = false
+        self.showDocumnetPlaceholderImages()
         self.selectDoumemtTextFeild.text = documentType
         AgreeViewController.docType = documentType
         UserDefaults.standard.set(documentType, forKey: "docType")
         
-        continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-        continueBtn.isUserInteractionEnabled = false
-        print(self.ocrPostData["docType"].stringValue != "")
-        print(self.ocrPostData["docType"].stringValue)
-        print(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType)
+        
         if(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType){
             self.frontImage.image = UIImage(named:"front")
             self.backImage.image = UIImage(named:"sdk_back")
             let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-            self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+            self.resetOcrData(documentType: documentType)
         }
         self.ocrPostData["docType"].stringValue = documentType
         
@@ -148,10 +132,26 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         }
     }
     
+    func showDocumnetPlaceholderImages(){
+        self.frontView.isHidden = false
+        self.backView.isHidden  = false
+        self.ensureLabel.isHidden = false
+        self.pictureClearLabel.isHidden = false
+        self.cornersVisibleLabel.isHidden = false
+        
+        continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+        continueBtn.isUserInteractionEnabled = false
+    }
+    
+    func resetOcrData(documentType:String){
+        
+        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+    }
+    
     @IBAction func handleSlectDocumentTap(_ sender: Any) {
         
         self.selectDoumemtTextFeild.resignFirstResponder()
-        //self.showAlertDailog()
         self.dropDown.show()
         
     }
@@ -268,7 +268,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
                         //UserDefaults.standard.set(refreshToken, forKey: "token")
                         DispatchQueue.main.async {
-                            self.openMismatchPopupVC()
+                            self.openMismatchPopupVC(titleDesceription: "There is a mismatch between your ID type and uploaded document")
                         }
 
                         
@@ -371,8 +371,6 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             }
             
         }
-        
-        
         if let po = xml["PrintLetterBarcodeData"].element?.attribute(by:"po"){
             self.ocrPostData["address2"].stringValue = po.text
         }
@@ -382,20 +380,13 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
         if let state = xml["PrintLetterBarcodeData"].element?.attribute(by:"state"){
             self.ocrPostData["address2"].stringValue = self.ocrPostData["address2"].stringValue+", "+state.text
         }
-        
-        
-        
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"yob"){
             self.ocrPostData["dob"].stringValue = dob.text+"/01/01"
         }
-        
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"dob"){
             var dobArray = dob.text.split(separator: "/")
             self.ocrPostData["dob"].stringValue = dobArray[2]+"/"+dobArray[1]+"/"+dobArray[0]
         }
-        
-        
-        
         if let gender = xml["PrintLetterBarcodeData"].element?.attribute(by:"gender"){
             self.ocrPostData["gender"].stringValue = gender.text
         }
@@ -442,8 +433,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                 
                 textRecognizer.process(image) { ocrResult, error in
                     guard error == nil, let ocrResult = ocrResult else {
-                        print("error in OCR \(error)")
-                        print(error.debugDescription)
+                        
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                             alertController.dismiss(animated: true, completion: {
                                 self.openRetakeVC()
@@ -460,7 +450,8 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         //let isValidPassportFront = self.checkPassportFront(rawText: resultText)
                         if(passportData["isPassportExpired"].boolValue){
                             alertController.dismiss(animated: true, completion: {
-                                Utils().showToast(context: self, msg: "Document validity is expired.\nPlease use another document", showToastFrom: 20.0)
+                                self.openMismatchPopupVC(titleDesceription: "Dear customer,you have uploaded an expired document")
+                                //Utils().showToast(context: self, msg: "Document validity is expired.\nPlease use another document", showToastFrom: 20.0)
                             })
                             
                         }else if(passportData["isValidPassportFront"].boolValue){
@@ -690,7 +681,6 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
     
     
     func photoTweaksControllerDidCancel(_ controller: IGRPhotoTweakViewController) {
-        print("delegate cancel")
         
         self.dismiss(animated: true, completion: {
             self.isOCRScannerCanceled = true
@@ -849,7 +839,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         
     }
     
-    func openMismatchPopupVC(){
+    func openMismatchPopupVC(titleDesceription:String){
         
         let bundel = Bundle(for: MismatchPopupViewController.self)
         
@@ -857,6 +847,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             viewController.requestFrom = "document"
+            viewController.titleDescription = titleDesceription
             viewController.mismatcPopupDelegate = self
             self.present(viewController, animated: true)
         }
@@ -880,6 +871,7 @@ extension UploadDocumentViewController: MismatcPopupDelegate {
         let docType = self.ocrPostData["docType"].stringValue
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
         self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+        //Utils().openCamera(imagePicker: self.imagePicker, viewController: self, isFront: false)
         
     }
     

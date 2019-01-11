@@ -10,7 +10,7 @@ import SwiftyJSON
 
 class AadharOCR {
     
-    var aadharOcrData = JSON(["isValidAadharFront":false,"isValidAadharBack":false,"docType":"Aadhar Card","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":""])
+    var aadharOcrData = JSON(["isValidAadharFront":false,"isValidAadharBack":false,"docType":"Aadhaar Card","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":""])
     
     public func checkAadhaarFront(rawText:String,isAadharDataFetchedFromQRCode:Bool,QRScannerAadhanrNumber:String) -> JSON {
         var rawStrings:[String] = [String]()

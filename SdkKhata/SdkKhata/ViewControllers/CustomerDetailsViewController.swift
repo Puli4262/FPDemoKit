@@ -532,7 +532,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             
         }else{
-            if(!isVisiblity){
+            if((self.addressDetailsDropdownImg.image == UIImage(named:"accordian_uparrow"))){
                 communicationAddressLine1TextField.isHidden = false
                 communicationAddLine2TextField.isHidden = false
                 communicationAddPincodeTextField.isHidden = false
@@ -546,6 +546,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     self.addressDeatilsViewConstraint.constant = 630
                 }
             }
+            
+            
             
             
         }
@@ -932,11 +934,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             customerPostData["cityPermanent"].stringValue = ""
             customerPostData["statePermanent"].stringValue = ""
             
-            if(customerPostData["maritialStatus"].stringValue  == "S"){
-                customerPostData["maritialStatus"].stringValue = "S"
-            }else{
-                customerPostData["maritialStatus"].stringValue = "M"
-            }
+            
 
             
             UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "firstName")
@@ -1269,9 +1267,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     @IBAction func handleMaritalStatus(_ sender: UISegmentedControl) {
         if(sender.selectedSegmentIndex == 0 ){
-            self.customerPostData["maritialStatus"].stringValue = "M"
-        }else if(sender.selectedSegmentIndex == 1){
             self.customerPostData["maritialStatus"].stringValue = "S"
+        }else if(sender.selectedSegmentIndex == 1){
+            self.customerPostData["maritialStatus"].stringValue = "M"
         }
     }
     @IBAction func handleEmploymentChange(_ sender: UISegmentedControl) {
@@ -1343,11 +1341,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         }else{
             self.maritalStatusSegment.selectedSegmentIndex = 0
         }
-        
+        print(customerPostData["employmentstatus"].stringValue)
+        print(userData["employmentstatus"].stringValue)
         if(userData["employmentstatus"].stringValue == "Salary"){
-            self.maritalStatusSegment.selectedSegmentIndex = 0
+            self.employerStatusSegment.selectedSegmentIndex = 0
+            
         }else if(userData["employmentstatus"].stringValue == "Self Employed"){
-            self.maritalStatusSegment.selectedSegmentIndex = 1
+            self.employerStatusSegment.selectedSegmentIndex = 1
         }
         
         if(JSON(customerPostData["pan"]) != JSON.null && customerPostData["pan"].stringValue != "absent" && customerPostData["pan"].stringValue != "" ){

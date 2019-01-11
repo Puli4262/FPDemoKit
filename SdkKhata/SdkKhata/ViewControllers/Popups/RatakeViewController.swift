@@ -31,7 +31,7 @@ class RetakeViewController: UIViewController {
         
         var imageName = ""
         switch docType {
-        case "Aadhar Card":
+        case "Aadhaar Card":
             imageName = "how_to_aadhar"
             break
         case "Passport":

@@ -27,6 +27,8 @@ class PassportOCR {
             passportOcrData["isValidPassportFront"].boolValue = true
             
         }else{
+            print("last line count \(rawStrings[i].replacingOccurrences(of: " ", with: "").count)")
+            print("second line count \(rawStrings[i-1].replacingOccurrences(of: " ", with: "").count)")
             passportOcrData["isValidPassportFront"].boolValue = false
             
         }

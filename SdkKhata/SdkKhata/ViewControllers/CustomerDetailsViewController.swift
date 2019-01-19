@@ -785,7 +785,6 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     self.setPrefilledData(userData: self.customerPostData)
                     let status = UserDefaults.standard.string(forKey: "status")
                     
-                    
                     if(refreshToken == "InvalidToken"){
                         DispatchQueue.main.async {
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)

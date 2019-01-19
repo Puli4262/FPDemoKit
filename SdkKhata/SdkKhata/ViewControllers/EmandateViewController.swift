@@ -120,8 +120,9 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let madateResArray = mandateResponse.split(separator: "|")
             
             if(Int(madateResArray[0]) == 0300 ){
-                let madateRef = String(madateResArray[3].split(separator: "/")[0])
-                self.handleEmandateCreation(mandateRef: madateRef)
+                let mandateRef = String(madateResArray[3].split(separator: "/")[0])
+                self.handleEmandateCreation(mandateRef: mandateRef)
+                //self.handleEmandateVerification(mandateRef: mandateRef)
             }else{
                 self.dismiss(animated: true, completion: nil)
             }
@@ -183,7 +184,12 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                             
                         }
                     }else{
-                        utils.showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                            self.dismiss(animated: true, completion: nil)
+                        })
+                        
+                        
                     }
                     
                 })
@@ -195,6 +201,61 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 })
             })
             
+            
+        }else{
+            
+            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
+            self.present(alert, animated: true, completion: nil)
+            
+            
+        }
+    }
+    
+    func handleEmandateVerification(mandateRef:String){
+        
+        let utils = Utils()
+        if(utils.isConnectedToNetwork()){
+            let alertController = utils.loadingAlert(viewController: self)
+            self.present(alertController, animated: false, completion: nil)
+            let merchantIdentifier = mandateTokenResponse["mandate"]["consumerData"]["merchantId"].stringValue
+            let transactionIdentifier = mandateTokenResponse["mandate"]["consumerData"]["txnId"].stringValue
+            let poastData = JSON(["merchant":["identifier":merchantIdentifier],"payment":["instruction":[:]],"transaction":["deviceIdentifier":"S","type":"002","currency":"INR","identifier":transactionIdentifier,"dateTime":"17-01-2019","subType":"002","requestType":"TSI"],"consumer":["identifier":""]])
+            
+            
+            let urlString = "https://www.paynimo.com/api/paynimoV2.req"
+            print(urlString)
+            print(poastData)
+            Alamofire.request(urlString, method: .post, parameters: poastData.dictionaryObject,encoding: JSONEncoding.default, headers: nil).responseJSON {
+                response in
+                switch response.result {
+                case .success:
+                    
+                    alertController.dismiss(animated: true, completion: {
+                        
+                        let res = JSON(response.value)
+                        print(res)
+                        let statusCode = res["paymentMethod"]["paymentTransaction"]["statusCode"].stringValue
+                        print(statusCode)
+                        if(!statusCode.containsIgnoringCase(find: "0300")){
+                             Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                self.dismiss(animated: true, completion: nil)
+                            })
+                            
+                            
+                        }else if(statusCode.containsIgnoringCase(find: "0300")){
+                            
+                            self.handleEmandateCreation(mandateRef: mandateRef)
+                        }
+                    })
+                    break
+                case .failure(let error):
+                    alertController.dismiss(animated: true, completion: {
+                        print(error)
+                    })
+                    
+                }
+            }
             
         }else{
             

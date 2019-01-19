@@ -28,7 +28,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var frontView: UIView!
-    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     
     var isOCRScannerCanceled = false
     
@@ -146,7 +146,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     func resetOcrData(documentType:String){
         
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-        self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+        self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     }
     
     @IBAction func handleSlectDocumentTap(_ sender: Any) {
@@ -466,6 +466,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                                     self.ocrPostData["doc_number"].stringValue = passportData["doc_number"].stringValue
                                     self.ocrPostData["dob"].stringValue = passportData["dob"].stringValue
                                     self.ocrPostData["gender"].stringValue = passportData["gender"].stringValue
+                                    self.ocrPostData["docIssueDate"].stringValue = passportData["docIssueDate"].stringValue
+                                    self.ocrPostData["docExpDate"].stringValue =
+                                    passportData["docExpDate"].stringValue
                                 })
                             }
                             
@@ -870,7 +873,7 @@ extension UploadDocumentViewController: MismatcPopupDelegate {
         self.continueBtn.isUserInteractionEnabled = false
         let docType = self.ocrPostData["docType"].stringValue
         let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-        self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":""])
+        self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
         //Utils().openCamera(imagePicker: self.imagePicker, viewController: self, isFront: false)
         
     }

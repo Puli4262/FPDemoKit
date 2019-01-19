@@ -132,7 +132,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     var status = res["status"].stringValue
                     KhataViewController.panStatus = res["docType"].stringValue
                     UserDefaults.standard.set(res["docType"].stringValue, forKey: "docType")
-                    UserDefaults.standard.set("Pan valided",forKey: "status")
+                    UserDefaults.standard.set(status,forKey: "status")
                     let dncFlag = res["dncFlag"].boolValue
                     UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
                     UserDefaults.standard.set(res["firstName"].stringValue, forKey: "firstName")

@@ -52,9 +52,9 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             self.present(alertController, animated: false, completion: nil)
             let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email,"deviceId":"ios"]
             
-            let token = UserDefaults.standard.string(forKey: "token")
-            print(token!)
-            utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
+//            let token = UserDefaults.standard.string(forKey: "token")
+//            print(token!)
+            utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: [:], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
@@ -65,10 +65,6 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                     }else{
                         self.loadPayUWebview(payUData: res)
                     }
-                    
-                    //self.loadPayUWebview(payUData: res)
-                    
-                    
                 })
                 
             }, failure: { error in

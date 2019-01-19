@@ -10,7 +10,7 @@ import SwiftyJSON
 
 
 class PassportOCR {
-    var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":""])
+    var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":"","docIssueDate":"","docExpDate":""])
     
     public func checkPassportFront(rawText:String) -> JSON {
         
@@ -248,6 +248,8 @@ class PassportOCR {
             let passportIssuedDate = String(describing: issuedYear)+"/"+String(format: "%02d", issuedMonth!)+"/"+String(format: "%02d", issuedDate)
             print(passportIssuedDate)
             print(passportExpiryDate)
+            self.passportOcrData["docIssueDate"].stringValue = passportIssuedDate
+            self.passportOcrData["docExpDate"].stringValue = passportExpiryDate
             self.passportOcrData["isPassportExpired"].boolValue = false
         }else{
             self.passportOcrData["isPassportExpired"].boolValue = true

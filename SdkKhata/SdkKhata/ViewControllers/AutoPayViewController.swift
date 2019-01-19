@@ -161,6 +161,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         let mandateRefId = UserDefaults.standard.string(forKey: "mandateRefId")
         if(mandateRefId! != "" && mandateRefId! != "0"){
             self.handleEmandateCreationApi(mandateRef: mandateRefId!)
+//            var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
+//            self.getMandateTokenApi(params:JSON(mandateDict))
         }else if(selectedBankIndex == 4){
             self.handleEmandateCreationApi(mandateRef: "None of the above")
         }else{

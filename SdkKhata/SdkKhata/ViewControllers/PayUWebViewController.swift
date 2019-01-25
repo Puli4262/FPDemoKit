@@ -143,8 +143,8 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         if(requestString.containsIgnoringCase(find: "KhataBackEnd/jsp/Cancel.jsp")){
             self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             
-        }else if(requestString.containsIgnoringCase(find: "success")){
-            print(requestString)
+        }else if(requestString.containsIgnoringCase(find: "khata_files/t_c.html?data=success")){
+            
             requestString = requestString.replacingOccurrences(of: "%7C", with: "|")
             print(requestString.split(separator: "|"))
             let dataArray = requestString.split(separator: "|")

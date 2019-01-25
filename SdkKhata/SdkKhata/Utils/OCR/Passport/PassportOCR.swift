@@ -183,7 +183,7 @@ class PassportOCR {
         passportOcrData["address2"].stringValue = address2
         print(address1)
         print(address2)
-        UserDefaults.standard.set("Passport", forKey: "docType")
+        UserDefaults.standard.set("Passport", forKey: "khaata_docType")
         
     }
     

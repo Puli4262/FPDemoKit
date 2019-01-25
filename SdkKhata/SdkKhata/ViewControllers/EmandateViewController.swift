@@ -10,11 +10,13 @@ import Alamofire
 import SwiftyJSON
 
 class EmandateViewController: UIViewController,UIWebViewDelegate {
-
+    
+    private var sessionManager = Alamofire.SessionManager()
     @IBOutlet weak var closeImg: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var webView: UIWebView!
     var mandateTokenResponse : JSON = JSON([])
+    var isGettingSuccessResponse = false
     var eMandateResponseDelegate:EMandateResponseDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,6 +109,27 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         webView.loadHTMLString(htmlString, baseURL: nil)
     }
     
+    
+    func webViewDidStartLoad(_ webView: UIWebView){
+        let requestURL = self.webView.request?.url
+        let requestString:String = (requestURL?.absoluteString)!
+        print(requestString)
+        self.activityIndicator.isHidden = false
+        
+        if(requestString.containsIgnoringCase(find: "https://www.tpsl-india.in/PaymentGateway/PaymentGatewayReturnTestBank.jsp")){
+            DispatchQueue.main.asyncAfter(deadline: .now()+30, execute: {
+                print(self.isGettingSuccessResponse)
+                if(!self.isGettingSuccessResponse){
+                    Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+2.0, execute: {
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                }
+            })
+            
+        }
+    }
+    
     func webViewDidFinishLoad(_ webView: UIWebView) {
         let requestURL = self.webView.request?.url
         let requestString:String = (requestURL?.absoluteString)!
@@ -120,11 +143,16 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let madateResArray = mandateResponse.split(separator: "|")
             
             if(Int(madateResArray[0]) == 0300 ){
+                isGettingSuccessResponse = true
                 let mandateRef = String(madateResArray[3].split(separator: "/")[0])
                 self.handleEmandateCreation(mandateRef: mandateRef)
                 //self.handleEmandateVerification(mandateRef: mandateRef)
             }else{
-                self.dismiss(animated: true, completion: nil)
+                Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                DispatchQueue.main.asyncAfter(deadline: .now()+2.0, execute: {
+                    self.dismiss(animated: true, completion: nil)
+                })
+                
             }
         }
         
@@ -139,67 +167,150 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
-            let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
-            let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
+            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
+            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
             let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"10","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
-            print(JSON(poastData))
             
             
-            let token = UserDefaults.standard.string(forKey: "token")
-            print(token!)
-            utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
-
-                alertController.dismiss(animated: true, completion: {
+            
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            
+            
+            let urlString = utils.hostURL+"/mandate/createMandate"
+            print(urlString)
+            print(poastData)
+            print(["accessToken":token!])
+        
+            var request = URLRequest(url: URL(string: urlString)! )
+            request.httpMethod = "POST"
+            request.allHTTPHeaderFields = ["accessToken":token!]
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            //request.timeoutInterval = 30 //Seconds
+            let values = poastData
+            request.httpBody = try! JSONSerialization.data(withJSONObject: values, options: [])
+            Alamofire.request(request as! URLRequestConvertible).responseJSON {
+                response in
+                
+                
+                switch response.result {
+                case .success:
+                    let res = JSON(response.value)
                     print(res)
-                    let refreshToken = res["token"].stringValue
-                    let response = res["response"].stringValue
-                    if(refreshToken == "InvalidToken"){
-                        DispatchQueue.main.async {
-                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                        }
-                    }else if(response.containsIgnoringCase(find: "success")){
-                        
-                        let status = UserDefaults.standard.string(forKey: "status")!
-                        print(status)
-                        if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
+                    alertController.dismiss(animated: true, completion: {
+                        print(res)
+                        let refreshToken = res["token"].stringValue
+                        let response = res["response"].stringValue
+                        if(refreshToken == "InvalidToken"){
+                            DispatchQueue.main.async {
+                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                            }
+                        }else if(response.containsIgnoringCase(find: "success")){
                             
-                            self.dismiss(animated: true, completion: {
-                                let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
-                                print(dncFlag)
-                                if(dncFlag){
-                                    self.eMandateResponseDelegate?.gotoAgreeVC()
-                                }else{
-                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
-                                }
+                            let status = UserDefaults.standard.string(forKey: "khaata_status")!
+                            print(status)
+                            if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                                 
-                            })
+                                self.dismiss(animated: true, completion: {
+                                    let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+                                    print(dncFlag)
+                                    if(dncFlag){
+                                        self.eMandateResponseDelegate?.gotoAgreeVC()
+                                    }else{
+                                        self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                    }
+                                    
+                                })
+                            }else{
+                                
+                                
+                                self.dismiss(animated: true, completion: {
+                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                })
+                                
+                            }
                         }else{
-                            
-                            
-                            self.dismiss(animated: true, completion: {
-                                self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                            print("calling error")
+                            Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                self.dismiss(animated: true, completion: nil)
                             })
+                            
                             
                         }
-                    }else{
-                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                        
+                    })
+                    
+                    break
+                case .failure(let error):
+                    print("calling failure")
+                    alertController.dismiss(animated: true, completion: {
+                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                             self.dismiss(animated: true, completion: nil)
                         })
                         
-                        
-                    }
-                    
-                })
+                    })
+                    print(error.localizedDescription)
+                }
+                
+            }
+            
 
-            }, failure: { error in
-                alertController.dismiss(animated: true, completion: {
-                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-                    
-                })
-            })
+            
+            
+//            utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
+//
+//                alertController.dismiss(animated: true, completion: {
+//                    print(res)
+//                    let refreshToken = res["token"].stringValue
+//                    let response = res["response"].stringValue
+//                    if(refreshToken == "InvalidToken"){
+//                        DispatchQueue.main.async {
+//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+//                        }
+//                    }else if(response.containsIgnoringCase(find: "success")){
+//
+//                        let status = UserDefaults.standard.string(forKey: "khaata_status")!
+//                        print(status)
+//                        if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
+//
+//                            self.dismiss(animated: true, completion: {
+//                                let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+//                                print(dncFlag)
+//                                if(dncFlag){
+//                                    self.eMandateResponseDelegate?.gotoAgreeVC()
+//                                }else{
+//                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+//                                }
+//
+//                            })
+//                        }else{
+//
+//
+//                            self.dismiss(animated: true, completion: {
+//                                self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+//                            })
+//
+//                        }
+//                    }else{
+//                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+//                            self.dismiss(animated: true, completion: nil)
+//                        })
+//
+//
+//                    }
+//
+//                })
+//
+//            }, failure: { error in
+//                alertController.dismiss(animated: true, completion: {
+//                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+//
+//                })
+//            })
             
             
         }else{
@@ -266,9 +377,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         }
     }
     
-    func webViewDidStartLoad(_ webView: UIWebView){
-        self.activityIndicator.isHidden = false
-    }
+    
     
     
     

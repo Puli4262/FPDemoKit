@@ -68,7 +68,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     func setupTopBar(viewController: UIViewController){
         
-        let status = UserDefaults.standard.string(forKey: "status")
+        let status = UserDefaults.standard.string(forKey: "khaata_status")
         print("status is \(status)")
         
         viewController.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
@@ -76,7 +76,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         viewController.navigationController?.navigationBar.layer.shadowRadius = 4.0
         viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
-        let mandateRefId = UserDefaults.standard.string(forKey: "mandateRefId")
+        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
         print(status!)
         print(mandateRefId!)
         if(status == "editMandate"){
@@ -99,7 +99,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
         
         if(!dncFlag){
             self.stackViewHeightConstraint.constant = 0
@@ -148,17 +148,17 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     @IBAction func handleAutopayBtn(_ sender: Any) {
         
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         let utils = Utils()
         let hostUrl = utils.hostURL
-        let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
-        let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
+        let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
+        let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
         var featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
         var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"\(hostUrl)/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
         
         
         
-        let mandateRefId = UserDefaults.standard.string(forKey: "mandateRefId")
+        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
         if(mandateRefId! != "" && mandateRefId! != "0"){
             self.handleEmandateCreationApi(mandateRef: mandateRefId!)
 //            var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
@@ -167,7 +167,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             self.handleEmandateCreationApi(mandateRef: "None of the above")
         }else{
                 print(selectedBankIndex)
-                let emailID = UserDefaults.standard.string(forKey: "emailID")
+                let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
                 consumerDataDict["consumerEmailId"].stringValue = emailID!
                 consumerDataDict["accountNo"].stringValue = self.accountNumberArray[selectedBankIndex]
                 consumerDataDict["accountHolderName"].stringValue = ""
@@ -189,7 +189,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let token = UserDefaults.standard.string(forKey: "token")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
             print(token!)
             Alamofire.upload(multipartFormData:
                 {
@@ -228,7 +228,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                                 utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                                             }
                                         }else{
-                                            //UserDefaults.standard.set(refreshToken, forKey: "token")
+                                            //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                                             let response = resJson["returnStatus"]["response"].stringValue
                                             if(response.containsIgnoringCase(find: "success")){
                                                 self.openEmandateWebView(madateTokenResponse: resJson)
@@ -378,14 +378,14 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")!
-            let firstName = UserDefaults.standard.string(forKey: "firstName") ?? ""
-            let lastName = UserDefaults.standard.string(forKey: "lastName") ?? ""
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
+            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
+            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
             print(self.selectedBankIndex)
             let poastData = ["mandateRef":mandateRef,"ifsc":"","accType":"10","accNumber":"","accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
-            let token = UserDefaults.standard.string(forKey: "token")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
             print(token!)
             utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
                 
@@ -399,7 +399,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                         }
                     }else if(response.containsIgnoringCase(find: "success")){
                             
-                            let status = UserDefaults.standard.string(forKey: "status")!
+                            let status = UserDefaults.standard.string(forKey: "khaata_status")!
                         
                             if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                                 
@@ -458,7 +458,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     func handleDncFlag(mandateResponse:JSON){
         
-        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
         print(dncFlag)
         if(dncFlag){
             self.openAgreeVC()

@@ -57,7 +57,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
         Utils().setupTopBar(viewController: self)
         self.setDelegates()
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         ocrPostData["mobileNumber"].stringValue = mobileNumber!
         self.setAndHandleDropdown()
         self.setStepperIcon()
@@ -87,7 +87,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
         }else{
@@ -115,13 +115,13 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         self.showDocumnetPlaceholderImages()
         self.selectDoumemtTextFeild.text = documentType
         AgreeViewController.docType = documentType
-        UserDefaults.standard.set(documentType, forKey: "docType")
+        UserDefaults.standard.set(documentType, forKey: "khaata_docType")
         
         
         if(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType){
             self.frontImage.image = UIImage(named:"front")
             self.backImage.image = UIImage(named:"sdk_back")
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
             self.resetOcrData(documentType: documentType)
         }
         self.ocrPostData["docType"].stringValue = documentType
@@ -145,7 +145,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     
     func resetOcrData(documentType:String){
         
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     }
     
@@ -245,7 +245,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
        
         let utils = Utils()
-        let token = UserDefaults.standard.string(forKey: "token")
+        let token = UserDefaults.standard.string(forKey: "khaata_token")
         let headers = ["accessToken":token!]
         print("headers \(headers)")
         let postData = JSON(["ocrdocument":ocrPostData])
@@ -266,14 +266,14 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                         }
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
-                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         DispatchQueue.main.async {
                             self.openMismatchPopupVC(titleDesceription: "There is a mismatch between your ID type and uploaded document")
                         }
 
                         
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
-                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         
                         DispatchQueue.main.async {
                             self.openRetakeVC()
@@ -281,8 +281,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                         
                         
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
-                        //UserDefaults.standard.set(refreshToken, forKey: "token")
-                        UserDefaults.standard.set("DocumentUploaded",forKey: "SalfieUploaded")
+                        //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
+                        
                         self.openSelfieVC()
                     }
                 })
@@ -329,7 +329,7 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["doc_number"].stringValue = uid.text
             isAadharDataFetchedFromQRCode = true
             self.ocrPostData["docType"].stringValue = "Aadhaar Card"
-            UserDefaults.standard.set("Aadhaar Card", forKey: "docType")
+            UserDefaults.standard.set("Aadhaar Card", forKey: "khaata_docType")
             self.ocrPostData["raw_front"].stringValue = result
         }
         if let name = xml["PrintLetterBarcodeData"].element?.attribute(by:"name"){
@@ -872,7 +872,7 @@ extension UploadDocumentViewController: MismatcPopupDelegate {
         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
         self.continueBtn.isUserInteractionEnabled = false
         let docType = self.ocrPostData["docType"].stringValue
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
         //Utils().openCamera(imagePicker: self.imagePicker, viewController: self, isFront: false)
         

@@ -98,10 +98,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         Utils().setupTopBar(viewController: self)
         self.setDelegates()
         
-        let emailID = UserDefaults.standard.string(forKey: "emailID")
+        let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
         self.emailIdTextField.text = emailID
         
-        let DOB = UserDefaults.standard.string(forKey: "DOB")
+        let DOB = UserDefaults.standard.string(forKey: "khaata_DOB")
         //self.dateOfBirthTextField.text = DOB
         
         self.pancardViewHeightConstraint.constant = 150
@@ -118,7 +118,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         pancardBtn.isUserInteractionEnabled = false
         personalDetailsBtn.isUserInteractionEnabled = false
         addressDetailsBtn.isUserInteractionEnabled  = false
-        let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         self.customerPostData["mobileNumber"].stringValue = mobileNumber!
         self.getCustomerDetailsApi(mobileNumber:mobileNumber!)
         self.dateOfBirthTextField.keyboardType = UIKeyboardType.numberPad
@@ -139,7 +139,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
         }else{
@@ -221,6 +221,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 checkboxImg.isUserInteractionEnabled = true
                 pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
             }
+        }else if(textField == firstNameTextField || textField == lastNameTextField || textField == fatherNameTextField || textField == motherNameTextField ){
+            textField.text = textField.text?.capitalizingFirstLetter()
+            textField.text = textField.text?.filter({ "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ".contains($0) })
         }else if(textField == firstNameTextField || textField == lastNameTextField || textField == fatherNameTextField || textField == motherNameTextField || textField == permanentAddressLine1TextField || textField == permanentAddressLine2TextField || textField == communicationAddressLine1TextField || textField == communicationAddLine2TextField || textField == permanentAddCityTextField || textField == communicationAddCityTextField || textField == permanentAddStateTextField || textField == communicationAddCityTextField ){
             
             textField.text = textField.text?.capitalizingFirstLetter()
@@ -292,8 +295,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             customerDetailsView.constant = 600
             self.view.frame.size.height = 750
             print("PAN number : \(self.customerPostData["pan"].stringValue)")
-            let status = UserDefaults.standard.string(forKey: "status")
-            print(status)
+            let status = UserDefaults.standard.string(forKey: "khaata_status")
+            
             if(status! == "Pan valided" || status! == "personaldetail" || status! == "customercreated"){
                 pancardInValidLabel.isHidden = true
                 pancardBtn.isHidden = true
@@ -381,7 +384,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         fatherNameTextField.isHidden = visibility
         motherNameTextField.isHidden = visibility
         personalDetailsBtn.isHidden = visibility
-        let status = UserDefaults.standard.string(forKey: "status")
+        let status = UserDefaults.standard.string(forKey: "khaata_status")
         
         if(status == "Pan valided"){
             personalDetailsBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
@@ -441,7 +444,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         communicationAddStateTextField.isHidden = visibility
         addressDetailsBtn.isHidden = visibility
         
-        let status = UserDefaults.standard.string(forKey: "status")
+        let status = UserDefaults.standard.string(forKey: "khaata_status")
         
         if(status == "personaldetail" || status == "customercreated"){
             if(visibility){
@@ -595,7 +598,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 let alertController = utils.loadingAlert(viewController: self)
                 self.present(alertController, animated: false, completion: nil)
                 var panNumber = ""
-                let phoneNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+                let phoneNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
 
                 if(self.checkboxImg.image == UIImage(named:"check_box")){
                     panNumber = "absent"
@@ -603,7 +606,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     panNumber = self.pancardTextField.text!
                 }
                 
-                let token = UserDefaults.standard.string(forKey: "token")
+                let token = UserDefaults.standard.string(forKey: "khaata_token")
                 utils.requestGETURL("/customer/getPanDetail?mobilenumber=\(phoneNumber!)&panNumber=\(panNumber)", headers: ["accessToken":token!], viewCotroller: self, success: { res in
                     print(res)
                     
@@ -625,7 +628,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             }else if(res["panNumber"].stringValue == "noMatch"){
                                 self.openPanMismatchPopupVC()
                             }else if(res["panNumber"].stringValue == "absent"){
-                                UserDefaults.standard.set("Pan valided", forKey: "status")
+                                UserDefaults.standard.set("Pan valided", forKey: "khaata_status")
                                 print("handle absent pin")
                                 KhataViewController.panStatus = "Absent"
                                 
@@ -660,7 +663,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 
                                 
                             }else {
-                                UserDefaults.standard.set("Pan valided", forKey: "status")
+                                UserDefaults.standard.set("Pan valided", forKey: "khaata_status")
                                 
                                 if(res["firstName"].exists() && res["firstName"].stringValue != "" ){
                                     self.firstNameTextField.text = res["firstName"].stringValue
@@ -756,7 +759,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            let token = UserDefaults.standard.string(forKey: "token") ?? ""
+            let token = UserDefaults.standard.string(forKey: "khaata_token") ?? ""
             print("token is \(token)")
             print("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)")
             utils.requestGETURL("/customer/getCustomerDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":token], viewCotroller: self, success: { res in
@@ -768,11 +771,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
 //                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
 //                    }
 //                }else{
-                    //UserDefaults.standard.set(refreshToken, forKey: "token")
+                    //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                 
                 let getCoustomerStatus = res["status"].stringValue
                 if(getCoustomerStatus == "personaldetail" || getCoustomerStatus == "customercreated"){
-                    UserDefaults.standard.set(getCoustomerStatus, forKey: "status")
+                    UserDefaults.standard.set(getCoustomerStatus, forKey: "khaata_status")
                 }
                 
                 let corAddressFlag = res["corAddressFlag"].boolValue
@@ -783,7 +786,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     
                     self.customerPostData = res
                     self.setPrefilledData(userData: self.customerPostData)
-                    let status = UserDefaults.standard.string(forKey: "status")
+                    let status = UserDefaults.standard.string(forKey: "khaata_status")
                     
                     if(refreshToken == "InvalidToken"){
                         DispatchQueue.main.async {
@@ -893,7 +896,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let token = UserDefaults.standard.string(forKey: "token")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
             print("token \(token!)")
             self.customerPostData["status"].stringValue = status
             if(self.customerPostData["gender"].stringValue == ""){
@@ -905,13 +908,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             if(self.customerPostData["employmentstatus"].stringValue == ""){
                 customerPostData["employmentstatus"].stringValue  = "Salary"
             }
-            let emailID = UserDefaults.standard.string(forKey: "emailID")
+            let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
             
             if(customerPostData["emailid"].stringValue == ""){
                 customerPostData["emailid"].stringValue = emailID!
             }
             
-            let DOB = UserDefaults.standard.string(forKey: "DOB")
+            let DOB = UserDefaults.standard.string(forKey: "khaata_DOB")
             if(customerPostData["dob"].stringValue == ""){
                 customerPostData["dob"].stringValue = DOB!
             }
@@ -936,22 +939,22 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
 
             
-            UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "firstName")
-            UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "lastName")
+            UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "khaata_firstName")
+            UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "khaata_lastName")
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
                 print(res)
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
-                        //UserDefaults.standard.set(refreshToken, forKey: "token")
+                        //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         let resPonseStatus = res["status"].stringValue
                         if(resPonseStatus.containsIgnoringCase(find: "Customer dedup found")){
                             self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document")
                         }else if(res["response"].stringValue == "success"){
                             
                             if(status == "personaldetail"){
-                                UserDefaults.standard.set(status, forKey: "status")
+                                UserDefaults.standard.set(status, forKey: "khaata_status")
                                 
                                 self.handlePancardUIVisibility(visibility:true)
                                 self.handlePersonalDetailsUIVisibility(visibility: true)
@@ -972,8 +975,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                     self.addressDeatilsViewConstraint.constant = 630
                                 }
                             }else{
-                                UserDefaults.standard.set(status, forKey: "status")
-                                let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+                                UserDefaults.standard.set(status, forKey: "khaata_status")
+                                let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
                                 if(dncFlag){
                                     self.openAutopayVC()
                                 }else{
@@ -1101,9 +1104,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         if(utils.isConnectedToNetwork()){
             
-            let token = UserDefaults.standard.string(forKey: "token")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
             print("token \(token!)")
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
             print("mobileNumber \(mobileNumber!)")
             
             
@@ -1236,7 +1239,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     @IBAction func handleDontHavePancard(_ sender: Any) {
         
-        let status = UserDefaults.standard.string(forKey: "status")
+        let status = UserDefaults.standard.string(forKey: "khaata_status")
         
         if(status! != "Pan valided" || status! != "personaldetail" || status! != "customercreated"){
             self.pancardTextField.text = ""
@@ -1288,12 +1291,12 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         self.lastNameTextField.text = userData["lastName"].stringValue
         self.dateOfBirthTextField.text = userData["dob"].stringValue
         self.emailIdTextField.text = userData["emailid"].stringValue
-        let emailID = UserDefaults.standard.string(forKey: "emailID")
+        let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
         
         if(emailID != ""){
             self.emailIdTextField.text = emailID
         }
-        let DOB = UserDefaults.standard.string(forKey: "DOB")
+        let DOB = UserDefaults.standard.string(forKey: "khaata_DOB")
         if(userData["dob"].stringValue != ""){
            self.dateOfBirthTextField.text = userData["dob"].stringValue
             self.customerPostData["dob"].stringValue = userData["dob"].stringValue

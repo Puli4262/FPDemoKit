@@ -30,13 +30,11 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //viewController.mobileNumber = "8308702798"
             //viewController.tokenId = "Is9w6IVzvA+Dw9LkF5Le9w=="
             
-            //testing
-            //viewController.mobileNumber = "9768522945"
-            //viewController.tokenId = "dCqEcEmxwr/w+nnanrfW+Q=="
+            
             
             //testing
-            viewController.mobileNumber = "9833955597"
-            viewController.tokenId = "yPwLDtEDoE2WyOK54nrJDg=="
+            viewController.mobileNumber = "9987393229"
+            viewController.tokenId = "h0LEk6xVs2tM89NJoBzppA=="
             
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
@@ -63,7 +61,12 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
         print("PAYU response in FP APP")
-        print(status)
+        print("status \(status)")
+        print("txnId \(txnId)")
+        print("amount \(amount)")
+        print("name \(name)")
+        print("productInfo \(productInfo)")
+        
     }
 
     @IBAction func handlePaynow(_ sender: Any) {

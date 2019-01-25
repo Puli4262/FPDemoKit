@@ -36,7 +36,7 @@ class AgreeViewController: UIViewController {
     
     func setkhaataAcountLabel(){
         
-        let preApprovedLimit = UserDefaults.standard.string(forKey: "preApprovedLimit")
+        let preApprovedLimit = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
         print(preApprovedLimit!)
         let dataString = "Your ₹ \(preApprovedLimit!) Khaata"
         
@@ -52,7 +52,7 @@ class AgreeViewController: UIViewController {
     }
     
     func setCarryIdView(){
-        let docType = UserDefaults.standard.string(forKey: "docType") ?? "Aadhaar"
+        let docType = UserDefaults.standard.string(forKey: "khaata_docType") ?? "Aadhaar"
         
         let attrs1 = [NSAttributedStringKey.foregroundColor : UIColor.black]
         
@@ -92,7 +92,7 @@ class AgreeViewController: UIViewController {
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "dncFlag")
+        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
         if(!dncFlag){
             self.autoPayView.isHidden = true
             self.shareDetailsLabel.backgroundColor = UIColor.lightGray
@@ -144,8 +144,8 @@ class AgreeViewController: UIViewController {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-            let token = UserDefaults.standard.string(forKey: "token")
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
             print(token!)
             utils.requestPOSTURL("/lead/createLoan?mobilenumber=\(mobileNumber!)", parameters: [:], headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
                 

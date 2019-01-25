@@ -52,7 +52,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             self.present(alertController, animated: false, completion: nil)
             let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email,"deviceId":"ios"]
             
-//            let token = UserDefaults.standard.string(forKey: "token")
+//            let token = UserDefaults.standard.string(forKey: "khaata_token")
 //            print(token!)
             utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: [:], viewCotroller: self, success: { res in
                 
@@ -83,6 +83,10 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     
     
     func loadPayUWebview(payUData:JSON){
+        let liveUrl = "https://secure.payu.in/_payment"
+        let testUrl = "https://test.payu.in/_payment"
+        let testKey = "gtKFFx"
+        let liveKey = "hVxRrY1k"
         let firstName = payUData["firstname"].stringValue
         let lastName = payUData["lastname"].stringValue
         let key = payUData["key"].stringValue
@@ -99,7 +103,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                             <html>
                                 <head></head>
                                 <body onload='form1.submit()'>
-                                    <form id='form1' action='https://test.payu.in/_payment' method='post'>
+                                    <form id='form1' action='\(testUrl)' method='post'>
                                         <input name='amount' type='hidden' value='\(amount)' />
                                         <input name='firstname' type='hidden' value='\(firstname)' />
                                         <input name='curl' type='hidden' value='\(curl)' />
@@ -107,7 +111,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                                         <input name='furl' type='hidden' value='\(furl)' />
                                         <input name='surl' type='hidden' value='\(surl)' />
                                         <input name='productinfo' type='hidden' value='\(productinfo)' />
-                                        <input name='key' type='hidden' value='gtKFFx' />
+                                        <input name='key' type='hidden' value='\(testKey)' />
                                         <input name='email' type='hidden' value='\(email)' />
                                         <input name='hash' type='hidden' value='\(hash)' />
                                         <input name='txnid' type='hidden' value='\(txnid)' />

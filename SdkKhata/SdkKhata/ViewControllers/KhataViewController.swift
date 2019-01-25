@@ -56,7 +56,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     override open func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
-        //self.addBackButton()
+        //self.x()
         
         print("receiving data")
         print("mobileNumber: \(mobileNumber)")
@@ -72,24 +72,21 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         
         if(self.requestFrom == "Call Payu"){
             
-            UserDefaults.standard.set(emailID, forKey: "emailID")
+            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
             self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
             
         }else if(self.requestFrom != "failure"){
-            UserDefaults.standard.set(self.mobileNumber, forKey: "mobileNumber")
-            let mobileNumber = UserDefaults.standard.string(forKey: "mobileNumber")
-            UserDefaults.standard.set(emailID, forKey: "emailID")
-            UserDefaults.standard.set(DOB, forKey: "DOB")
+            UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
+            UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 //self.openUploadDocumentsVC()
             })
         }
-        
-        
-        
-        
+    
     }
     
     func addBackButton(){
@@ -118,7 +115,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                 let emaiId = res["email"].stringValue
                 
                 if(emaiId != ""){
-                    UserDefaults.standard.set(emaiId, forKey: "emailID")
+                    UserDefaults.standard.set(emaiId, forKey: "khaata_emailID")
                 }
                 
                 if(constantToken == "InvalidToken"){
@@ -128,29 +125,29 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                         utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }
                 }else{
-                    UserDefaults.standard.set(token, forKey: "token")
+                    UserDefaults.standard.set(token, forKey: "khaata_token")
                     var status = res["status"].stringValue
                     KhataViewController.panStatus = res["docType"].stringValue
-                    UserDefaults.standard.set(res["docType"].stringValue, forKey: "docType")
-                    UserDefaults.standard.set(status,forKey: "status")
+                    UserDefaults.standard.set(res["docType"].stringValue, forKey: "khaata_docType")
+                    UserDefaults.standard.set(status,forKey: "khaata_status")
                     let dncFlag = res["dncFlag"].boolValue
-                    UserDefaults.standard.set(dncFlag, forKey: "dncFlag")
-                    UserDefaults.standard.set(res["firstName"].stringValue, forKey: "firstName")
-                    UserDefaults.standard.set(res["lastName"].stringValue, forKey: "lastName")
-                    UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "preApprovedLimit")
-                    UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "mandateRefId")
+                    UserDefaults.standard.set(dncFlag, forKey: "khaata_dncFlag")
+                    UserDefaults.standard.set(res["firstName"].stringValue, forKey: "khaata_firstName")
+                    UserDefaults.standard.set(res["lastName"].stringValue, forKey: "khaata_lastName")
+                    UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
+                    UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
                     print("status \(status)")
                     if(status == "kycPending"){
                         
                         if(!dncFlag){
-                            UserDefaults.standard.set("kycPending",forKey: "status")
+                            UserDefaults.standard.set("kycPending",forKey: "khaata_status")
                             status = "kycPending"
                         }else{
                             if(res["mandateRefId"].stringValue == "0"){
-                                UserDefaults.standard.set("kycPending",forKey: "status")
+                                UserDefaults.standard.set("kycPending",forKey: "khaata_status")
                                 status = "kycPending"
                             }else{
-                                UserDefaults.standard.set("nonMandatory",forKey: "status")
+                                UserDefaults.standard.set("nonMandatory",forKey: "khaata_status")
                                 status = "nonMandatory"
                             }
                         }

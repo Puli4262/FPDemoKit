@@ -33,7 +33,7 @@ class AadharOCR {
                     
                     if(isAadharDataFetchedFromQRCode){
                         print("Aadhar number from QR code \(QRScannerAadhanrNumber)")
-                        print("Aadhar number from OCR \(QRScannerAadhanrNumber)")
+                        print("Aadhar number from OCR \(aadharNumber)")
                         if(QRScannerAadhanrNumber == aadharNumber){
                             
                             flag = true

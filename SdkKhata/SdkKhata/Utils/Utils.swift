@@ -127,7 +127,7 @@ class Utils {
             print("URL:",self.hostURL+strURL)
             print("BODY:",params)
             
-            
+            print(headers)
             
             Alamofire.upload(multipartFormData:
                 {

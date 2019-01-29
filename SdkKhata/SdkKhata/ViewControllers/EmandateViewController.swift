@@ -215,8 +215,14 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                                 self.dismiss(animated: true, completion: {
                                     let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
                                     print(dncFlag)
+                                    let lan = UserDefaults.standard.string(forKey: "khaata_lan")
                                     if(dncFlag){
-                                        self.eMandateResponseDelegate?.gotoAgreeVC()
+                                        if(JSON(lan!) == JSON.null || lan! == "" || lan! == "0"){
+                                            self.eMandateResponseDelegate?.gotoAgreeVC()
+                                        }else{
+                                            self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                        }
+                                        
                                     }else{
                                         self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
                                     }

@@ -20,7 +20,7 @@ class PassportOCR {
             rawStrings.append(String(line))
         }
         let i = rawStrings.count - 1
-        if(rawStrings[i].replacingOccurrences(of: " ", with: "").count == 44  && rawStrings[i-1].replacingOccurrences(of: " ", with: "").count == 44 ){
+        if(rawStrings[i].replacingOccurrences(of: " ", with: "").count == 44  && rawStrings[i-1].replacingOccurrences(of: " ", with: "").count == 44 && passportNumberValidator(passportNumber: "\(rawStrings[i].prefix(8))")){
             passportOcrData["doc_number"].stringValue = "\(rawStrings[i].prefix(8))"
             self.extractPassportName(rawString: rawStrings)
             self.dateValidator(date: rawText, lastLineString: rawStrings[i].replacingOccurrences(of: " ", with: ""))
@@ -184,6 +184,21 @@ class PassportOCR {
         print(address1)
         print(address2)
         UserDefaults.standard.set("Passport", forKey: "khaata_docType")
+        
+    }
+    
+    func passportNumberValidator(passportNumber:String) -> Bool {
+        
+        let passportNumberRegex = "([A-Z]\\d{7})"
+
+        let allPassportNumberMatches = Utils().matches(for: passportNumberRegex, in: passportNumber)
+        if(allPassportNumberMatches.count != 0){
+            print("valid passport number \(passportNumber)")
+            return true
+        }else{
+            print("invalid passport number \(passportNumber)")
+            return false
+        }
         
     }
     

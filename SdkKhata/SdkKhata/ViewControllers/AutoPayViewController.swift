@@ -100,8 +100,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     func setStepperIcon(){
         let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        
-        if(!dncFlag){
+        let lan = UserDefaults.standard.string(forKey: "khaata_lan")
+        if( JSON(lan!) != JSON.null || lan! != "" || lan! != "0" || !dncFlag ){
             self.stackViewHeightConstraint.constant = 0
             self.submitIDView.isHidden = true
             self.shareDetailView.isHidden = true
@@ -158,7 +158,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         
         
         
-        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
+        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_mandateRefId")
         if(mandateRefId! != "" && mandateRefId! != "0"){
             self.handleEmandateCreationApi(mandateRef: mandateRefId!)
 //            var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
@@ -435,6 +435,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func handleMandateRef(mandateRef:String,mandateResponse:JSON){
+        print(mandateRef)
         if(mandateRef.containsIgnoringCase(find: "None of the above")){
             self.handleDncFlag(mandateResponse: mandateResponse)
         }else{
@@ -457,11 +458,16 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     
     func handleDncFlag(mandateResponse:JSON){
-        
+        let lan = UserDefaults.standard.string(forKey: "khaata_lan")
         let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        print(dncFlag)
+        print(lan!)
         if(dncFlag){
-            self.openAgreeVC()
+            if(JSON(lan!) == JSON.null || lan! == "" || lan! == "0"){
+                self.openAgreeVC()
+            }else{
+                self.gotoKhataVC(mandateResponse: mandateResponse)
+            }
+            
         }else{
             self.gotoKhataVC(mandateResponse: mandateResponse)
         }
@@ -476,7 +482,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                 KhataViewController.sanctionAmount = mandateResponse["amount"].intValue
                 KhataViewController.CIF = mandateResponse["cif"].stringValue
                 KhataViewController.LAN  = mandateResponse["lan"].stringValue
-                KhataViewController.status = "MandateCompleted"
+                KhataViewController.status = mandateResponse["status"].stringValue
                 KhataViewController.mandateId = mandateResponse["mandateId"].stringValue
                 self.navigationController!.popToViewController(controller, animated: true)
                 break

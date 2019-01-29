@@ -89,9 +89,9 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     
     @IBAction func handleSendSelfieUploadApi(_ sender: Any) {
         
-        print("handle selfie upload api")
         
-        //self.openCustomerDetailsVC()
+        
+        
         
         let utils = Utils()
         let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
@@ -119,6 +119,10 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             self.openCustomerDetailsVC()
                             
                             
+                        }else if(res["response"].stringValue.containsIgnoringCase(find: "fail") && status.containsIgnoringCase(find: "102")){
+                            DispatchQueue.main.async {
+                                self.openPanMismatchPopupVC()
+                            }
                         }else if(res["response"].stringValue.containsIgnoringCase(find: "fail") && status.containsIgnoringCase(find: "noMatch")){
                             DispatchQueue.main.async {
                                 self.openMismatchPopupVC(titleDescription: "There is a mismatch between your ID photograph and selfie")
@@ -142,6 +146,22 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             
             
         }
+    }
+    
+    func openPanMismatchPopupVC(){
+        
+        let bundel = Bundle(for: PanDataMismatchPopupViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PanDataMismatchVC") as? PanDataMismatchPopupViewController {
+            viewController.pancardPopupDelegate = self
+            viewController.titleDescription = "There is a mismatch between your photo in the ID document and selfie taken"
+            viewController.btn1Title = "Update ID"
+            viewController.btn2Title = "Re-take Selfie"
+            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self.present(viewController, animated: true)
+        }
+        
     }
     
     func openCustomerDetailsVC() {
@@ -173,9 +193,6 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     
     func flipImage(image: UIImage) -> UIImage {
         guard let cgImage = image.cgImage else {
-            // Could not form CGImage from UIImage for some reason.
-            // Return unflipped image
-            print("image p")
             return image
         }
         let flippedImage = UIImage(cgImage: cgImage,
@@ -190,7 +207,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
 extension SelfieViewController: CropViewControllerDelegate {
     
     func cropViewController(_ cropViewController: CropViewController, didCropToImage croppedImage: UIImage, withRect cropRect: CGRect, angle: Int) {
-        print("handle image")
+        
         self.dismiss(animated: true, completion: {
             self.selfieImageView.isHidden = false
             self.selfieImageView.image = croppedImage
@@ -209,10 +226,29 @@ extension SelfieViewController: CropViewControllerDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
+    func openUploadDocumentsVC() {
+        
+        let bundel = Bundle(for: UploadDocumentViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "UploadDocumentsVC") as? UploadDocumentViewController {
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+        
+    }
+    
     
 }
 
-extension SelfieViewController: MismatcPopupDelegate {
+extension SelfieViewController: MismatcPopupDelegate,PancardPopupDelegate {
+    func handleGotoDocuments() {
+        self.openUploadDocumentsVC()
+    }
+    
+    func handlePanupate() {
+        print("handle update retake selfi")
+        self.resetDocument()
+    }
+    
     func resetDocument() {
         print("Reset Images")
         self.cameraIcon.isHidden = true

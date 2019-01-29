@@ -80,10 +80,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
             UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
             UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
+            
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                //self.openUploadDocumentsVC()
+                //self.openCustomerDetailsVC()
             })
         }
     
@@ -136,6 +137,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     UserDefaults.standard.set(res["lastName"].stringValue, forKey: "khaata_lastName")
                     UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
                     UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
+                    UserDefaults.standard.set(res["lan"].stringValue, forKey: "khaata_lan")
                     print("status \(status)")
                     if(status == "kycPending"){
                         
@@ -215,8 +217,13 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             self.handleMandateCreate(leadResponse: leadResponse)
             break
         case "MandateCompleted":
-            if(!leadResponse["dncFlag"].boolValue){
-                //self.openAutopayVC()
+            let mandateId = leadResponse["mandateId"].intValue
+            let lan = leadResponse["lan"].stringValue
+            let  mandateRefId = leadResponse["mandateRefId"].stringValue
+            print(mandateId)
+            print(lan)
+            print(mandateRefId)
+            if(mandateId != 0 && mandateRefId != "" && lan != "" ){
                 self.handleJournyComplete(leadResponse: leadResponse)
             }else{
               self.openAgreeVC()
@@ -232,16 +239,23 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     }
     
     func handleJournyComplete(leadResponse:JSON){
+        
         Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: Int(leadResponse["mandateId"].stringValue)!)
             self.navigationController?.popToRootViewController(animated: true)
         })
+        
     }
     
     func handleMandateCreate(leadResponse:JSON){
-        if(leadResponse["dncFlag"].boolValue && leadResponse["mandateRefId"].stringValue == "0" && leadResponse["lan"].stringValue == ""){
-            self.openAgreeVC()
+        if(leadResponse["dncFlag"].boolValue ){
+            if(leadResponse["mandateRefId"].stringValue == "0" && (leadResponse["mandateId"].intValue == 0)){
+                self.openAutopayVC()
+            }else{
+                self.openAgreeVC()
+            }
+            
         }else{
             self.openAutopayVC()
         }

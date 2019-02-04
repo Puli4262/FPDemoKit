@@ -899,7 +899,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             let token = UserDefaults.standard.string(forKey: "khaata_token")
             print("token \(token!)")
             self.customerPostData["status"].stringValue = status
-            if(self.customerPostData["gender"].stringValue == ""){
+            if(self.customerPostData["gender"].stringValue == "" ||  self.customerPostData["gender"].stringValue.containsIgnoringCase(find: "male")){
                 customerPostData["gender"].stringValue  = "M"
             }
             if(self.customerPostData["maritialStatus"].stringValue == ""){
@@ -1330,14 +1330,17 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         if(userData["gender"].stringValue.containsIgnoringCase(find: "M") || userData["gender"].stringValue.containsIgnoringCase(find: "male")){
             self.genderSegment.selectedSegmentIndex = 0
+            customerPostData["gender"].stringValue  = "M"
         }else if(userData["gender"].stringValue.containsIgnoringCase(find: "F") || userData["gender"].stringValue.containsIgnoringCase(find: "female")){
             self.genderSegment.selectedSegmentIndex = 1
+            customerPostData["gender"].stringValue  = "F"
         }else if(userData["gender"].stringValue.containsIgnoringCase(find: "OT") || userData["gender"].stringValue.containsIgnoringCase(find: "other")){
             self.genderSegment.selectedSegmentIndex = 2
+            customerPostData["gender"].stringValue  = "OT"
         }else{
             self.genderSegment.selectedSegmentIndex = 0
         }
-        print(userData["maritialStatus"].stringValue)
+        
         if(userData["maritialStatus"].stringValue.containsIgnoringCase(find: "M")){
             self.maritalStatusSegment.selectedSegmentIndex = 1
         }else{

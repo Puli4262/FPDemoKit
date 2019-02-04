@@ -266,8 +266,10 @@ class PassportOCR {
             self.passportOcrData["docIssueDate"].stringValue = passportIssuedDate
             self.passportOcrData["docExpDate"].stringValue = passportExpiryDate
             self.passportOcrData["isPassportExpired"].boolValue = false
+            //self.passportOcrData["isValidPassportFront"].boolValue = true
         }else{
             self.passportOcrData["isPassportExpired"].boolValue = true
+            //passportOcrData["isValidPassportFront"].boolValue = false
         }
         
     }

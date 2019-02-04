@@ -84,7 +84,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                //self.openCustomerDetailsVC()
+                //self.openUploadDocumentsVC()
             })
         }
     

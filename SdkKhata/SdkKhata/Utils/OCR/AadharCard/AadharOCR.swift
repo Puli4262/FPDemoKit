@@ -152,12 +152,9 @@ class AadharOCR {
     
     public func checkAadhaarBack(rawText:String,isAadharDataFetchedFromQRCode:Bool,QRScannerPincode:String) -> JSON {
         print(rawText)
-        //let aadharAddressRegex = "((Addres?s).*(,?\n\\d{6}))"
-        let aadharAddressRegex = "((Addres?s?).*(,?\\d{6}))"
         
+        let aadharAddressRegex = "((Addres?s?).*(,?\\d{6}))"
         let allAadharAddressMatches = Utils().matches(for: aadharAddressRegex, in: rawText.replacingOccurrences(of: "\n", with: " "))
-        print("allAadharAddressMatches")
-        print(allAadharAddressMatches)
         var flag = false
         if(allAadharAddressMatches.count >= 1){
             

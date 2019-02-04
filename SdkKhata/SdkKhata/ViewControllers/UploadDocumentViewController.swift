@@ -28,7 +28,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var frontView: UIView!
-    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "9175389565", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
+    var ocrPostData: JSON = JSON(["doc_number": "", "docType": "", "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": "", "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     
     var isOCRScannerCanceled = false
     
@@ -49,7 +49,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     @IBOutlet weak var cornersVisibleLabel: UILabel!
     
     
-    
+    var noOfAttempts = 0
     let dropDown = DropDown()
     
     override func viewDidLoad() {
@@ -158,6 +158,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     
     @IBAction func handleDocumentBackImage(_ sender: Any) {
         clicked = "back"
+        self.noOfAttempts = 0
         if(self.selectDoumemtTextFeild.text == ""){
             
             Utils().showToast(context: self, msg: "Please select document type.", showToastFrom: 120.0)
@@ -261,6 +262,7 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                 
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
+                    self.noOfAttempts = 0
                     if(refreshToken == "InvalidToken"){
                         DispatchQueue.main.async {
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
@@ -276,7 +278,13 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         
                         DispatchQueue.main.async {
-                            self.openRetakeVC()
+                            
+                            if(self.clicked == "front"){
+                                self.openRetakeVC(croppedImage: UIImage(named: "front")!)
+                            }else{
+                                self.openRetakeVC(croppedImage: UIImage(named: "sdk_back")!)
+                            }
+                            
                         }
                         
                         
@@ -416,7 +424,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             
         if(Utils().isConnectedToNetwork()){
             
-            if(self.selectDoumemtTextFeild.text == "Passport"){
+            if(self.selectDoumemtTextFeild.text == "Passport" && self.noOfAttempts <= 1){
                 
                 let alertController = Utils().loadingAlert(viewController: self)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
@@ -435,8 +443,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     guard error == nil, let ocrResult = ocrResult else {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                            
                             alertController.dismiss(animated: true, completion: {
-                                self.openRetakeVC()
+                                self.openRetakeVC(croppedImage: croppedImage)
                             })
                         })
                         return
@@ -447,18 +456,18 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     if(self.clicked == "front"){
                         let passportData = PassportOCR().checkPassportFront(rawText: resultText)
                         print(passportData)
-                        //let isValidPassportFront = self.checkPassportFront(rawText: resultText)
+                        
                         if(passportData["isPassportExpired"].boolValue){
                             alertController.dismiss(animated: true, completion: {
                                 self.openMismatchPopupVC(titleDesceription: "Dear customer,you have uploaded an expired document")
-                                //Utils().showToast(context: self, msg: "Document validity is expired.\nPlease use another document", showToastFrom: 20.0)
+                                
                             })
                             
                         }else if(passportData["isValidPassportFront"].boolValue){
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
                                     self.setFrontImage(croppedImage: croppedImage)
-                                    
+                                    self.noOfAttempts = 0
                                     self.ocrPostData["raw_front"].stringValue = resultText
                                     self.ocrPostData["lastname"].stringValue = passportData["lastname"].stringValue
                                     self.ocrPostData["firstname"].stringValue = passportData["firstname"].stringValue
@@ -475,8 +484,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                         }else{
                             DispatchQueue.main.async {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                 })
                             }
                            
@@ -489,6 +499,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         if(passportBackData["isValidPassportFront"].boolValue){
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
+                                    self.noOfAttempts = 0
                                     self.setBackImage(croppedImage: croppedImage)
                                     self.ocrPostData["rawBack"].stringValue = resultText
                                     self.ocrPostData["pincode"].stringValue = passportBackData["pincode"].stringValue
@@ -503,8 +514,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                         }else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                 })
                             })
                             
@@ -514,7 +526,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                     
                 }
                 
-            }else if(self.selectDoumemtTextFeild.text == "Aadhaar Card"){
+            }else if(self.selectDoumemtTextFeild.text == "Aadhaar Card" && self.noOfAttempts <= 1){
                 let alertController = Utils().loadingAlert(viewController: self)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
                     self.present(alertController, animated: false, completion: nil)
@@ -535,8 +547,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         guard error == nil, let ocrResult = ocrResult else {
                             print("error in OCR \(error)")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                 })
                             })
                             return
@@ -551,6 +564,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         if(aadharData["isValidAadharFront"].boolValue){
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
+                                    self.noOfAttempts = 0
                                     self.setFrontImage(croppedImage: croppedImage)
                                     if(!self.isAadharDataFetchedFromQRCode){
                                         self.ocrPostData["raw_front"].stringValue = resultText
@@ -569,8 +583,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                         }else{
                             DispatchQueue.main.async {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                 })
                             }
                             
@@ -589,8 +604,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         guard error == nil, let ocrResult = ocrResult else {
                             print("error in OCR \(error)")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.0, execute: {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                 })
                             })
                             return
@@ -605,6 +621,7 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                             DispatchQueue.main.async {
                                 alertController.dismiss(animated: true, completion: {
+                                    self.noOfAttempts = 0
                                     self.setBackImage(croppedImage: croppedImage)
                                     self.ocrPostData["rawBack"].stringValue = resultText
                                     if(!self.isAadharDataFetchedFromQRCode){
@@ -620,8 +637,9 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                         }else{
                             
                             DispatchQueue.main.async {
+                                
                                 alertController.dismiss(animated: true, completion: {
-                                    self.openRetakeVC()
+                                    self.openRetakeVC(croppedImage: croppedImage)
                                     
                                 })
                             }
@@ -825,20 +843,38 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
         
     }
     
-    func openRetakeVC(){
+    func openRetakeVC(croppedImage:UIImage){
         
         let bundel = Bundle(for: RetakeViewController.self)
         
         print(ocrPostData["docType"],clicked)
-        
-        if let retakeVC = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RetakeVC") as? RetakeViewController {
-            retakeVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-            retakeVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            retakeVC.retakeDelegate = self
-            retakeVC.docType = ocrPostData["docType"].stringValue
-            self.present(retakeVC, animated: true, completion: nil)
-            
+        if(self.noOfAttempts == 0){
+            if let retakeVC = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RetakeVC") as? RetakeViewController {
+                retakeVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+                retakeVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+                retakeVC.retakeDelegate = self
+                retakeVC.docType = ocrPostData["docType"].stringValue
+                self.present(retakeVC, animated: true, completion: {
+                    self.noOfAttempts = self.noOfAttempts + 1
+                })
+                
+            }
+        }else{
+            let docType = self.ocrPostData["docType"].stringValue
+            self.resetOcrData(documentType: docType)
+            if(self.clicked == "front"){
+                self.isFrontPictureUploaded = true
+                self.firstPageImg.isHidden = false
+                self.frontImage.image = croppedImage
+            }else{
+                self.lastPageImg.isHidden = false
+                self.backImage.image = croppedImage
+                self.isBackPictureUploaded = true
+                self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+                self.continueBtn.isUserInteractionEnabled = true
+            }
         }
+        
         
     }
     

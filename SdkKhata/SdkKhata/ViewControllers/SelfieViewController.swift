@@ -28,7 +28,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     var imagePicker = UIImagePickerController()
     
     
-    
+    var isMismatchPopupShown = false
     override func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self)
@@ -149,7 +149,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func openPanMismatchPopupVC(){
-        
+        print("isMismatchPopupShown : \(isMismatchPopupShown)")
         let bundel = Bundle(for: PanDataMismatchPopupViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PanDataMismatchVC") as? PanDataMismatchPopupViewController {
@@ -175,19 +175,25 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func openMismatchPopupVC(titleDescription:String){
-        
-        let bundel = Bundle(for: MismatchPopupViewController.self)
-        
-        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "MismatchPopupVC") as? MismatchPopupViewController {
-            viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-            viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            viewController.btnTitle = "Retake selfie"
-            viewController.titleDescription = titleDescription
-            viewController.requestFrom = "selfie"
-            viewController.btnTitle = "Retake selfie"
-            viewController.mismatcPopupDelegate = self
-            self.present(viewController, animated: true)
+        print("isMismatchPopupShown : \(isMismatchPopupShown)")
+        if(!isMismatchPopupShown){
+            isMismatchPopupShown = true
+            let bundel = Bundle(for: MismatchPopupViewController.self)
+            
+            if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "MismatchPopupVC") as? MismatchPopupViewController {
+                viewController.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+                viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+                viewController.btnTitle = "Retake selfie"
+                viewController.titleDescription = titleDescription
+                viewController.requestFrom = "selfie"
+                viewController.btnTitle = "Retake selfie"
+                viewController.mismatcPopupDelegate = self
+                self.present(viewController, animated: true)
+            }
+        }else{
+            self.openPanMismatchPopupVC()
         }
+        
         
     }
     

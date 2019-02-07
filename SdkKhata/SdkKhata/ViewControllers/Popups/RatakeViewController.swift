@@ -11,6 +11,7 @@ class RetakeViewController: UIViewController {
     var retakeDelegate:RetakeDelegate?
     var docType = ""
     var imageSide = ""
+    var commingFrom = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,7 +23,7 @@ class RetakeViewController: UIViewController {
     @IBAction func handleRetakeID(_ sender: Any) {
         
         self.dismiss(animated: true, completion: {
-            self.retakeDelegate?.retakeID()
+            self.retakeDelegate?.retakeID(commingFrom:self.commingFrom)
         })
         
     }
@@ -57,6 +58,6 @@ class RetakeViewController: UIViewController {
 }
 
 protocol RetakeDelegate {
-    func retakeID()
+    func retakeID(commingFrom:String)
 }
 

@@ -369,6 +369,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 case .failure(let error):
                     alertController.dismiss(animated: true, completion: {
                         print(error)
+                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
                     })
                     
                 }

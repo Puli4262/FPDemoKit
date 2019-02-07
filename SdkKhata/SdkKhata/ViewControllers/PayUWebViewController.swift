@@ -68,7 +68,9 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 })
                 
             }, failure: { error in
-                
+                alertController.dismiss(animated: true, completion: {
+                    utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                })
             })
             
             

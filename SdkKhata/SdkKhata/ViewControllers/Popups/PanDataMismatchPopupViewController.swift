@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class PanDataMismatchPopupViewController: UIViewController {
     var pancardPopupDelegate:PancardPopupDelegate?
     
@@ -27,15 +28,58 @@ class PanDataMismatchPopupViewController: UIViewController {
     }
 
     @IBAction func handleBtnClicks(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: {
-            if(sender.titleLabel?.text == "Update ID"){
-                
-                self.pancardPopupDelegate?.handleGotoDocuments()
-            }else{
-                self.pancardPopupDelegate?.handlePanupate()
-            }
-        })
         
+        if(sender.titleLabel?.text == "Update ID"){
+            //self.pancardPopupDelegate?.handleGotoDocuments()
+            self.handleUpdateIDApi()
+        }else{
+            self.dismiss(animated: true, completion: {
+                self.pancardPopupDelegate?.handlePanupate()
+            })
+        }
+        
+        
+    }
+    
+    func handleUpdateIDApi(){
+        
+        let utils = Utils()
+        if(utils.isConnectedToNetwork()){
+            let alertController = utils.loadingAlert(viewController: self)
+            
+            self.present(alertController, animated: false, completion: nil)
+            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            utils.requestPOSTURL("/customer/updateOCR?mobileNumber=\(mobileNumber!)", parameters: [:], headers: ["accessToken":token!], viewCotroller: self, success: { res in
+                
+                alertController.dismiss(animated: true, completion: {
+                    print(res)
+                    if(res["response"].stringValue.containsIgnoringCase(find: "success")){
+                        self.dismiss(animated: true, completion: {
+                            self.pancardPopupDelegate?.handleGotoDocuments()
+                        })
+                    }else{
+                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    }
+                    
+                    
+                })
+                
+            }, failure: { error in
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                })
+                
+            })
+            
+            
+        }else{
+            
+            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
+            self.present(alert, animated: true, completion: nil)
+            
+            
+        }
     }
     
     

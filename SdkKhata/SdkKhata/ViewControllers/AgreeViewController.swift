@@ -183,7 +183,9 @@ class AgreeViewController: UIViewController {
                 })
                 
             }, failure: { error in
-                
+                alertController.dismiss(animated: true, completion: {
+                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                })
             })
             
             

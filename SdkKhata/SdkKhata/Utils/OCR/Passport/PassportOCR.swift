@@ -10,7 +10,7 @@ import SwiftyJSON
 
 
 class PassportOCR {
-    var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","pincode":"","address1":"","address2":"","gender":"","docIssueDate":"","docExpDate":""])
+    var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","motherName":"","pincode":"","address1":"","address2":"","gender":"","docIssueDate":"","docExpDate":""])
     
     public func checkPassportFront(rawText:String) -> JSON {
         
@@ -20,15 +20,15 @@ class PassportOCR {
             rawStrings.append(String(line))
         }
         let i = rawStrings.count - 1
-        if(rawStrings[i].replacingOccurrences(of: " ", with: "").count == 44  && rawStrings[i-1].replacingOccurrences(of: " ", with: "").count == 44 && passportNumberValidator(passportNumber: "\(rawStrings[i].prefix(8))")){
+        if(rawStrings[i].count == 44  && rawStrings[i-1].count == 44 && passportNumberValidator(passportNumber: "\(rawStrings[i].prefix(8))")){
             passportOcrData["doc_number"].stringValue = "\(rawStrings[i].prefix(8))"
             self.extractPassportName(rawString: rawStrings)
-            self.dateValidator(date: rawText, lastLineString: rawStrings[i].replacingOccurrences(of: " ", with: ""))
+            self.dateValidator(date: rawText, lastLineString: rawStrings[i])
             passportOcrData["isValidPassportFront"].boolValue = true
             
         }else{
-            print("last line count \(rawStrings[i].replacingOccurrences(of: " ", with: "").count)")
-            print("second line count \(rawStrings[i-1].replacingOccurrences(of: " ", with: "").count)")
+            print("last line count \(rawStrings[i].count)")
+            print("second line count \(rawStrings[i-1]).count)")
             passportOcrData["isValidPassportFront"].boolValue = false
             
         }
@@ -42,49 +42,50 @@ class PassportOCR {
         let nameString = sencondLineFromLast[5 ..< sencondLineFromLast.count]
         
         let namesSearch = nameString.split(separator: "<")
-        print(namesSearch)
+        
         var nameSearch:[String] = [String]()
         for name in namesSearch{
             nameSearch.append(String(name))
         }
-        
+        //Ex: namesSearch  = ["Devika","Singh"],["Buttala","Sanket","Sudhir"]
         if(nameSearch.count >= 1){
             passportOcrData["docType"].stringValue = "Passport"
-            passportOcrData["lastname"].stringValue = nameSearch[0]
-            
+            passportOcrData["firstname"].stringValue = nameSearch[0]
         }
         
         if(nameSearch.count >= 2){
-            passportOcrData["firstname"].stringValue = nameSearch[1]
+            if(sencondLineFromLast[5] == "<"){
+                passportOcrData["firstname"].stringValue = nameSearch[0] + " " + nameSearch[1]
+                passportOcrData["lastname"].stringValue = ""
+            }else{
+                passportOcrData["firstname"].stringValue = nameSearch[1]
+                passportOcrData["lastname"].stringValue = nameSearch[0]
+            }
+            
         }
+        
         if(nameSearch.count >= 3){
-            passportOcrData["midelName"].stringValue = nameSearch[2]
+            passportOcrData["firstname"].stringValue = nameSearch[1] + " " + nameSearch[2]
+            passportOcrData["lastname"].stringValue =    nameSearch[0]
         }
     }
     
     
-    public func checkPassportBack(rawText:String,passportNumber:String,lastName:String) -> JSON {
+    public func checkPassportBack(rawText:String,passportNumber:String,userName:String) -> JSON {
         
         var rawStrings = [String]()
         let rawString = rawText.split(separator: "\n")
         
         var i = 0
-        var flag = false
         var flag1 = false
-        var flag2 = false
+        
         for line in rawString{
             rawStrings.append(String(line))
         }
         print(rawStrings)
         
         while i < rawStrings.count {
-            if ( passportNumber.containsIgnoringCase(find: rawStrings[i])){
-                flag = true
-            }
             
-            if (rawStrings[i].containsIgnoringCase(find: lastName)) {
-                flag2 = true;
-            }
             if (rawStrings[i].containsIgnoringCase(find: "Address")) {
                 flag1 = true;
             }
@@ -93,23 +94,26 @@ class PassportOCR {
             
             
         }
-        print("is doc nunmber same === \(flag)")
-        print("is lastname same === \(flag2)")
+        
         print("is Address word contains === \(flag1)")
-        if ((flag || flag2) && flag1) {
-            extractPassportAddress(rawString: rawStrings, lastName: lastName)
+        if (flag1) {
+            extractPassportAddress(rawString: rawStrings, userName: userName)
         }
         
-        passportOcrData["isValidPassportFront"].boolValue = ((flag || flag2) && flag1)
+        passportOcrData["isValidPassportFront"].boolValue = (flag1)
         
         return passportOcrData
     }
     
-    func extractPassportAddress(rawString:[String],lastName:String){
+    func extractPassportAddress(rawString:[String],userName:String){
         
         var addressString = ""
         var i = 0
         var fFlag = false
+        var mFlag = false
+        
+        print("======== Father Mother Names =======")
+        print(userName)
         while (i < rawString.count){
             
             if (rawString[i].contains("Address")) {
@@ -122,17 +126,44 @@ class PassportOCR {
                 addressString = addressString + pinAdd
                 
             }
+    
+//            let userNameArray = userName.split(separator: " ")
+//            let fatherOrMotherNameMatches = userNameArray.filter({rawString[i].containsIgnoringCase(find: String($0))})
+//            if (fatherOrMotherNameMatches.count != 0){
+//                if(!fFlag){
+//                    passportOcrData["midelName"].stringValue = rawString[i]
+//                    print("fatherName \(rawString[i]) \(i)")
+//                    fFlag = true;
+//                }else if(fFlag && !mFlag){
+//
+//                    passportOcrData["motherName"].stringValue = rawString[i]
+//                    mFlag = true
+//                    print("mothername \(rawString[i]) \(i)")
+//                }
+//
+//
+//            }
             
-            
-            if (rawString[i].containsIgnoringCase(find: lastName) && !fFlag) {
-                passportOcrData["midelName"].stringValue = rawString[i]
-                fFlag = true;
-                print("fatherName \(rawString[i])")
+            if (rawString[i].containsIgnoringCase(find: "Name of Father") && !fFlag) {
+                if(rawString[i+1].containsIgnoringCase(find: "Name of Mother")){
+                    passportOcrData["midelName"].stringValue = rawString[i-1]
+                    fFlag = true
+                    print("fatherName \(rawString[i+1])")
+                }else if(!rawString[i+1].isAlphabetic){
+                    passportOcrData["midelName"].stringValue = rawString[i+2]
+                    fFlag = true
+                    print("fatherName \(rawString[i+1])")
+                }else if(rawString[i+1].isAlphabetic){
+                    passportOcrData["midelName"].stringValue = rawString[i+1]
+                    fFlag = true
+                    print("fatherName \(rawString[i+1])")
+                }
+                
             }
-            
-            if (rawString[i].containsIgnoringCase(find: lastName) && fFlag) {
-                passportOcrData["motherName"].stringValue = rawString[i]
-                print("motherName \(rawString[i])")
+
+            if (rawString[i].containsIgnoringCase(find: "Name of Mother") && fFlag) {
+                passportOcrData["motherName"].stringValue = rawString[i+1]
+                print("motherName \(rawString[i+1])")
             }
             i = i+1
         }

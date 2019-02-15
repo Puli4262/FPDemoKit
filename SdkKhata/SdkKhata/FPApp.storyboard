@@ -2427,7 +2427,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ICICI Bank" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nQJ-qu-eOi">
-                                                <rect key="frame" x="68" y="9.5" width="60" height="33"/>
+                                                <rect key="frame" x="68" y="9" width="60" height="33"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="14" id="pSt-pf-W2T"/>
                                                 </constraints>
@@ -2471,7 +2471,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Axis Bank " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O60-Pe-fxh">
-                                                <rect key="frame" x="60" y="18" width="68" height="15.5"/>
+                                                <rect key="frame" x="60" y="17.5" width="68" height="15.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="15" id="4sx-In-4k0"/>
                                                 </constraints>
@@ -2514,7 +2514,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SBI Bank " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GGR-mu-xgp">
-                                                <rect key="frame" x="60" y="18" width="68" height="15.5"/>
+                                                <rect key="frame" x="60" y="17.5" width="68" height="15.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="15" id="ESY-Z8-ZV3"/>
                                                 </constraints>
@@ -3079,7 +3079,7 @@
                                         <rect key="frame" x="8" y="8" width="268" height="68"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <attributedString key="attributedText">
-                                            <fragment content="Please remember to carry your Passport for verification at for your next shopping visit at our stores.">
+                                            <fragment content="Please remember to carry your Passport for verification for your next shopping visit at our stores.">
                                                 <attributes>
                                                     <color key="NSColor" red="0.5468310700034078" green="0.55224523901334255" blue="0.55224523901334255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <font key="NSFont" metaFont="system"/>

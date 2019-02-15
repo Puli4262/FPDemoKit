@@ -62,7 +62,7 @@ class AgreeViewController: UIViewController {
         
         let attributedString2 = NSMutableAttributedString(string:"\(docType)", attributes:attrs2)
         
-        let attributedString3 = NSMutableAttributedString(string:" for verification at for your next shopping visit at our stores.", attributes:attrs1)
+        let attributedString3 = NSMutableAttributedString(string:" for verification on your next shopping visit at our stores.", attributes:attrs1)
         
         attributedString1.append(attributedString2)
         attributedString1.append(attributedString3)

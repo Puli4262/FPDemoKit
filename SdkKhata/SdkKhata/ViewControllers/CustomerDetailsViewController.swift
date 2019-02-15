@@ -1086,12 +1086,18 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             Utils().showToast(context: self, msg: "Please enter the valid email ID.", showToastFrom: 350.0)
             emailIdTextField.becomeFirstResponder()
-        }else if(fatherNameTextField.text! == ""){
+        }else if(fatherNameTextField.text! == "" ){
             
             Utils().showToast(context: self, msg: "Please enter the father name.", showToastFrom: 350.0)
             fatherNameTextField.becomeFirstResponder()
+        }else if(!(fatherNameTextField.text?.isAlphabetic)!){
+            Utils().showToast(context: self, msg: "Please enter valid father name.", showToastFrom: 350.0)
+            fatherNameTextField.becomeFirstResponder()
         }else if(motherNameTextField.text! == ""){
             Utils().showToast(context: self, msg: "Please enter the mother name.", showToastFrom: 350.0)
+            motherNameTextField.becomeFirstResponder()
+        }else if(!(motherNameTextField.text?.isAlphabetic)!){
+            Utils().showToast(context: self, msg: "Please enter valid mother name.", showToastFrom: 350.0)
             motherNameTextField.becomeFirstResponder()
         }else{
             self.handleCreateCustomer(status: "personaldetail")

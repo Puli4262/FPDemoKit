@@ -17,6 +17,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
 
     @IBAction func openKhataApp(_ sender: Any) {
@@ -31,8 +32,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //viewController.tokenId = "bw8pkCKITpseqiOHOgsCxg=="
             
             //testing
-            viewController.mobileNumber = "9800000089"
-            viewController.tokenId = "w/fNYxRTs6NAfTa1bKnG1g=="
+            viewController.mobileNumber = "7506735494"
+            viewController.tokenId = "wr5c1sG4MPESd5S9nnRx4g=="
             
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""

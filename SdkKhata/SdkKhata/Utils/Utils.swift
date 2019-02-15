@@ -633,7 +633,11 @@ extension String
     }
     
     var isAlphabetic: Bool {
-        return !isEmpty && range(of: "[^a-zA-Z]", options: .regularExpression) == nil
+        return !isEmpty && range(of: "[^a-zA-Z ]+", options: .regularExpression) == nil
+    }
+    
+    var isAlphaNumaric: Bool {
+        return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
     }
     
     var isNumaric: Bool {

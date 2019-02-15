@@ -519,7 +519,8 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
                             
                         }
                     }else{
-                        let passportBackData = PassportOCR().checkPassportBack(rawText: resultText, passportNumber: self.ocrPostData["doc_number"].stringValue, lastName: self.ocrPostData["lastname"].stringValue)
+                        let userName = self.ocrPostData["firstname"].stringValue+" "+self.ocrPostData["lastname"].stringValue
+                        let passportBackData = PassportOCR().checkPassportBack(rawText: resultText, passportNumber: self.ocrPostData["doc_number"].stringValue, userName: userName)
                         print(passportBackData)
                         //let isValidPassportBack =  self.checkPassportBack(rawText: resultText)
                         if(passportBackData["isValidPassportFront"].boolValue){

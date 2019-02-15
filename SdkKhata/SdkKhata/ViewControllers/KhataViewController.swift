@@ -69,7 +69,6 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         print("firstname \(firstname)")
         
         
-        
         if(self.requestFrom == "Call Payu"){
             
             UserDefaults.standard.set(emailID, forKey: "khaata_emailID")

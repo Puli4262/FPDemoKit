@@ -9,7 +9,7 @@ import UIKit
 import SwiftyJSON
 
 class PayUWebViewController: UIViewController,UIWebViewDelegate {
-
+    
     @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     @IBOutlet weak var webView: UIWebView!
     
@@ -29,7 +29,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -52,14 +52,14 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             self.present(alertController, animated: false, completion: nil)
             let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email,"deviceId":"ios"]
             
-//            let token = UserDefaults.standard.string(forKey: "khaata_token")
-//            print(token!)
+            //            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //            print(token!)
             utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: [:], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
                     let token = res["token"].stringValue
-
+                    
                     if(token == "InvalidToken"){
                         utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }else{
@@ -88,7 +88,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         let liveUrl = "https://secure.payu.in/_payment"
         let testUrl = "https://test.payu.in/_payment"
         let testKey = "gtKFFx"
-        let liveKey = "hVxRrY1k"
+        let liveKey = "9fl2BV"
         let firstName = payUData["firstname"].stringValue
         let lastName = payUData["lastname"].stringValue
         let key = payUData["key"].stringValue
@@ -122,9 +122,30 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                                 </body>
                             </html>
                             """
+//        let htmlString = """
+//                            <html>
+//                                <head></head>
+//                                <body onload='form1.submit()'>
+//                                    <form id='form1' action='https://secure.payu.in/_payment' method='post'>
+//                                        <input name='amount' type='hidden' value='1.0' />
+//                                        <input name='firstname' type='hidden' value='Test' />
+//                                        <input name='curl' type='hidden' value='https://sdkuat.expanduscapital.com/KhataBackEnd/jsp/Cancel.jsp' />
+//                                        <input name='phone' type='hidden' value='9999999999' />
+//                                        <input name='furl' type='hidden' value='https://sdkuat.expanduscapital.com/KhataBackEnd/jsp/Failure.jsp' />
+//                                        <input name='surl' type='hidden' value='https://sdkuat.expanduscapital.com/KhataBackEnd/jsp/success.jsp' />
+//                                        <input name='productinfo' type='hidden' value='SAU Admission 2014' />
+//                                        <input name='key' type='hidden' value='9fl2BV' />
+//                                        <input name='email' type='hidden' value='pkatkar@analyticsfoxsoftwares.com' />
+//                                        <input name='hash' type='hidden' value='3a40838824b609b930ca83b356626327ad661ce27bbf519cda4eb29ef5edbd204c2b87a1a1f677da9d127b99b7d75713f0c1522dca702313707994b8b70e46c6' />
+//                                        <input name='txnid' type='hidden' value='0019zzcc' />
+//                                        <input name='lastname' type='hidden' value='null' />
+//                                    </form>
+//                                </body>
+//                            </html>
+//                        """
         
         webView.loadHTMLString(htmlString, baseURL: nil)
-
+        
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
@@ -169,7 +190,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         }
         
         self.activityIndicatior.isHidden = true
-    
+        
     }
     
     func sendResponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
@@ -188,9 +209,9 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         
     }
     
-
     
-
+    
+    
 }
 
 public protocol PayUResponseDelegate {

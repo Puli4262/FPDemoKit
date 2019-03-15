@@ -32,8 +32,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             //viewController.tokenId = "bw8pkCKITpseqiOHOgsCxg=="
             
             //testing
-            viewController.mobileNumber = "7506735494"
-            viewController.tokenId = "wr5c1sG4MPESd5S9nnRx4g=="
+            viewController.mobileNumber = "9987393229"
+            viewController.tokenId = "IZYPgLS/vsnA2YKqrhs6eg=="
             
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""

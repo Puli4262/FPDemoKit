@@ -19,8 +19,8 @@ class Utils {
     //AWS HOST IP
     //let hostIP = "52.66.207.92"
     
-    //Test Server
-    //let hostURL = "http://13.126.20.61:8080/KhataBackEnd"
+    //AWS Server
+    //let hostURL = "http://13.233.134.122:8080/KhataBackEnd/"
     
     //SIT Server
     let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"

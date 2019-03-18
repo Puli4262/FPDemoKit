@@ -766,12 +766,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 print(res)
                 let refreshToken = res["token"].stringValue
                 print("refreshToken \(refreshToken)" )
-//                if(refreshToken == "" || refreshToken == "InvalidToken"){
-//                    DispatchQueue.main.async {
-//                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                    }
-//                }else{
-                    //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
+
                 
                 let getCoustomerStatus = res["status"].stringValue
                 if(getCoustomerStatus == "personaldetail" || getCoustomerStatus == "customercreated"){
@@ -936,9 +931,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             customerPostData["cityPermanent"].stringValue = ""
             customerPostData["statePermanent"].stringValue = ""
             
-            
-
-            
+        
             UserDefaults.standard.set(customerPostData["firstName"].stringValue, forKey: "khaata_firstName")
             UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "khaata_lastName")
             print("Params \(customerPostData)")

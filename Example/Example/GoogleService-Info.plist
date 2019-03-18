@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>949497558789-78t13u8of20emd3l5bik0iatckaiudtv.apps.googleusercontent.com</string>
+	<string>357066781567-sfl7gnodso6fiee0s4jk839drg1ukbi8.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.949497558789-78t13u8of20emd3l5bik0iatckaiudtv</string>
+	<string>com.googleusercontent.apps.357066781567-sfl7gnodso6fiee0s4jk839drg1ukbi8</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBu18guambRZypGGDiJ6pFZ8_E4dvGSbc4</string>
+	<string>AIzaSyB-G4mSZ08ryzZAD1gahLeFIF8j2XRfJcA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>949497558789</string>
+	<string>357066781567</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.anc.fp</string>
+	<string>com.futuregroup.futurepay</string>
 	<key>PROJECT_ID</key>
-	<string>ocr-testing-6d951</string>
+	<string>future-pay-dev-2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>ocr-testing-6d951.appspot.com</string>
+	<string>future-pay-dev-2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:949497558789:ios:837a32efe3f69088</string>
+	<string>1:357066781567:ios:1f51b191448a2fc2</string>
 	<key>DATABASE_URL</key>
-	<string>https://ocr-testing-6d951.firebaseio.com</string>
+	<string>https://future-pay-dev-2.firebaseio.com</string>
 </dict>
 </plist>

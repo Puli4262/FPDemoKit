@@ -39,6 +39,7 @@ class Utils {
     public var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
     }
+    private var sessionManager = Alamofire.SessionManager()
     
     func requestPOSTURL(_ strURL: String,parameters:[String:Any],headers:[String:String], viewCotroller:UIViewController, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void) {
         
@@ -46,7 +47,12 @@ class Utils {
         print(headers)
         print(JSON(parameters))
         
-        Alamofire.request(hostURL+strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON  { (response) -> Void in
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 120 // seconds
+        
+        self.sessionManager = Alamofire.SessionManager(configuration: configuration)
+        
+        sessionManager.request(hostURL+strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON  { (response) -> Void in
             
             switch response.result {
             case .success:
@@ -70,10 +76,16 @@ class Utils {
         
         
         print("URL:",self.hostURL+strURL)
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 120 // seconds
+        
+        self.sessionManager = Alamofire.SessionManager(configuration: configuration)
+        
         
         DispatchQueue.main.async {
             
-            Alamofire.request(self.hostURL+strURL, headers: headers).responseJSON { (response) -> Void in
+            
+            self.sessionManager.request(self.hostURL+strURL, headers: headers).responseJSON { (response) -> Void in
                 
                 switch response.result {
                 case .success:
@@ -92,15 +104,13 @@ class Utils {
     
     func isStringContainsNumbers(name:String) -> Bool{
         
-        let decimalCharacters = CharacterSet.decimalDigits
-        
-        let decimalRange = name.rangeOfCharacter(from: decimalCharacters)
-        
-        if decimalRange != nil {
+        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+        if name.rangeOfCharacter(from: characterset.inverted) != nil {
             return true
         }else{
             return false
         }
+        
     }
     
     func getCurrentYear() -> Int {
@@ -129,7 +139,12 @@ class Utils {
             
             print(headers)
             
-            Alamofire.upload(multipartFormData:
+            let configuration = URLSessionConfiguration.default
+            configuration.timeoutIntervalForRequest = 120 // seconds
+            
+            self.sessionManager = Alamofire.SessionManager(configuration: configuration)
+            
+            self.sessionManager.upload(multipartFormData:
                 {
                     (multipartFormData) in
                     

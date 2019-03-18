@@ -128,6 +128,8 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                                 self.openMismatchPopupVC(titleDescription: "There is a mismatch between your ID photograph and selfie")
                             }
                             
+                        }else{
+                            Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
                         }
                     })
                 }, failure: {error in

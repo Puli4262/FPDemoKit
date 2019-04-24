@@ -484,6 +484,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                 KhataViewController.LAN  = mandateResponse["lan"].stringValue
                 KhataViewController.status = mandateResponse["status"].stringValue
                 KhataViewController.mandateId = mandateResponse["mandateId"].stringValue
+                KhataViewController.statusCode = mandateResponse["returnCode"].stringValue
                 self.navigationController!.popToViewController(controller, animated: true)
                 break
             }
@@ -507,22 +508,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
 }
 
 extension AutoPayViewController: EMandateResponseDelegate {
-    func gotoAgreeVC() {
-        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
-        
-        self.present(alert, animated: true, completion: nil)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-            self.dismiss(animated: true, completion: {
-                self.openAgreeVC()
-            })
-            
-        })
-        //self.openAgreeVC()
-    }
-    
-    func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String) {
-        
+    func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String, statusCode: String) {
         let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
@@ -537,6 +523,7 @@ extension AutoPayViewController: EMandateResponseDelegate {
                         KhataViewController.LAN  = LAN
                         KhataViewController.status = status
                         KhataViewController.mandateId = mandateId
+                        KhataViewController.statusCode = statusCode
                         self.navigationController!.popToViewController(controller, animated: true)
                         break
                     }
@@ -544,8 +531,23 @@ extension AutoPayViewController: EMandateResponseDelegate {
             })
             
         })
-        
     }
+    
+    func gotoAgreeVC() {
+        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            self.dismiss(animated: true, completion: {
+                self.openAgreeVC()
+            })
+            
+        })
+        //self.openAgreeVC()
+    }
+    
+    
     
     
     

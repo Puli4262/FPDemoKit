@@ -15,12 +15,17 @@ class PopupViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var popupView: Cardview!
     var titleDescription = ""
+    var statusCode = ""
+    var status = ""
+    var btnTitle = "Go Back"
     var closeAppDelegate:CloseAppDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = titleDescription
         if(self.titleLabel.text?.containsIgnoringCase(find: "already exists"))!{
             self.gobackBtn.setTitle("OK", for: .normal)
+        }else{
+            gobackBtn.setTitle(btnTitle, for: .normal)
         }
     }
 
@@ -34,13 +39,13 @@ class PopupViewController: UIViewController {
         
         self.dismiss(animated: true, completion: {
             if(self.titleLabel.text?.containsIgnoringCase(find: "eligible"))!{
-                self.closeAppDelegate?.closeApp(status: "notEligible")
+                self.closeAppDelegate?.closeApp(status: "notEligible", statusCode: self.statusCode)
             }else if(self.titleLabel.text?.containsIgnoringCase(find: "already exists"))!{
-                self.closeAppDelegate?.closeApp(status: "alreadyCustomer")
+                self.closeAppDelegate?.closeApp(status: "alreadyCustomer", statusCode: self.statusCode)
             }else{
-                self.closeAppDelegate?.closeApp(status: "")
+                self.closeAppDelegate?.closeApp(status: self.status, statusCode: self.statusCode)
             }
-           
+            
         })
         
     }
@@ -52,5 +57,5 @@ class PopupViewController: UIViewController {
 }
 
 protocol CloseAppDelegate {
-    func closeApp(status:String)
+    func closeApp(status:String,statusCode:String)
 }

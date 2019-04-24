@@ -167,6 +167,7 @@ class AgreeViewController: UIViewController {
                                     KhataViewController.LAN  = res["lan"].stringValue
                                     KhataViewController.status = res["status"].stringValue
                                     KhataViewController.mandateId = res["mandateId"].stringValue
+                                    KhataViewController.statusCode = res["returnCode"].stringValue
                                     self.navigationController!.popToViewController(controller, animated: true)
                                     break
                                 }

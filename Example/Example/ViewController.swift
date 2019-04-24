@@ -13,10 +13,17 @@ import SdkKhata
 
 class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
+    @IBOutlet weak var statusCodeLabel: UILabel!
+    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var constantTokenTextFeild: UITextField!
+    @IBOutlet weak var mobileNumberTextFeild: UITextField!
+    
     @IBOutlet weak var applyBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.mobileNumberTextFeild.text = "8879247251"
+        self.constantTokenTextFeild.text = "fulhIyyZKT3qPapX1yfAYA=="
         
     }
 
@@ -26,46 +33,14 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             
             viewController.sendFPSDKResponseDelegate = self
-            
-            //development
-            viewController.mobileNumber = "9820866871"
-            viewController.tokenId = "7sJzukXoIM4ifevSa1bEXQ=="
-            
-            //testing
-            //viewController.mobileNumber = "7972053062"
-            //viewController.tokenId = "urxluLlKC8w5qNkPQefaBQ=="
-            
+            viewController.mobileNumber = self.mobileNumberTextFeild.text!
+            viewController.tokenId = self.constantTokenTextFeild.text!
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
-            viewController.DOB = "1990/01/01"
-            viewController.mandateStatus = "mandatory"
-            
+            viewController.DOB = "01/01/1990"
+            viewController.mandateStatus = ""
             self.navigationController?.pushViewController(viewController, animated: true)
         }
-    }
-    
-    
-    
-    
-    
-    func sendResponse(sanctionAmount: Int, LAN: String,status:String,CIF:String,mandateId:Int) {
-        print("Main APP")
-        print("SanctionAmount : \(sanctionAmount)")
-        print("LAN ID : \(LAN)")
-        print("Status : \(status)")
-        print("CIF : \(CIF)")
-        print("mandateId : \(mandateId)")
-        self.applyBtn.setTitle(status, for: .normal)
-    }
-    
-    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
-        print("PAYU response in FP APP")
-        print("status \(status)")
-        print("txnId \(txnId)")
-        print("amount \(amount)")
-        print("name \(name)")
-        print("productInfo \(productInfo)")
-        
     }
 
     @IBAction func handlePaynow(_ sender: Any) {
@@ -97,9 +72,32 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         
     }
     
-    func KhaataSDKFailure(status: String) {
+    func sendResponse( LAN: String, CIF : String, status: String, statusCode: String) {
+        print("Main APP")
         
+        print("LAN ID : \(LAN)")
+        print("Status : \(status)")
+        print("CIF : \(CIF)")
+        
+        print("statusCode \(statusCode)")
+        self.applyBtn.setTitle(status, for: .normal)
+        self.statusLabel.text = status
+        self.statusCodeLabel.text = statusCode
+    }
+    
+    func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String, statusCode: String) {
+        print("PAYU response in FP APP")
+        print(status)
+        print("statusCode \(statusCode)")
+        self.statusLabel.text = String(status)
+        
+    }
+    
+    func KhaataSDKFailure(status: String, statusCode: String) {
         print("status \(status)")
+        print("statusCode \(statusCode)")
+        self.statusLabel.text = status
+        self.statusCodeLabel.text = statusCode
     }
     
     

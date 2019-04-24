@@ -171,10 +171,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
             let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
             let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"10","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
-            
-            
-            
-            
+        
             let token = UserDefaults.standard.string(forKey: "khaata_token")
             
             
@@ -220,11 +217,11 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                                         if(JSON(lan!) == JSON.null || lan! == "" || lan! == "0"){
                                             self.eMandateResponseDelegate?.gotoAgreeVC()
                                         }else{
-                                            self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                            self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef, statusCode: res["returnCode"].stringValue)
                                         }
                                         
                                     }else{
-                                        self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                        self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef, statusCode: res["returnCode"].stringValue)
                                     }
                                     
                                 })
@@ -232,7 +229,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                                 
                                 
                                 self.dismiss(animated: true, completion: {
-                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
+                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef, statusCode: res["returnCode"].stringValue)
                                 })
                                 
                             }
@@ -420,7 +417,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
 }
 
 public protocol EMandateResponseDelegate {
-    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String)
+    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:String,statusCode:String)
     func gotoAgreeVC()
     
 }

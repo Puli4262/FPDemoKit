@@ -39,8 +39,8 @@ class Utils {
     public var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
     }
-    private var sessionManager = Alamofire.SessionManager()
     
+    var sessionManager : SessionManager?
     func requestPOSTURL(_ strURL: String,parameters:[String:Any],headers:[String:String], viewCotroller:UIViewController, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void) {
         
         print("URL:",self.hostURL+strURL)
@@ -52,7 +52,7 @@ class Utils {
         
         self.sessionManager = Alamofire.SessionManager(configuration: configuration)
         
-        sessionManager.request(hostURL+strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON  { (response) -> Void in
+        Alamofire.request(hostURL+strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON  { (response) -> Void in
             
             switch response.result {
             case .success:
@@ -75,18 +75,22 @@ class Utils {
     func requestGETURL(_ strURL: String,headers:[String:String], viewCotroller:UIViewController, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void) {
         
         
-        print("URL:",self.hostURL+strURL)
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 120 // seconds
         
-        self.sessionManager = Alamofire.SessionManager(configuration: configuration)
+        print("URL:",self.hostURL+strURL)
+        
+        
+        
+        
+        var request = URLRequest(url: URL(string: self.hostURL+strURL)! )
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+        request.timeoutInterval = 120
         
         
         DispatchQueue.main.async {
             
-            
-            self.sessionManager.request(self.hostURL+strURL, headers: headers).responseJSON { (response) -> Void in
-                
+            Alamofire.request(request as URLRequestConvertible).responseJSON {
+                response in
                 switch response.result {
                 case .success:
                     success(JSON(response.value!))
@@ -97,7 +101,6 @@ class Utils {
                     print(error.localizedDescription)
                     break
                 }
-                
             }
         }
     }
@@ -144,7 +147,7 @@ class Utils {
             
             self.sessionManager = Alamofire.SessionManager(configuration: configuration)
             
-            self.sessionManager.upload(multipartFormData:
+            self.sessionManager?.upload(multipartFormData:
                 {
                     (multipartFormData) in
                     
@@ -223,10 +226,11 @@ class Utils {
             for controller in viewController.navigationController!.viewControllers as Array {
                 if controller.isKind(of: KhataViewController.self) {
                     let VC = controller as! KhataViewController
-                    KhataViewController.comingFrom = "unauthorised"
+                    KhataViewController.comingFrom = "InvalidToken"
+                    KhataViewController.status = "InvalidToken"
+                    KhataViewController.statusCode = "401"
                     VC.requestFrom = "failure"
                     viewController.navigationController!.popToViewController(VC, animated: true)
-                    
                 }
             }
             

@@ -848,14 +848,56 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         
                     }else if(status! == "customercreated"){
                         
-                        self.handlePancardUIVisibility(visibility:true)
-                        self.handlePersonalDetailsUIVisibility(visibility: false)
-                        self.handleAddressDetailsUIVisibility(visibility:true)
-                        self.handleVCHeight()
+                        let cif = UserDefaults.standard.string(forKey: "khaata_cif") 
                         
-                        self.idDetailsTextField.isUserInteractionEnabled = true
-                        self.personalDetailsTextField.isUserInteractionEnabled = true
-                        self.addressTitleTextField.isUserInteractionEnabled = true
+                        if(cif == ""){
+                            
+                            self.handlePancardUIVisibility(visibility:true)
+                            self.handlePersonalDetailsUIVisibility(visibility: true)
+                            self.handleAddressDetailsUIVisibility(visibility:false)
+                            self.handleVCHeight()
+                            
+                            self.idDetailsTextField.isUserInteractionEnabled = true
+                            self.personalDetailsTextField.isUserInteractionEnabled = true
+                            self.addressTitleTextField.isUserInteractionEnabled = true
+                            
+                            
+                            
+                            self.firstNameTextField.isUserInteractionEnabled = false
+                            self.lastNameTextField.isUserInteractionEnabled = false
+                            self.dateOfBirthTextField.isUserInteractionEnabled = false
+                            self.emailIdTextField.isUserInteractionEnabled = false
+                            self.fatherNameTextField.isUserInteractionEnabled = false
+                            self.motherNameTextField.isUserInteractionEnabled = false
+                            
+                            self.genderSegment.isUserInteractionEnabled = false
+                            self.maritalStatusSegment.isUserInteractionEnabled = false
+                            self.employerStatusSegment.isUserInteractionEnabled = false
+                            
+                            self.permanentAddressLine1TextField.isUserInteractionEnabled = false
+                            self.permanentAddressLine2TextField.isUserInteractionEnabled = false
+                            self.permanentAddPincodeTextField.isUserInteractionEnabled = false
+                            
+                            self.communicationAddressLine1TextField.isUserInteractionEnabled = false
+                            self.communicationAddLine2TextField.isUserInteractionEnabled = false
+                            self.communicationAddPincodeTextField.isUserInteractionEnabled = false
+                            
+                            
+                            
+                        }else{
+                            
+                            self.handlePancardUIVisibility(visibility:true)
+                            self.handlePersonalDetailsUIVisibility(visibility: false)
+                            self.handleAddressDetailsUIVisibility(visibility:true)
+                            self.handleVCHeight()
+                            
+                            self.idDetailsTextField.isUserInteractionEnabled = true
+                            self.personalDetailsTextField.isUserInteractionEnabled = true
+                            self.addressTitleTextField.isUserInteractionEnabled = true
+                            
+                            
+                        }
+                        
                         
                         
                         
@@ -942,8 +984,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     if(refreshToken != "InvalidToken"){
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         let resPonseStatus = res["status"].stringValue
+                        let returnCode = res["returnCode"].stringValue
                         if(resPonseStatus.containsIgnoringCase(find: "Customer dedup found")){
-                            self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document")
+                            self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document", statusCode: returnCode)
+                        }else if(resPonseStatus.containsIgnoringCase(find: "CustomerDedup")){
+                            self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document", statusCode: returnCode)
                         }else if(res["response"].stringValue == "success"){
                             
                             if(status == "personaldetail"){
@@ -1112,12 +1157,18 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             utils.requestGETURL("/upload/getZipdetails?pinCode=\(pincode)&mobileNumber=\(mobileNumber!)", headers: ["accessToken":token!], viewCotroller: self, success: { res in
                 print(res)
                 let refreshToken = res["token"].stringValue
+                let response = res["response"].stringValue
                 
                 if(refreshToken == "InvalidToken"){
                     DispatchQueue.main.async {
                         utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }
 
+                }else if(response == "Fail"){
+                    DispatchQueue.main.async {
+                        utils.showToast(context: self, msg: "Please try again",showToastFrom:20)
+                    }
+                    
                 }else if(from == "permanent"){
                         
                         self.permanentAddCityTextField.text = res["city"].stringValue
@@ -1414,7 +1465,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
     }
     
-    func openPopupVC(titleDescription:String){
+    func openPopupVC(titleDescription:String,statusCode:String ){
         
         let bundel = Bundle(for: PopupViewController.self)
         
@@ -1423,10 +1474,13 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             viewController.titleDescription = titleDescription
             viewController.closeAppDelegate = self
+            viewController.btnTitle = "Go Back"
+            viewController.statusCode = statusCode
             self.present(viewController, animated: true)
         }
         
     }
+    
     
 }
 
@@ -1451,16 +1505,15 @@ extension CustomerDetailsViewController:PancardPopupDelegate {
 }
 
 extension CustomerDetailsViewController : CloseAppDelegate {
-    func closeApp(status: String) {
+    func closeApp(status: String, statusCode: String) {
         for controller in self.navigationController!.viewControllers as Array {
             if controller.isKind(of: KhataViewController.self) {
                 let VC = controller as! KhataViewController
                 KhataViewController.comingFrom = status
                 VC.requestFrom = "failure"
+                KhataViewController.statusCode = statusCode
                 self.navigationController!.popToViewController(VC, animated: true)
-                
             }
         }
-        //self.navigationController?.popToRootViewController(animated: true)
     }
 }

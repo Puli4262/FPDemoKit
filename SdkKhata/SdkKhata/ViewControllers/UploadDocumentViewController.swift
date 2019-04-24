@@ -13,7 +13,7 @@ import SWXMLHash
 import SwiftyJSON
 import DropDown
 import CropViewController
-
+import AVFoundation
 
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
@@ -127,7 +127,6 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             self.frontImage.image = UIImage(named:"front")
             self.backImage.image = UIImage(named:"sdk_back")
             self.showDocumnetPlaceholderImages()
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
             self.resetOcrData(documentType: documentType)
         }
         self.ocrPostData["docType"].stringValue = documentType
@@ -137,7 +136,38 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             self.openQRCodeScanner()
         }
     }
+    func isCameraPermissionGranted() -> Bool {
+        var isGranted = false
+        if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
+            isGranted = true
+        } else {
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+                if granted {
+                    isGranted = true
+                } else {
+                    isGranted = false
+                }
+            })
+        }
+        return isGranted
+    }
     
+    
+    
+    @available(iOS 10.0, *)
+    func showCameraPermissionPopup(){
+        let alert = UIAlertController(title: "Camera", message: "Camera access is absolutely necessary to use this app", preferredStyle: .alert)
+        
+        // Add "OK" Button to alert, pressing it will bring you to the settings app
+        alert.addAction(UIAlertAction(title: "Grant Permission", style: .default, handler: { action in
+            if let url = NSURL(string: UIApplicationOpenSettingsURLString) as URL? {
+                UIApplication.shared.openURL(url)
+            }
+        }))
+        // Show the alert with animation
+        self.navigationController?.present(alert, animated: true)
+        
+    }
     func showDocumnetPlaceholderImages(){
         self.frontView.isHidden = false
         self.backView.isHidden  = false
@@ -158,10 +188,17 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     }
     
+    @available(iOS 10.0, *)
     @IBAction func handleSlectDocumentTap(_ sender: Any) {
         
-        self.selectDoumemtTextFeild.resignFirstResponder()
-        self.dropDown.show()
+        if(isCameraPermissionGranted()){
+            self.selectDoumemtTextFeild.resignFirstResponder()
+            self.dropDown.show()
+        }else{
+            print("handle pop up")
+            self.showCameraPermissionPopup()
+        }
+        
         
     }
     

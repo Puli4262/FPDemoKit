@@ -26,6 +26,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     public static var status = ""
     public static var CIF = ""
     public static var mandateId = ""
+    public static var statusCode = ""
     //E-mandate Parameters
     public var txnid = ""
     public var amount = ""
@@ -113,17 +114,21 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                 let token = res["token"].stringValue
                 let constantToken = res["constantToken"].stringValue
                 let emaiId = res["email"].stringValue
-                
+                let status = res["status"].stringValue
+                let return_code = res["return_code"].stringValue
                 if(emaiId != ""){
                     UserDefaults.standard.set(emaiId, forKey: "khaata_emailID")
                 }
                 
-                if(constantToken == "InvalidToken"){
-                    self.handnleGoBackPopup(titleDescription: "We are unable to open your Khaata at the moment as you are not eligible")
-                }else if(token == "" || token == "InvalidToken"){
-                    DispatchQueue.main.async {
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                if(return_code != "200"){
+                    if(return_code == "410"){
+                        self.handnleGoBackPopup(titleDescription: "Lead Expired", btnTitle: "Ok", statusCode: return_code, status: status)
+                    }else if(return_code == "404"){
+                        self.handnleGoBackPopup(titleDescription: "Lead Not Found", btnTitle: "Ok", statusCode: return_code, status: status)
+                    }else if(return_code == "401"){
+                        self.handnleGoBackPopup(titleDescription: "Invalid Token", btnTitle: "Ok", statusCode: return_code, status: "InvalidToken")
                     }
+                    
                 }else{
                     UserDefaults.standard.set(token, forKey: "khaata_token")
                     var status = res["status"].stringValue
@@ -137,9 +142,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
                     UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
                     UserDefaults.standard.set(res["lan"].stringValue, forKey: "khaata_lan")
+                    UserDefaults.standard.set(res["cif"].stringValue, forKey: "khaata_cif")
                     print("status \(status)")
                     if(status == "kycPending"){
-                        
                         if(!dncFlag){
                             UserDefaults.standard.set("kycPending",forKey: "khaata_status")
                             status = "kycPending"
@@ -180,17 +185,17 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     
     open override func viewWillAppear(_ animated: Bool) {
         self.activityIndicatior.isHidden = false
-        print(KhataViewController.comingFrom == "unauthorised")
+        
         if(KhataViewController.comingFrom == "data"){
-            sendFPSDKResponseDelegate?.sendResponse(sanctionAmount:KhataViewController.sanctionAmount, LAN: KhataViewController.LAN, status: KhataViewController.status, CIF: KhataViewController.CIF, mandateId: Int(KhataViewController.mandateId)!)
+            sendFPSDKResponseDelegate?.sendResponse(LAN: KhataViewController.LAN, CIF: KhataViewController.CIF,status: KhataViewController.status,statusCode: KhataViewController.statusCode)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
         }else if(KhataViewController.comingFrom == "payU"){
-            sendFPSDKResponseDelegate?.payUresponse(status:KhataViewController.payUStatus,txnId:KhataViewController.payUTxnid,amount:KhataViewController.payUAmount,name:KhataViewController.payUName,productInfo:KhataViewController.payUProductInfo)
+            sendFPSDKResponseDelegate?.payUresponse(status:KhataViewController.payUStatus,txnId:KhataViewController.payUTxnid,amount:KhataViewController.payUAmount,name:KhataViewController.payUName,productInfo:KhataViewController.payUProductInfo, statusCode: KhataViewController.statusCode)
             KhataViewController.comingFrom = ""
             self.navigationController?.popViewController(animated: true)
         }else if(self.requestFrom == "failure"){
-            sendFPSDKResponseDelegate?.KhaataSDKFailure(status: KhataViewController.comingFrom)
+            sendFPSDKResponseDelegate?.KhaataSDKFailure(status: KhataViewController.comingFrom, statusCode: KhataViewController.statusCode)
             self.navigationController?.popToRootViewController(animated: true)
         }
         
@@ -199,6 +204,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     
     func handleStatus(status:String,leadResponse:JSON){
         print(status)
+        
         switch(status) {
         case "KYCInitaited":
             self.openUploadDocumentsVC()
@@ -206,8 +212,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         case "DocumentUploaded":
             self.openSelfieVC()
             break
-        case "SalfieUploaded","Pan valided","personaldetail","customercreated":
+        case "SalfieUploaded","Pan valided","personaldetail":
             self.openCustomerDetailsVC()
+            break
+        case "customercreated":
+            self.handleCustomerCreation(leadResponse: leadResponse)
             break
         case "kycPending","editMandate":
             self.openAutopayVC()
@@ -236,12 +245,25 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             break
         }
     }
-    
+    func handleCustomerCreation(leadResponse:JSON){
+        let cif = leadResponse["cif"].stringValue
+        let dncFlag = leadResponse["dncFlag"].boolValue
+        if(cif == ""){
+            self.openCustomerDetailsVC()
+        }else{
+            if(dncFlag){
+                self.openAutopayVC()
+            }else{
+                self.openAgreeVC()
+            }
+            
+        }
+    }
     func handleJournyComplete(leadResponse:JSON){
         
         Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            self.sendFPSDKResponseDelegate?.sendResponse(sanctionAmount: leadResponse["preApprovedLimit"].intValue, LAN: leadResponse["lan"].stringValue, status: "alreadyCustomer", CIF: leadResponse["cif"].stringValue, mandateId: Int(leadResponse["mandateId"].stringValue)!)
+            self.sendFPSDKResponseDelegate?.sendResponse(LAN: leadResponse["lan"].stringValue, CIF: leadResponse["cif"].stringValue,status: "alreadyCustomer", statusCode: "205" )
             self.navigationController?.popToRootViewController(animated: true)
         })
         
@@ -261,11 +283,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         
     }
     
-    func handnleGoBackPopup(titleDescription:String){
-        self.openPopupVC(titleDescription:titleDescription)
+    func handnleGoBackPopup(titleDescription:String,btnTitle:String,statusCode:String,status:String){
+        self.openPopupVC(titleDescription:titleDescription,btnTitle:btnTitle,statusCode:statusCode,status:status)
     }
-    
-    func openPopupVC(titleDescription:String){
+    func openPopupVC(titleDescription:String,btnTitle:String,statusCode:String,status:String){
         
         let bundel = Bundle(for: PopupViewController.self)
         
@@ -274,6 +295,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             viewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             viewController.titleDescription = titleDescription
             viewController.closeAppDelegate = self
+            viewController.btnTitle = btnTitle
+            viewController.statusCode = statusCode
+            viewController.status = status
             self.present(viewController, animated: true)
         }
         
@@ -354,7 +378,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     
     
     public func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
-    sendFPSDKResponseDelegate?.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
+        sendFPSDKResponseDelegate?.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo, statusCode: "")
         KhataViewController.comingFrom = ""
         self.navigationController?.popViewController(animated: true)
     }
@@ -362,21 +386,22 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
 }
 
 public protocol SendFPSDKResponseDelegate {
-    func sendResponse(sanctionAmount:Int,LAN:String,status:String,CIF:String,mandateId:Int)
-    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
-    func KhaataSDKFailure(status:String)
+    func sendResponse(LAN:String,CIF:String,status:String,statusCode:String)
+    func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String,statusCode:String )
+    func KhaataSDKFailure(status:String,statusCode:String)
 }
 
 extension KhataViewController:CloseAppDelegate {
     
     
-    func closeApp(status:String) {
-        sendFPSDKResponseDelegate?.KhaataSDKFailure(status: status)
+    func closeApp(status:String,statusCode:String ) {
+        sendFPSDKResponseDelegate?.KhaataSDKFailure(status: status, statusCode: statusCode)
         self.navigationController?.popToRootViewController(animated: true)
     }
     
     
 }
+
 
 
 

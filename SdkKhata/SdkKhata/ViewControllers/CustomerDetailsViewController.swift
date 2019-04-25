@@ -851,7 +851,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         let cif = UserDefaults.standard.string(forKey: "khaata_cif") 
                         
                         if(cif == ""){
-                            
+                            DispatchQueue.main.async {
+                                utils.showToast(context: self, msg: "Please try again", showToastFrom: 20)
+                            }
                             self.handlePancardUIVisibility(visibility:true)
                             self.handlePersonalDetailsUIVisibility(visibility: true)
                             self.handleAddressDetailsUIVisibility(visibility:false)

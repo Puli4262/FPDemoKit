@@ -69,8 +69,6 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     func setupTopBar(viewController: UIViewController){
         
         let status = UserDefaults.standard.string(forKey: "khaata_status")
-        print("status is \(status)")
-        
         viewController.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
         viewController.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         viewController.navigationController?.navigationBar.layer.shadowRadius = 4.0

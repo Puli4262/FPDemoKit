@@ -157,7 +157,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         var status = false
         
         let requestURL = self.webView.request?.url
-        var requestString:String = (requestURL?.absoluteString)!
+        var requestString:String = (requestURL?.absoluteString) ?? ""
         print(requestString)
         //let response =  webView.stringByEvaluatingJavaScript(from: "PayU()")
         //print(response)

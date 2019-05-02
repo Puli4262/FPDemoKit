@@ -197,7 +197,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             self.navigationController?.popViewController(animated: true)
         }else if(self.requestFrom == "failure"){
             sendFPSDKResponseDelegate?.KhaataSDKFailure(status: KhataViewController.comingFrom, statusCode: KhataViewController.statusCode)
-            self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.popViewController(animated: true)
         }
         
     }

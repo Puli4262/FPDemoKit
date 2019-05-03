@@ -127,7 +127,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     }else if(return_code == "404"){
                         self.handnleGoBackPopup(titleDescription: "Lead Not Found", btnTitle: "Ok", statusCode: return_code, status: status)
                     }else if(return_code == "401"){
-                        self.handnleGoBackPopup(titleDescription: "Invalid Token", btnTitle: "Ok", statusCode: return_code, status: "Authorization failed")
+                        self.handnleGoBackPopup(titleDescription: "Authorization Failed", btnTitle: "Ok", statusCode: return_code, status: "InvalidToken")
                     }
                     
                 }else{

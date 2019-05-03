@@ -226,8 +226,8 @@ class Utils {
             for controller in viewController.navigationController!.viewControllers as Array {
                 if controller.isKind(of: KhataViewController.self) {
                     let VC = controller as! KhataViewController
-                    KhataViewController.comingFrom = "Authorization failed"
-                    KhataViewController.status = "Authorization failed"
+                    KhataViewController.comingFrom = "InvalidToken"
+                    KhataViewController.status = "InvalidToken"
                     KhataViewController.statusCode = "401"
                     VC.requestFrom = "failure"
                     viewController.navigationController!.popToViewController(VC, animated: true)

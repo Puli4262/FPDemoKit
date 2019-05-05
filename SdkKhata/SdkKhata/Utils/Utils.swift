@@ -14,7 +14,7 @@ import SystemConfiguration
 private var __maxLengths = [UITextField: Int]()
 class Utils {
     //SIT HOST IP
-    let hostIP = "https://sdkuat.expanduscapital.com"
+    let hostIP = "https://appuat.expanduscapital.com"
     
     //AWS HOST IP
     //let hostIP = "52.66.207.92"
@@ -23,7 +23,7 @@ class Utils {
     //let hostURL = "http://13.233.134.122:8080/KhataBackEnd/"
     
     //SIT Server
-    let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
+    let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
     
     //AWS Server
     //let hostURL = "http://52.66.207.92:8080/KhataBackEnd"

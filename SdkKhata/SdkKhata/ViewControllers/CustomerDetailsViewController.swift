@@ -1254,13 +1254,17 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             
             Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)
             permanentAddPincodeTextField.becomeFirstResponder()
+            permanentAddPincodeTextField.errorMessage = "Enter Pincode"
             
         }else if(permanentAddCityTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)
             permanentAddCityTextField.becomeFirstResponder()
+            
+
         }else if(permanentAddStateTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)
             permanentAddStateTextField.becomeFirstResponder()
+    
         }else {
             
             if(!isCommunicationAddSameSwitch.isOn){
@@ -1518,7 +1522,7 @@ extension CustomerDetailsViewController:PancardPopupDelegate {
     }
     
     func handlePanupate() {
-        print("handle pan details")
+        pancardTextField.text = ""  
     }
 }
 

@@ -55,7 +55,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = self.mobileNumberTextFeild.text!
             viewController.tokenId = self.constantTokenTextFeild.text!
-            viewController.emailID = "testacc0990gmail.com"
+            viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "01/01/1990"
             viewController.mandateStatus = ""

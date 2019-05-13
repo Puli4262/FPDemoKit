@@ -82,10 +82,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
             UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
             
-            self.getLeadApi(mobileNumber: mobileNumber!)
+            //self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                //self.openUploadDocumentsVC()
+                self.openAgreeVC()
             })
         }
     

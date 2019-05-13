@@ -203,6 +203,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     
     @objc func textFieldDidChange(_ textField : UITextField){
+        let floatingLabelTextField = textField as? SkyFloatingLabelTextField
+        floatingLabelTextField?.errorMessage = ""
         if(textField == dateOfBirthTextField){
             textField.text = Utils().formattedNumber(number: textField.text!, format: "XX/XX/XXXX")
         }else if(textField == pancardTextField){
@@ -1102,43 +1104,54 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         if(firstNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the first name.", showToastFrom: 350.0)
             firstNameTextField.becomeFirstResponder()
+            firstNameTextField.errorMessage = "Enter first Name"
         }else if(utils.isStringContainsNumbers(name: firstNameTextField.text!)){
             Utils().showToast(context: self, msg: "Invalid first name", showToastFrom: 350.0)
             firstNameTextField.becomeFirstResponder()
+            firstNameTextField.errorMessage = "Invalid first Name"
         }else if(lastNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the last name.", showToastFrom: 350.0)
             lastNameTextField.becomeFirstResponder()
+            lastNameTextField.errorMessage = "Enter last Name"
         }else if(utils.isStringContainsNumbers(name: lastNameTextField.text!)){
             Utils().showToast(context: self, msg: "Invalid last name", showToastFrom: 350.0)
             lastNameTextField.becomeFirstResponder()
+            lastNameTextField.errorMessage = "Invalid last Name"
         }else if((dateOfBirthTextField.text?.count)! < 10){
             Utils().showToast(context: self, msg: "Please enter the valid date.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
+            dateOfBirthTextField.errorMessage = "Invalid Date"
         }else if(!Utils().isValidDate(dateString: dateOfBirthTextField.text!)){
             Utils().showToast(context: self, msg: "Please enter the valid date.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
-            
+            dateOfBirthTextField.errorMessage = "Invalid Date"
         }else if((year! - Int(dateOfBirthTextField.text!.split(separator: "/")[0])! < 18)){
             
             Utils().showToast(context: self, msg: "Age should not be less than 18.", showToastFrom: 350.0)
             dateOfBirthTextField.becomeFirstResponder()
+            dateOfBirthTextField.errorMessage = "Must be less than 18"
         }else if(!Utils().isValidEmailAddress(emailAddressString: emailIdTextField.text!)){
             
             Utils().showToast(context: self, msg: "Please enter the valid email ID.", showToastFrom: 350.0)
             emailIdTextField.becomeFirstResponder()
+            emailIdTextField.errorMessage = "Invalid Email"
         }else if(fatherNameTextField.text! == "" ){
             
             Utils().showToast(context: self, msg: "Please enter the father name.", showToastFrom: 350.0)
             fatherNameTextField.becomeFirstResponder()
+            fatherNameTextField.errorMessage = "Enter father name"
         }else if(!(fatherNameTextField.text?.isAlphabetic)!){
             Utils().showToast(context: self, msg: "Please enter valid father name.", showToastFrom: 350.0)
             fatherNameTextField.becomeFirstResponder()
+            fatherNameTextField.errorMessage = "Invalid father name"
         }else if(motherNameTextField.text! == ""){
             Utils().showToast(context: self, msg: "Please enter the mother name.", showToastFrom: 350.0)
             motherNameTextField.becomeFirstResponder()
+            motherNameTextField.errorMessage = "Enter mother name"
         }else if(!(motherNameTextField.text?.isAlphabetic)!){
             Utils().showToast(context: self, msg: "Please enter valid mother name.", showToastFrom: 350.0)
             motherNameTextField.becomeFirstResponder()
+            motherNameTextField.errorMessage = "Invalid mother name"
         }else{
             self.handleCreateCustomer(status: "personaldetail")
         }
@@ -1222,18 +1235,21 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         if(utils.isStringContainsNumbers(name: firstNameTextField.text!)){
             Utils().showToast(context: self, msg: "Invalid first name", showToastFrom: 350.0)
+            firstNameTextField.errorMessage = "Invalid first name"
             firstNameTextField.becomeFirstResponder()
         }else if(lastNameTextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the last name.", showToastFrom: 350.0)
             lastNameTextField.becomeFirstResponder()
+            lastNameTextField.errorMessage = "Invalid last name"
         }else if(permanentAddressLine1TextField.text == ""){
             
             Utils().showToast(context: self, msg: "Please enter the permanent address1.", showToastFrom: 350.0)
             permanentAddressLine1TextField.becomeFirstResponder()
-            
+            permanentAddressLine1TextField.errorMessage = "Enter address line1"
         }else if(permanentAddressLine2TextField.text == ""){
             Utils().showToast(context: self, msg: "Please enter the permanent address2.", showToastFrom: 350.0)
             permanentAddressLine2TextField.becomeFirstResponder()
+            permanentAddressLine2TextField.errorMessage = "Enter address line2"
         }else if(permanentAddPincodeTextField.text! == "" || (permanentAddPincodeTextField.text?.count)! < 6){
             
             Utils().showToast(context: self, msg: "Please enter the pincode.", showToastFrom: 350.0)

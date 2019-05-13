@@ -100,6 +100,7 @@ PODS:
 
 DEPENDENCIES:
   - SdkKhata (from `../SdkKhata/`)
+  - SkyFloatingLabelTextField (~> 3.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -153,6 +154,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f
 
-PODFILE CHECKSUM: c32425cc7c38e2708fbf4307ac343d9305d42226
+PODFILE CHECKSUM: 7c181cf01d6c12e966a354c2fac180efd9fe3667
 
 COCOAPODS: 1.5.3

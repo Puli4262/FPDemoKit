@@ -79,14 +79,30 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c6h-Fq-7pe" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                <rect key="frame" x="16" y="415" width="343" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="7AG-Vj-ByL"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="c6h-Fq-7pe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="4OP-3b-5iO"/>
                             <constraint firstItem="5H3-AY-Yn0" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6Aj-JV-t6Z"/>
                             <constraint firstItem="CYw-1a-ddk" firstAttribute="leading" secondItem="QGu-vY-sDG" secondAttribute="trailing" constant="8" id="9wc-JC-GlU"/>
                             <constraint firstItem="gsY-GT-dIl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="B38-AT-OEd"/>
                             <constraint firstItem="NKY-rT-tIw" firstAttribute="top" secondItem="gsY-GT-dIl" secondAttribute="bottom" constant="16" id="Fo6-Ag-LGJ"/>
                             <constraint firstItem="QGu-vY-sDG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="Mdx-nT-VtJ"/>
+                            <constraint firstItem="c6h-Fq-7pe" firstAttribute="top" secondItem="GP2-Gm-q9W" secondAttribute="bottom" constant="8" id="OPe-Bm-lpB"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PJz-iK-6eW"/>
                             <constraint firstItem="XBn-Xh-eU5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="PRe-Xq-cG6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="GP2-Gm-q9W" secondAttribute="trailing" constant="16" id="QEX-HJ-pEc"/>
@@ -96,6 +112,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5H3-AY-Yn0" secondAttribute="bottom" constant="20" id="YCR-hS-qsg"/>
                             <constraint firstItem="GP2-Gm-q9W" firstAttribute="top" secondItem="XBn-Xh-eU5" secondAttribute="bottom" constant="8" id="eeW-En-iRj"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="NKY-rT-tIw" secondAttribute="trailing" constant="16" id="hhH-tG-3ek"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="c6h-Fq-7pe" secondAttribute="trailing" constant="16" id="jJL-cL-zvV"/>
                             <constraint firstItem="CYw-1a-ddk" firstAttribute="height" secondItem="QGu-vY-sDG" secondAttribute="height" id="jQZ-iT-EuN"/>
                             <constraint firstItem="QGu-vY-sDG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="mFm-1t-eJO"/>
                             <constraint firstItem="NKY-rT-tIw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="pIw-Ly-NaV"/>
@@ -115,6 +132,7 @@
                         <outlet property="mobileNumberTextFeild" destination="gsY-GT-dIl" id="Ni6-N4-fNc"/>
                         <outlet property="statusCodeLabel" destination="CYw-1a-ddk" id="jkQ-kQ-Gcc"/>
                         <outlet property="statusLabel" destination="QGu-vY-sDG" id="XOi-3z-I8I"/>
+                        <outlet property="textField" destination="c6h-Fq-7pe" id="MpX-U4-YJU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

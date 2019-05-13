@@ -9,10 +9,11 @@
 import UIKit
 import AVFoundation
 import SdkKhata
-
+import SkyFloatingLabelTextField
 
 class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
+    @IBOutlet weak var textField: SkyFloatingLabelTextField!
     @IBOutlet weak var statusCodeLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var constantTokenTextFeild: UITextField!
@@ -22,9 +23,28 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.mobileNumberTextFeild.text = "9920891076"
-        self.constantTokenTextFeild.text = "VDV42FV2n5gM5JG6rnY7+Q=="
+        self.mobileNumberTextFeild.text = "9987104447"
+        self.constantTokenTextFeild.text = "yhODQTaKymmIMuMYE48uVQ=="
         
+        textField.placeholder = "Email"
+        textField.title = "Email address"
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        
+    }
+    
+    // This will notify us when something has changed on the textfield
+    @objc func textFieldDidChange(_ textfield: UITextField) {
+        if let text = textfield.text {
+            if let floatingLabelTextField = textField as? SkyFloatingLabelTextField {
+                if( textfield.text != "" && text.characters.count < 3 ) {
+                    floatingLabelTextField.errorMessage = "Invalid email"
+                }
+                else {
+                    // The error message will only disappear when we reset it to nil or empty string
+                    floatingLabelTextField.errorMessage = ""
+                }
+            }
+        }
     }
 
     @IBAction func openKhataApp(_ sender: Any) {
@@ -35,7 +55,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.sendFPSDKResponseDelegate = self
             viewController.mobileNumber = self.mobileNumberTextFeild.text!
             viewController.tokenId = self.constantTokenTextFeild.text!
-            viewController.emailID = "testacc0990@gmail.com"
+            viewController.emailID = "testacc0990gmail.com"
             viewController.zipcode = ""
             viewController.DOB = "01/01/1990"
             viewController.mandateStatus = ""

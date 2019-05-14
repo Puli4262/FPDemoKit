@@ -272,7 +272,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
     
     func handleMandateCreate(leadResponse:JSON){
         if(leadResponse["dncFlag"].boolValue ){
-            if(leadResponse["mandateRefId"].stringValue == "0" && (leadResponse["mandateId"].intValue == 0)){
+            let cif = leadResponse["cif"].stringValue
+            if(cif != "" && leadResponse["mandateRefId"].stringValue == "0" && (leadResponse["mandateId"].intValue == 0)){
                 self.openAutopayVC()
             }else{
                 self.openAgreeVC()

@@ -1522,7 +1522,8 @@ extension CustomerDetailsViewController:PancardPopupDelegate {
     }
     
     func handlePanupate() {
-        pancardTextField.text = ""  
+        pancardTextField.text = ""
+        checkboxImg.isUserInteractionEnabled = true
     }
 }
 

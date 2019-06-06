@@ -70,14 +70,15 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         print("productinfo \(productinfo)")
         print("firstname \(firstname)")
         
-        
+        UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
         if(self.requestFrom == "Call Payu"){
             
             UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
             self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
+            //self.getTotalDueAmount(mobileNumber: mobileNumber)
             
         }else if(self.requestFrom != "failure"){
-            UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
+            
             let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
             UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
             UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
@@ -265,7 +266,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         Utils().showToast(context: self, msg: "Journey Already Completed.", showToastFrom: 30.0)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             self.sendFPSDKResponseDelegate?.sendResponse(LAN: leadResponse["lan"].stringValue, CIF: leadResponse["cif"].stringValue,status: "alreadyCustomer", statusCode: "205" )
-            self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.popViewController(animated: true)
         })
         
     }
@@ -378,12 +379,67 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         
     }
     
+    func openRepaymentVC(mobileNumebr:String,dueAmount:Int){
+        
+        let bundel = Bundle(for: RepaymentViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RepaymentViewController") as? RepaymentViewController {
+            viewController.dueAmount = dueAmount
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+    
     
     public func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
         sendFPSDKResponseDelegate?.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo, statusCode: "")
         KhataViewController.comingFrom = ""
         self.navigationController?.popViewController(animated: true)
     }
+    
+    
+    func getTotalDueAmount(mobileNumber:String){
+        let utils = Utils()
+        
+        if(utils.isConnectedToNetwork()){
+            let alertController = utils.loadingAlert(viewController: self)
+            self.present(alertController, animated: false, completion: nil)
+            
+            utils.requestPOSTURL("/payU/getTotalDueAmount", parameters: ["mobileNumber":mobileNumber], headers: ["Content-Type":"application/json"], viewCotroller: self, success: {res in
+                alertController.dismiss(animated: true, completion: {
+                    
+                    print(res)
+                    let status = res["status"].stringValue
+                    if(status.containsIgnoringCase(find: "fail")){
+//                        self.sendFPSDKResponseDelegate?.payUresponse(status: false, txnId: "", amount: "", name: "", productInfo: "", statusCode: res["returnCode"].stringValue)
+//                        self.navigationController?.popViewController(animated: true)
+                        
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 50)
+                    }else if(status.containsIgnoringCase(find: "success")){
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 50)
+                    }
+                })
+            }, failure: {error in
+                alertController.dismiss(animated: true, completion: {
+                    print(error.localizedDescription)
+                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                })
+                
+            })
+            
+        }else{
+            
+            
+            self.activityIndicatior.isHidden = true
+            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
+            self.present(alert, animated: true, completion: nil)
+            
+            
+        }
+        
+    }
+    
+    
+    
     
 }
 

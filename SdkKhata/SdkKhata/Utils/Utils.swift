@@ -15,12 +15,12 @@ private var __maxLengths = [UITextField: Int]()
 class Utils {
 
     //UAT Server
-    let hostIP = "https://appuat.expanduscapital.com"
-    let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
+    //let hostIP = "https://appuat.expanduscapital.com"
+    //let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
     
     //SIT Server
-    //let hostIP = "https://sdkuat.expanduscapital.com"
-    //let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
+    let hostIP = "https://sdkuat.expanduscapital.com"
+    let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
 
 
     
@@ -54,6 +54,9 @@ class Utils {
                 
                 break
             case .failure(let error):
+                if let data = response.data {
+                    print("Print Server Error: " + String(data: data, encoding: String.Encoding.utf8)!)
+                }
                 failure(error)
                 
                 break
@@ -322,7 +325,7 @@ class Utils {
         return result
     }
     
-    func setupTopBar(viewController: UIViewController){
+    func setupTopBar(viewController: UIViewController, title :String = "Khaata Application"){
         
         viewController.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
         viewController.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
@@ -330,7 +333,7 @@ class Utils {
         viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
         
-        viewController.title = "Khaata Application"
+        viewController.title = title
         let nav = viewController.navigationController?.navigationBar
         nav?.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.orange]
         

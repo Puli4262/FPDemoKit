@@ -74,6 +74,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.productinfo = "Khaata"
             viewController.firstname = "Test"
             viewController.emailID = "testacc0990@gmail.com"
+            viewController.mobileNumber = self.mobileNumberTextFeild.text!
             viewController.requestFrom = "Call Payu"
             self.navigationController?.pushViewController(viewController, animated: true)
         }
@@ -110,7 +111,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         print(status)
         print("statusCode \(statusCode)")
         self.statusLabel.text = String(status)
-        
+        self.statusCodeLabel.text = statusCode
     }
     
     func KhaataSDKFailure(status: String, statusCode: String) {

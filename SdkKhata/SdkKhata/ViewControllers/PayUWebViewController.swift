@@ -110,8 +110,8 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                                         <input name='productinfo' type='hidden' value='\(productinfo)' />
                                         <input name='key' type='hidden' value='\(key)' />
                                         <input name='email' type='hidden' value='\(email)' />
-                                        <input name='hash' type='hidden' value='\("45bdc7f7e103aa1524f8707d747a8b51948b0e500a6776c0c87747e88ed4bba58d9d390ba7ea4dcafcab770e19cff8d018a464923ba935ce7d2fe312fb46926a")' />
-                                        <input name='txnid' type='hidden' value='\("1559875727092")' />
+                                        <input name='hash' type='hidden' value='\(hash)' />
+                                        <input name='txnid' type='hidden' value='\(txnid)' />
                                         <input name='lastname' type='hidden' value='null' />
                                     </form>
                                 </body>
@@ -169,7 +169,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             print(requestString.split(separator: "|"))
             let dataArray = requestString.split(separator: "|")
             if(dataArray.count > 2){
-                let payUStatus = String(dataArray[0])
+                let payUStatus = String(dataArray[0].split(separator: "=")[1])
                 txnId = String(dataArray[1])
                 amount = String(dataArray[2])
                 name = String(dataArray[3])
@@ -177,7 +177,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 let mihpayid = String(dataArray[5])
                 status = true
 //                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
-                self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, mihpayid: mihpayid, payUStatus: payUStatus)
+                self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, amount: amount, name: name, productInfo: productInfo, mihpayid: mihpayid, payUStatus: payUStatus)
             }else{
                 status = false
 //                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
@@ -211,21 +211,25 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     }
     
     
-    func updatePaymentDetails(mobileNumber:String,txnId:String,mihpayid:String,payUStatus:String){
+    func updatePaymentDetails(mobileNumber:String,txnId:String,amount:String,name:String,productInfo:String,mihpayid:String,payUStatus:String){
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
+            
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let params = ["mobileNumber":mobileNumber,"txnId":txnId,"mihpayid":mihpayid,"status":payUStatus]
-            
             
             utils.requestPOSTURL("/payU/updatePaymentDetails", parameters: params, headers: [:], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-                    print(res)
-                    
-                    
+                    let status = res["status"].stringValue
+                    if(status.containsIgnoringCase(find: "success")){
+                        self.payUResponseDelegate!.payUresponse(status:true,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
+                        self.navigationController?.popViewController(animated: true)
+                    }else{
+                        Utils().showToast(context: self, msg: "Please try again later", showToastFrom: 20.0)
+                    }
                 })
                 
             }, failure: { error in
@@ -250,5 +254,6 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
 }
 
 public protocol PayUResponseDelegate {
+    
     func payUresponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String)
 }

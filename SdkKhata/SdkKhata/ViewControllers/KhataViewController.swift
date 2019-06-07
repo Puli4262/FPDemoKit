@@ -9,7 +9,7 @@ import UIKit
 import FirebaseCore
 import SwiftyJSON
 
-open class KhataViewController: UIViewController,UIApplicationDelegate,PayUResponseDelegate {
+open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     public var mobileNumber = ""
@@ -76,6 +76,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
 //            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
 //            self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
             self.getTotalDueAmount(mobileNumber: mobileNumber)
+            let backImage = UIImage(named: "backarrow")?.withRenderingMode(.alwaysOriginal)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(popnav))
             
         }else if(self.requestFrom != "failure"){
             
@@ -90,6 +92,10 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             })
         }
     
+    }
+    
+    @objc func popnav() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func addBackButton(){
@@ -373,16 +379,13 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
             viewController.dueAmount = dueAmount
             viewController.lan = lan
             viewController.mobileNumber = mobileNumber
+            viewController.repaymentDelegate = self
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
     
     
-    public func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
-        sendFPSDKResponseDelegate?.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo, statusCode: "")
-        KhataViewController.comingFrom = ""
-        self.navigationController?.popViewController(animated: true)
-    }
+    
     
     
     func getTotalDueAmount(mobileNumber:String){
@@ -448,6 +451,16 @@ extension KhataViewController:CloseAppDelegate {
     }
     
     
+}
+
+
+extension KhataViewController :RepaymentDelegate {
+    
+    public func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
+        
+        
+        
+    }
 }
 
 

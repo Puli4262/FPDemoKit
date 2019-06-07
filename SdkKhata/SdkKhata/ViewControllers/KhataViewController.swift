@@ -73,9 +73,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
         if(self.requestFrom == "Call Payu"){
             
-            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
-            self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
-            //self.getTotalDueAmount(mobileNumber: mobileNumber)
+//            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
+//            self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
+            self.getTotalDueAmount(mobileNumber: mobileNumber)
             
         }else if(self.requestFrom != "failure"){
             
@@ -363,28 +363,16 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
         
     }
     
-    func openPayUWebView(txnid:String,amount:String,productinfo:String,firstname:String,email:String) {
-        
-        let bundel = Bundle(for: PayUWebViewController.self)
-        
-        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PayUWebVC") as? PayUWebViewController {
-            viewController.txnid = txnid
-            viewController.amount = amount
-            viewController.productinfo = productinfo
-            viewController.firstname = firstname
-            viewController.email = email
-            viewController.payUResponseDelegate = self
-            self.navigationController?.pushViewController(viewController, animated: true)
-        }
-        
-    }
     
-    func openRepaymentVC(mobileNumebr:String,dueAmount:Int){
+    
+    func openRepaymentVC(mobileNumebr:String,dueAmount:Int,lan:String){
         
         let bundel = Bundle(for: RepaymentViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RepaymentViewController") as? RepaymentViewController {
             viewController.dueAmount = dueAmount
+            viewController.lan = lan
+            viewController.mobileNumber = mobileNumber
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -410,12 +398,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate,PayURespo
                     print(res)
                     let status = res["status"].stringValue
                     if(status.containsIgnoringCase(find: "fail")){
-//                        self.sendFPSDKResponseDelegate?.payUresponse(status: false, txnId: "", amount: "", name: "", productInfo: "", statusCode: res["returnCode"].stringValue)
-//                        self.navigationController?.popViewController(animated: true)
+                        self.sendFPSDKResponseDelegate?.payUresponse(status: false, txnId: "", amount: "", name: "", productInfo: "", statusCode: res["returnCode"].stringValue)
+                        self.navigationController?.popViewController(animated: true)
                         
-                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 50)
+                        
                     }else if(status.containsIgnoringCase(find: "success")){
-                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 50)
+                        let totalDueAmount = res["totalDueAmount"].intValue
+                        let lan = res["lan"].stringValue
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: totalDueAmount,lan:lan)
                     }
                 })
             }, failure: {error in

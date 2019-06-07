@@ -13,18 +13,14 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     @IBOutlet weak var activityIndicatior: UIActivityIndicatorView!
     @IBOutlet weak var webView: UIWebView!
     
-    var txnid = ""
+    
     var amount = ""
-    var productinfo = ""
-    var firstname = ""
-    var email = ""
+    var mobileNumber = ""
     var payUResponseDelegate:PayUResponseDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.delegate = self
         Utils().setupTopBar(viewController: self)
-        print("data in payUwebview vc")
-        print(txnid,amount,productinfo,firstname,email)
         self.getPayUtokenApi()
         
         
@@ -50,10 +46,9 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let params = ["txnid":self.generateTxnID(),"amount":amount,"productinfo":productinfo,"firstname":firstname,"email":email,"deviceId":"ios"]
+            let params = ["amount":amount,"deviceId":"ios","mobileNumber":self.mobileNumber]
             
-            //            let token = UserDefaults.standard.string(forKey: "khaata_token")
-            //            print(token!)
+            
             utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: [:], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
@@ -107,21 +102,23 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                                 <body onload='form1.submit()'>
                                     <form id='form1' action='\(testUrl)' method='post'>
                                         <input name='amount' type='hidden' value='\(amount)' />
-                                        <input name='firstname' type='hidden' value='\(firstname)' />
+                                        <input name='firstname' type='hidden' value='\(firstName)' />
                                         <input name='curl' type='hidden' value='\(curl)' />
                                         <input name='phone' type='hidden' value='\(phone)' />
                                         <input name='furl' type='hidden' value='\(furl)' />
                                         <input name='surl' type='hidden' value='\(surl)' />
                                         <input name='productinfo' type='hidden' value='\(productinfo)' />
-                                        <input name='key' type='hidden' value='\(testKey)' />
+                                        <input name='key' type='hidden' value='\(key)' />
                                         <input name='email' type='hidden' value='\(email)' />
-                                        <input name='hash' type='hidden' value='\(hash)' />
-                                        <input name='txnid' type='hidden' value='\(txnid)' />
+                                        <input name='hash' type='hidden' value='\("45bdc7f7e103aa1524f8707d747a8b51948b0e500a6776c0c87747e88ed4bba58d9d390ba7ea4dcafcab770e19cff8d018a464923ba935ce7d2fe312fb46926a")' />
+                                        <input name='txnid' type='hidden' value='\("1559875727092")' />
                                         <input name='lastname' type='hidden' value='null' />
                                     </form>
                                 </body>
                             </html>
                             """
+        
+        print(htmlString)
 //        let htmlString = """
 //                            <html>
 //                                <head></head>
@@ -172,15 +169,18 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             print(requestString.split(separator: "|"))
             let dataArray = requestString.split(separator: "|")
             if(dataArray.count > 2){
+                let payUStatus = String(dataArray[0])
                 txnId = String(dataArray[1])
                 amount = String(dataArray[2])
                 name = String(dataArray[3])
                 productInfo = String(dataArray[4])
+                let mihpayid = String(dataArray[5])
                 status = true
-                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+//                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+                self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, mihpayid: mihpayid, payUStatus: payUStatus)
             }else{
                 status = false
-                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+//                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             }
             
             
@@ -192,6 +192,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         self.activityIndicatior.isHidden = true
         
     }
+   
     
     func sendResponse(status:Bool,txnId:String,amount:String,name:String,productInfo:String){
         print(status,txnId,amount,name,productInfo)
@@ -207,6 +208,40 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         let dateString = currentDate.string(from : date as Date)
         return dateString
         
+    }
+    
+    
+    func updatePaymentDetails(mobileNumber:String,txnId:String,mihpayid:String,payUStatus:String){
+        let utils = Utils()
+        if(utils.isConnectedToNetwork()){
+            let alertController = utils.loadingAlert(viewController: self)
+            self.present(alertController, animated: false, completion: nil)
+            let params = ["mobileNumber":mobileNumber,"txnId":txnId,"mihpayid":mihpayid,"status":payUStatus]
+            
+            
+            utils.requestPOSTURL("/payU/updatePaymentDetails", parameters: params, headers: [:], viewCotroller: self, success: { res in
+                
+                alertController.dismiss(animated: true, completion: {
+                    print(res)
+                    print(res)
+                    
+                    
+                })
+                
+            }, failure: { error in
+                alertController.dismiss(animated: true, completion: {
+                    utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                })
+            })
+            
+            
+        }else{
+            
+            let alert = utils.networkError(title:"Network Error",message:"Please Check Network Connection")
+            self.present(alert, animated: true, completion: nil)
+            
+            
+        }
     }
     
     

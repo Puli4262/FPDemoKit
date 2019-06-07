@@ -18,6 +18,8 @@ class RepaymentViewController: UIViewController {
     @IBOutlet weak var dueAmountLabel: UILabel!
     @IBOutlet weak var amountErrorLabel: UILabel!
     var dueAmount = 50
+    var lan = ""
+    var mobileNumber = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self,title:"Repayment")
@@ -64,9 +66,22 @@ class RepaymentViewController: UIViewController {
             }else if(amount > Int(dueAmount)){
                 self.amountErrorLabel.text = "Entered amount is greater than the payable amount"
                 self.amountErrorLabel.isHidden = false
-                
-                
+            }else{
+                self.openPayUWebView(amount: self.amountTextField.text!, mobileNumber: mobileNumber)
             }
+        }
+        
+    }
+    
+    func openPayUWebView(amount:String,mobileNumber:String) {
+        
+        let bundel = Bundle(for: PayUWebViewController.self)
+        
+        if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "PayUWebVC") as? PayUWebViewController {
+            
+            viewController.amount = amount
+            viewController.mobileNumber = mobileNumber
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
         
     }

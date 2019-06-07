@@ -149,9 +149,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         let utils = Utils()
         let hostUrl = utils.hostURL
-        let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
-        let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
-        var featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
+        let featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
         var consumerDataDict : JSON = ["deviceId":"WEBSH1","token":"2a6499f02e3977619ca5e4b4fb69e5e36f527a4640f7e26be09bd23206f318f2","returnUrl":"\(hostUrl)/KhataBackEnd/jsp/response.jsp","responseHandler":"handleResponse","paymentMode":"netBanking","merchantLogoUrl":"https://www.paynimo.com/CompanyDocs/company-logo-md.png","merchantId":"T280968","currency":"INR","consumerId":"246","consumerMobileNo":"\(mobileNumber!)","consumerEmailId":"Anil@gmail.com","txnId":"99999999991545047567948001","items":[["itemId":"FIRST","amount":"1","comAmt":"0"]],"customStyle":["PRIMARY_COLOR_CODE":"#3977b7","SECONDARY_COLOR_CODE":"#FFFFFF","BUTTON_COLOR_CODE_1":"#1969bb","BUTTON_COLOR_CODE_2":"#FFFFFF"],"accountNo":"1234567890","accountType":"Saving","accountHolderName":"","ifscCode":"ICIC0000001","debitStartDate":"17-12-2018","debitEndDate":"31-12-2049","maxAmount":10000.0,"amountType":"M","frequency":"MNTH"]
         
         
@@ -171,7 +169,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                 consumerDataDict["accountHolderName"].stringValue = ""
                 consumerDataDict["ifscCode"].stringValue = self.ifscCodesArray[selectedBankIndex]
                 
-                var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
+            let mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
                 self.getMandateTokenApi(params:JSON(mandateDict))
         }
         

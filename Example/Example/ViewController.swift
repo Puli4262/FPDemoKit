@@ -23,7 +23,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.mobileNumberTextFeild.text = "9561627442"
+        self.mobileNumberTextFeild.text = "8422946149"
         self.constantTokenTextFeild.text = "Rn8X4EkxUixio0RrOjkQwA=="
         
         textField.placeholder = "Email"
@@ -57,7 +57,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
             viewController.tokenId = self.constantTokenTextFeild.text!
             viewController.emailID = "testacc0990@gmail.com"
             viewController.zipcode = ""
-            viewController.DOB = "01/01/1990"
+            viewController.DOB = ""
             viewController.mandateStatus = ""
             self.navigationController?.pushViewController(viewController, animated: true)
         }

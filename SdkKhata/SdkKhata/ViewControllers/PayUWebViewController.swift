@@ -80,12 +80,12 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     
     
     func loadPayUWebview(payUData:JSON){
-        let liveUrl = "https://secure.payu.in/_payment"
+        //let liveUrl = "https://secure.payu.in/_payment"
         let testUrl = "https://test.payu.in/_payment"
-        let testKey = "gtKFFx"
-        let liveKey = "9fl2BV"
+        //let testKey = "gtKFFx"
+        //let liveKey = "9fl2BV"
         let firstName = payUData["firstname"].stringValue
-        let lastName = payUData["lastname"].stringValue
+        //let lastName = payUData["lastname"].stringValue
         let key = payUData["key"].stringValue
         let surl = payUData["surl"].stringValue
         let furl = payUData["furl"].stringValue
@@ -118,7 +118,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                             </html>
                             """
         
-        print(htmlString)
+        
 //        let htmlString = """
 //                            <html>
 //                                <head></head>

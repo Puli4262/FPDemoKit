@@ -103,12 +103,12 @@ class AadharOCR {
             
             
         }else{
-            print(dob)
-            let birthYear = dob.suffix(4)
-            let birthMonth = "01"
-            let birthDay = "01"
-            aadharOcrData["dob"].stringValue = "\(birthYear)/\(birthMonth)/\(birthDay)"
-            print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
+            
+//            let birthYear = dob.suffix(4)
+//            let birthMonth = "01"
+//            let birthDay = "01"
+            aadharOcrData["dob"].stringValue = ""
+            //print("Date of birth : \(birthDay)/\(birthMonth)/\(birthYear)")
             
         }
     }

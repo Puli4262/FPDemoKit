@@ -448,7 +448,7 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["address2"].stringValue = self.ocrPostData["address2"].stringValue+", "+state.text
         }
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"yob"){
-            self.ocrPostData["dob"].stringValue = dob.text+"/01/01"
+            self.ocrPostData["dob"].stringValue = ""
         }
         if let dob = xml["PrintLetterBarcodeData"].element?.attribute(by:"dob"){
             var dobArray = dob.text.split(separator: "/")

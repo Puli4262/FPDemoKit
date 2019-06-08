@@ -13,6 +13,7 @@ class RepaymentViewController: UIViewController {
     @IBOutlet weak var totalDueImg: UIImageView!
     @IBOutlet weak var enterAmountImg: UIImageView!
     
+    @IBOutlet weak var payNowBtn: UIButton!
     @IBOutlet weak var amountTextField: SkyFloatingLabelTextField!
     
     @IBOutlet weak var dueAmountLabel: UILabel!
@@ -21,6 +22,7 @@ class RepaymentViewController: UIViewController {
     var lan = ""
     var mobileNumber = ""
     var repaymentDelegate:RepaymentDelegate?
+    var getTotalDueAmountStatus = false
     override func viewDidLoad() {
         super.viewDidLoad()
         Utils().setupTopBar(viewController: self,title:"Repayment")
@@ -30,15 +32,20 @@ class RepaymentViewController: UIViewController {
         self.amountTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
         let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
         self.dueAmountLabel.text = "₹ \(dueAmount).00"
-        print(mobileNumber)
-        
-        
         
         let backImage = UIImage(named: "backarrow")?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(popnav))
         
+        if(!getTotalDueAmountStatus){
+            self.payNowBtn.isHidden = true
+            Utils().showToast(context: self, msg: "Something error happens. Please try again", showToastFrom: 20.0)
+        }else{
+            self.payNowBtn.isHidden = false
+        }
+        
     }
     @objc func popnav() {
+        KhataViewController.comingFrom = "back"
         self.navigationController?.popViewController(animated: true)
     }
     

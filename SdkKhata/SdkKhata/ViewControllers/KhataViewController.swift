@@ -205,6 +205,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         }else if(self.requestFrom == "failure"){
             sendFPSDKResponseDelegate?.KhaataSDKFailure(status: KhataViewController.comingFrom, statusCode: KhataViewController.statusCode)
             self.navigationController?.popViewController(animated: true)
+        }else if(KhataViewController.comingFrom == "back"){
+            self.navigationController?.popViewController(animated: true)
+            KhataViewController.comingFrom = ""
         }
         
     }
@@ -371,7 +374,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     
     
-    func openRepaymentVC(mobileNumebr:String,dueAmount:Int,lan:String){
+    func openRepaymentVC(mobileNumebr:String,dueAmount:Int,lan:String,status:Bool){
         
         let bundel = Bundle(for: RepaymentViewController.self)
         
@@ -380,6 +383,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             viewController.lan = lan
             viewController.mobileNumber = mobileNumber
             viewController.repaymentDelegate = self
+            viewController.getTotalDueAmountStatus = status
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -400,15 +404,13 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     
                     print(res)
                     let status = res["status"].stringValue
-                    if(status.containsIgnoringCase(find: "fail")){
-                        self.sendFPSDKResponseDelegate?.payUresponse(status: false, txnId: "", amount: "", name: "", productInfo: "", statusCode: res["returnCode"].stringValue)
-                        self.navigationController?.popViewController(animated: true)
-                        
-                        
-                    }else if(status.containsIgnoringCase(find: "success")){
+                    
+                    if(status.containsIgnoringCase(find: "success")){
                         let totalDueAmount = res["totalDueAmount"].intValue
                         let lan = res["lan"].stringValue
-                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: totalDueAmount,lan:lan)
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: totalDueAmount,lan:lan,status:true)
+                    }else{
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 0,lan:"",status:false)
                     }
                 })
             }, failure: {error in

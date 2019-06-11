@@ -64,10 +64,9 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     }
 
     @IBAction func handlePaynow(_ sender: Any) {
-        
+//        print("paynow button clicked", amou)
         let bundel = Bundle(for: KhataViewController.self)
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
-            
             viewController.sendFPSDKResponseDelegate = self
             viewController.txnid = "100123abcde"
             viewController.amount = "10.0"
@@ -120,9 +119,6 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         self.statusLabel.text = status
         self.statusCodeLabel.text = statusCode
     }
-    
-    
-
 }
 
 

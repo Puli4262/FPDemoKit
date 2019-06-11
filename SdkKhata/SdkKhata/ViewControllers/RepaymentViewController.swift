@@ -18,7 +18,7 @@ class RepaymentViewController: UIViewController {
     
     @IBOutlet weak var dueAmountLabel: UILabel!
     @IBOutlet weak var amountErrorLabel: UILabel!
-    var dueAmount = 50
+    var dueAmount: Double = 50
     var lan = ""
     var mobileNumber = ""
     var repaymentDelegate:RepaymentDelegate?
@@ -31,14 +31,19 @@ class RepaymentViewController: UIViewController {
         self.amountTextField.delegate = self
         self.amountTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
         let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
-        self.dueAmountLabel.text = "₹ \(dueAmount).00"
+        self.dueAmountLabel.text = "₹ \(dueAmount)"
         
         let backImage = UIImage(named: "backarrow")?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(popnav))
         
         if(!getTotalDueAmountStatus){
             self.payNowBtn.isHidden = true
-            Utils().showToast(context: self, msg: "Something error happens. Please try again", showToastFrom: 20.0)
+            let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed, Please try after some time.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                self.popnav()
+            }))
+            self.present(alert, animated: true, completion: nil)
+//            Utils().showToast(context: self, msg: "Something error happens. Please try again", showToastFrom: 20.0)
         }else{
             self.payNowBtn.isHidden = false
         }
@@ -72,22 +77,22 @@ class RepaymentViewController: UIViewController {
     
     @IBAction func handlePayUIntiation(_ sender: Any) {
         
-        var amount:Int = Int(self.amountTextField.text!) ?? 0
+        var amount:Double = Double(self.amountTextField.text!) ?? 0
         self.amountErrorLabel.isHidden = true
         if(self.totalDueImg.image == UIImage(named: "radio_button_checked")){
             amount = dueAmount
             self.openPayUWebView(amount: String(dueAmount), mobileNumber: mobileNumber)
         }else{
-            
             if(self.enterAmountImg.image == UIImage(named: "radio_button_checked")){
-                if(amountTextField.text == "" || Int(amountTextField.text!) == 0){
+                if(amountTextField.text == "" || Double(amountTextField.text!) == 0 || amountTextField.text!.countInstances(of: ".") > 1){
                     self.amountErrorLabel.text = "Enter a Valid Amount"
                     self.amountErrorLabel.isHidden = false
-                }else if(amount > Int(dueAmount)){
+                }else if(amount > dueAmount){
                     self.amountErrorLabel.text = "Entered amount is greater than the payable amount"
                     self.amountErrorLabel.isHidden = false
                 }else{
-                    self.openPayUWebView(amount: self.amountTextField.text!, mobileNumber: mobileNumber)
+                    print(amount)
+//                    self.openPayUWebView(amount: self.amountTextField.text!, mobileNumber: mobileNumber)
                 }
             }
         }

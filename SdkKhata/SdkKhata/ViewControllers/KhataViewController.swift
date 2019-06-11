@@ -379,7 +379,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         let bundel = Bundle(for: RepaymentViewController.self)
         
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "RepaymentViewController") as? RepaymentViewController {
-            viewController.dueAmount = dueAmount
+            viewController.dueAmount = Double(dueAmount)
             viewController.lan = lan
             viewController.mobileNumber = mobileNumber
             viewController.repaymentDelegate = self

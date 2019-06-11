@@ -2877,7 +2877,7 @@
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NIx-BA-vXv">
                                 <rect key="frame" x="16" y="502" width="288" height="46"/>
@@ -3875,13 +3875,13 @@
         </scene>
     </scenes>
     <resources>
-        <image name="accordian_downarrow" width="72" height="72"/>
-        <image name="accordian_uparrow" width="72" height="72"/>
-        <image name="axis_icon" width="20" height="16.5"/>
+        <image name="accordian_downarrow" width="36" height="36"/>
+        <image name="accordian_uparrow" width="36" height="36"/>
+        <image name="axis_icon" width="20" height="16"/>
         <image name="camera" width="60" height="60"/>
         <image name="check_box_outline_blank" width="24" height="24"/>
         <image name="close" width="20" height="20"/>
-        <image name="doneicon" width="90" height="90"/>
+        <image name="doneicon" width="45" height="45"/>
         <image name="front" width="150" height="112"/>
         <image name="greentick" width="24" height="24"/>
         <image name="greycircle_progress" width="90" height="90"/>
@@ -3892,7 +3892,7 @@
         <image name="radio_button_checked" width="24" height="24"/>
         <image name="radio_button_unchecked" width="24" height="24"/>
         <image name="sbi_icon" width="60" height="60"/>
-        <image name="sdk_back" width="450" height="336"/>
+        <image name="sdk_back" width="225" height="168"/>
         <image name="selfieicon" width="540" height="540"/>
         <image name="warning" width="40" height="40"/>
     </resources>

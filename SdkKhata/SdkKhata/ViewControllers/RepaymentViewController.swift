@@ -21,6 +21,7 @@ class RepaymentViewController: UIViewController {
     var dueAmount: Double = 50
     var lan = ""
     var mobileNumber = ""
+    var token = ""
     var repaymentDelegate:RepaymentDelegate?
     var getTotalDueAmountStatus = false
     override func viewDidLoad() {
@@ -91,8 +92,8 @@ class RepaymentViewController: UIViewController {
                     self.amountErrorLabel.text = "Entered amount is greater than the payable amount"
                     self.amountErrorLabel.isHidden = false
                 }else{
-                    print(amount)
-//                    self.openPayUWebView(amount: self.amountTextField.text!, mobileNumber: mobileNumber)
+                    
+                    self.openPayUWebView(amount: self.amountTextField.text!, mobileNumber: mobileNumber)
                 }
             }
         }
@@ -109,6 +110,7 @@ class RepaymentViewController: UIViewController {
             viewController.amount = amount
             viewController.mobileNumber = mobileNumber
             viewController.payUResponseDelegate = self
+            viewController.accessToken = self.token
             self.navigationController?.pushViewController(viewController, animated: true)
         }
         
@@ -119,8 +121,25 @@ class RepaymentViewController: UIViewController {
 extension RepaymentViewController : UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField : UITextField){
+        if((textField.text?.contains(find: "."))!){
+            textField.resignFirstResponder()
+            textField.keyboardType = .numberPad
+            textField.becomeFirstResponder()
+            let dotIndex = textField.text?.indexInt(of: ".")
+            textField.maxLength = dotIndex!+3
+            
+        }else{
+            textField.resignFirstResponder()
+            textField.becomeFirstResponder()
+            textField.keyboardType = .decimalPad
+            textField.maxLength = 5
+        }
         self.amountErrorLabel.isHidden = true
     }
+    
+    
+    
+    
 }
 
 public protocol RepaymentDelegate {
@@ -132,14 +151,20 @@ public protocol RepaymentDelegate {
 extension RepaymentViewController : PayUResponseDelegate {
     func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
         if(status){
+            
             KhataViewController.payUTxnid = txnId
             KhataViewController.payUStatus = status
             KhataViewController.payUName = name
             KhataViewController.payUAmount = amount
             KhataViewController.payUProductInfo = productInfo
             KhataViewController.comingFrom = "payU"
-            //self.repaymentDelegate!.payUresponse(status:status,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
-            self.navigationController?.popViewController(animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
+                let alert = UIAlertController(title: "", message: "Your Payment for Rs. \(amount) is successful", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            })
         }else{
             Utils().showToast(context: self, msg: "Something error occured", showToastFrom: 20.0)
         }

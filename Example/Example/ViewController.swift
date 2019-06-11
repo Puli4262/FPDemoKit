@@ -23,8 +23,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.mobileNumberTextFeild.text = "8422946149"
-        self.constantTokenTextFeild.text = "Rn8X4EkxUixio0RrOjkQwA=="
+        self.mobileNumberTextFeild.text = "9001110001"
+        self.constantTokenTextFeild.text = "1WlCVMg2cDgm/0vv02XO5Q=="
         
         textField.placeholder = "Email"
         textField.title = "Email address"
@@ -68,11 +68,7 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
         let bundel = Bundle(for: KhataViewController.self)
         if let viewController = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "KhataVC") as? KhataViewController {
             viewController.sendFPSDKResponseDelegate = self
-            viewController.txnid = "100123abcde"
-            viewController.amount = "10.0"
-            viewController.productinfo = "Khaata"
-            viewController.firstname = "Test"
-            viewController.emailID = "testacc0990@gmail.com"
+            viewController.tokenId = self.constantTokenTextFeild.text!
             viewController.mobileNumber = self.mobileNumberTextFeild.text!
             viewController.requestFrom = "Call Payu"
             self.navigationController?.pushViewController(viewController, animated: true)

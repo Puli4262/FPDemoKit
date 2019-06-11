@@ -15,12 +15,12 @@ private var __maxLengths = [UITextField: Int]()
 class Utils {
 
     //UAT Server
-    //let hostIP = "https://appuat.expanduscapital.com"
-    //let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
+    let hostIP = "https://appuat.expanduscapital.com"
+    let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
     
     //SIT Server
-    let hostIP = "https://sdkuat.expanduscapital.com"
-    let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
+    //let hostIP = "https://sdkuat.expanduscapital.com"
+    //let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
 
 
     
@@ -769,5 +769,11 @@ extension String {
             searchRange = Range(uncheckedBounds: (lower: foundRange.upperBound, upper: endIndex))
         }
         return count
+    }
+}
+
+public extension String {
+    func indexInt(of char: Character) -> Int? {
+        return index(of: char)?.encodedOffset
     }
 }

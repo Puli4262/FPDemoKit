@@ -75,7 +75,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             
 //            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
 //            self.openPayUWebView(txnid: self.txnid, amount: self.amount, productinfo: self.productinfo, firstname: self.firstname, email: self.emailID)
-            self.getTotalDueAmount(mobileNumber: mobileNumber)
+            self.getTotalDueAmount(mobileNumber: mobileNumber,tokenId:self.tokenId)
             let backImage = UIImage(named: "backarrow")?.withRenderingMode(.alwaysOriginal)
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(popnav))
             
@@ -374,7 +374,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     
     
-    func openRepaymentVC(mobileNumebr:String,dueAmount:Int,lan:String,status:Bool){
+    func openRepaymentVC(mobileNumebr:String,dueAmount:Int,lan:String,status:Bool,token:String){
         
         let bundel = Bundle(for: RepaymentViewController.self)
         
@@ -384,6 +384,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             viewController.mobileNumber = mobileNumber
             viewController.repaymentDelegate = self
             viewController.getTotalDueAmountStatus = status
+            viewController.token = token
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -392,25 +393,26 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     
     
-    func getTotalDueAmount(mobileNumber:String){
+    func getTotalDueAmount(mobileNumber:String,tokenId:String){
         let utils = Utils()
         
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            utils.requestPOSTURL("/payU/getTotalDueAmount", parameters: ["mobileNumber":mobileNumber], headers: ["Content-Type":"application/json"], viewCotroller: self, success: {res in
+            utils.requestPOSTURL("/payU/getTotalDueAmount", parameters: ["mobileNumber":mobileNumber], headers: ["Content-Type":"application/json","accessToken":self.tokenId], viewCotroller: self, success: {res in
                 alertController.dismiss(animated: true, completion: {
                     
                     print(res)
                     let status = res["status"].stringValue
-                    
+                    let token = res["token"].stringValue
                     if(status.containsIgnoringCase(find: "success")){
                         let totalDueAmount = res["totalDueAmount"].intValue
+                        
                         let lan = res["lan"].stringValue
-                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: totalDueAmount,lan:lan,status:true)
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: totalDueAmount,lan:lan,status:true,token:token)
                     }else{
-                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 0,lan:"",status:false)
+                        self.openRepaymentVC(mobileNumebr: mobileNumber, dueAmount: 0,lan:"",status:false,token:token)
                     }
                 })
             }, failure: {error in

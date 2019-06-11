@@ -17,11 +17,12 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
     var amount = ""
     var mobileNumber = ""
     var payUResponseDelegate:PayUResponseDelegate?
+    var accessToken = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.delegate = self
         Utils().setupTopBar(viewController: self)
-        self.getPayUtokenApi()
+        self.getPayUtokenApi(accessToken: accessToken)
         
         
     }
@@ -41,7 +42,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
         self.activityIndicatior.isHidden = true
     }
     
-    func getPayUtokenApi(){
+    func getPayUtokenApi(accessToken:String){
         let utils = Utils()
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
@@ -49,16 +50,17 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             let params = ["amount":amount,"deviceId":"ios","mobileNumber":self.mobileNumber]
             
             
-            utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: [:], viewCotroller: self, success: { res in
+            utils.requestPOSTURL("/mandate/getPayUToken", parameters: params, headers: ["accessToken":accessToken], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-                    let token = res["token"].stringValue
+                    let returnCode = res["returnStatus"]["returnCode"].stringValue
                     
-                    if(token == "InvalidToken"){
-                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-                    }else{
+                    if(returnCode == "200"){
                         self.loadPayUWebview(payUData: res)
+                        
+                    }else{
+                        utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                     }
                 })
                 
@@ -180,6 +182,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, amount: amount, name: name, productInfo: productInfo, mihpayid: mihpayid, payUStatus: payUStatus)
             }else{
                 status = false
+                self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, amount: amount, name: name, productInfo: productInfo, mihpayid: "", payUStatus: "false")
 //                self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
             }
             
@@ -219,7 +222,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             self.present(alertController, animated: false, completion: nil)
             let params = ["mobileNumber":mobileNumber,"txnId":txnId,"mihpayid":mihpayid,"status":payUStatus]
             
-            utils.requestPOSTURL("/payU/updatePaymentDetails", parameters: params, headers: [:], viewCotroller: self, success: { res in
+            utils.requestPOSTURL("/payU/updatePaymentDetails", parameters: params, headers: ["accessToken":self.accessToken], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)

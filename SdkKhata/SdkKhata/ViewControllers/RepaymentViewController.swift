@@ -39,7 +39,7 @@ class RepaymentViewController: UIViewController {
         
         if(!getTotalDueAmountStatus){
             self.payNowBtn.isHidden = true
-            let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed, Please try after some time.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed. Please try after some time.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.popnav()
             }))
@@ -158,7 +158,7 @@ extension RepaymentViewController : PayUResponseDelegate {
             KhataViewController.payUAmount = amount
             KhataViewController.payUProductInfo = productInfo
             KhataViewController.comingFrom = "payU"
-            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
                 let alert = UIAlertController(title: "", message: "Your Payment for Rs. \(amount) is successful", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                     self.navigationController?.popViewController(animated: true)
@@ -166,7 +166,15 @@ extension RepaymentViewController : PayUResponseDelegate {
                 self.present(alert, animated: true, completion: nil)
             })
         }else{
-            Utils().showToast(context: self, msg: "Something error occured", showToastFrom: 20.0)
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed. Please try after some time.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                    self.popnav()
+                }))
+                self.present(alert, animated: true, completion: nil)
+            })
+            
+            //Utils().showToast(context: self, msg: "Something error occured", showToastFrom: 20.0)
         }
         
     }

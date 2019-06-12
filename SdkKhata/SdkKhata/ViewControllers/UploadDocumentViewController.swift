@@ -458,6 +458,10 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["gender"].stringValue = gender.text
         }
         
+        if let gname = xml["PrintLetterBarcodeData"].element?.attribute(by:"gname"){
+            self.ocrPostData["midelName"].stringValue = gname.text
+        }
+        
        
         
         
@@ -814,17 +818,20 @@ extension UploadDocumentViewController: CropViewControllerDelegate {
             
         case 5:
             ocrPostData["firstname"].stringValue = "\(String(nameArray[0]))  \(String(nameArray[1]))"
-            ocrPostData["midelName"].stringValue = "\(String(nameArray[2]))  \(String(nameArray[3]))"
+            //ocrPostData["midelName"].stringValue = "\(String(nameArray[2]))  \(String(nameArray[3]))"
+            ocrPostData["midelName"].stringValue = ""
             ocrPostData["lastname"].stringValue = String(nameArray[4])
             break
         case 4:
             ocrPostData["firstname"].stringValue = "\(String(nameArray[0]))  \(String(nameArray[1]))"
-            ocrPostData["midelName"].stringValue = "\(String(nameArray[2]))"
+            //ocrPostData["midelName"].stringValue = "\(String(nameArray[2]))"
+            ocrPostData["midelName"].stringValue = ""
             ocrPostData["lastname"].stringValue = String(nameArray[3])
             break
         case 3:
             ocrPostData["firstname"].stringValue = String(nameArray[0])
-            ocrPostData["midelName"].stringValue = String(nameArray[1])
+            //ocrPostData["midelName"].stringValue = String(nameArray[1])
+            ocrPostData["midelName"].stringValue = ""
             ocrPostData["lastname"].stringValue = String(nameArray[2])
             break
         case 2:

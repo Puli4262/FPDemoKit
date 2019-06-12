@@ -121,17 +121,20 @@ class AadharOCR {
             
         case 5:
             aadharOcrData["firstname"].stringValue = "\(String(nameArray[0]))  \(String(nameArray[1]))"
-            aadharOcrData["midelName"].stringValue = "\(String(nameArray[2]))  \(String(nameArray[3]))"
+            //aadharOcrData["midelName"].stringValue = "\(String(nameArray[2]))  \(String(nameArray[3]))"
+            aadharOcrData["midelName"].stringValue = ""
             aadharOcrData["lastname"].stringValue = String(nameArray[4])
             break
         case 4:
             aadharOcrData["firstname"].stringValue = "\(String(nameArray[0]))  \(String(nameArray[1]))"
-            aadharOcrData["midelName"].stringValue = "\(String(nameArray[2]))"
+            //aadharOcrData["midelName"].stringValue = "\(String(nameArray[2]))"
+            aadharOcrData["midelName"].stringValue = ""
             aadharOcrData["lastname"].stringValue = String(nameArray[3])
             break
         case 3:
             aadharOcrData["firstname"].stringValue = String(nameArray[0])
-            aadharOcrData["midelName"].stringValue = String(nameArray[1])
+            //aadharOcrData["midelName"].stringValue = String(nameArray[1])
+            aadharOcrData["midelName"].stringValue = ""
             aadharOcrData["lastname"].stringValue = String(nameArray[2])
             break
         case 2:

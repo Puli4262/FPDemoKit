@@ -193,6 +193,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         let bundel = Bundle(for: AgreeViewController.self)
         
         if let datePickerVC = UIStoryboard(name: "FPApp", bundle: bundel).instantiateViewController(withIdentifier: "DateVC") as? DateOfBirthViewController {
+            self.dateOfBirthTextField.errorMessage = ""
             datePickerVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
             datePickerVC.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
             datePickerVC.dateOfBirthDelegate = self
@@ -203,6 +204,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
     
     
     @objc func textFieldDidChange(_ textField : UITextField){
+        self.dateOfBirthTextField.errorMessage = ""
+        
         let floatingLabelTextField = textField as? SkyFloatingLabelTextField
         floatingLabelTextField?.errorMessage = ""
         if(textField == dateOfBirthTextField){

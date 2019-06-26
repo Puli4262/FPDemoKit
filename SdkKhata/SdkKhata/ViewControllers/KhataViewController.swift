@@ -88,7 +88,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                //self.openAgreeVC()
+                //self.openCustomerDetailsVC()
             })
         }
     
@@ -120,7 +120,6 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             utils.requestGETURL("/lead/getLeadDetail?mobilenumber=\(mobileNumber)", headers: ["accessToken":self.tokenId], viewCotroller: self, success: { res in
                 print(res)
                 let token = res["token"].stringValue
-                let constantToken = res["constantToken"].stringValue
                 let emaiId = res["email"].stringValue
                 let status = res["status"].stringValue
                 let return_code = res["return_code"].stringValue
@@ -135,6 +134,9 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                         self.handnleGoBackPopup(titleDescription: "Lead Not Found", btnTitle: "Ok", statusCode: return_code, status: status)
                     }else if(return_code == "401"){
                         self.handnleGoBackPopup(titleDescription: "Authorization Failed", btnTitle: "Ok", statusCode: return_code, status: "InvalidToken")
+                    }else if(return_code == "411"){
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     }
                     
                 }else{
@@ -171,8 +173,14 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     
                 }
             }, failure: {error in
-                print(error.localizedDescription)
-                Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                
+                
+                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true, completion: nil)
+                //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
             })
             
             
@@ -418,7 +426,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             }, failure: {error in
                 alertController.dismiss(animated: true, completion: {
                     print(error.localizedDescription)
-                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
+                    
                 })
                 
             })

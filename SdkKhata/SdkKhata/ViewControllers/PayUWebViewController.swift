@@ -66,7 +66,9 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                 
             }, failure: { error in
                 alertController.dismiss(animated: true, completion: {
-                    utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
                 })
             })
             
@@ -231,13 +233,17 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
                         self.payUResponseDelegate!.payUresponse(status:true,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
                         self.navigationController?.popViewController(animated: true)
                     }else{
-                        Utils().showToast(context: self, msg: "Please try again later", showToastFrom: 20.0)
+                        //Utils().showToast(context: self, msg: "Please try again later", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     }
                 })
                 
             }, failure: { error in
                 alertController.dismiss(animated: true, completion: {
-                    utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
                 })
             })
             

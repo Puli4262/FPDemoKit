@@ -59,7 +59,9 @@ class PanDataMismatchPopupViewController: UIViewController {
                             self.pancardPopupDelegate?.handleGotoDocuments()
                         })
                     }else{
-                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     }
                     
                     
@@ -67,7 +69,9 @@ class PanDataMismatchPopupViewController: UIViewController {
                 
             }, failure: { error in
                 alertController.dismiss(animated: true, completion: {
-                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
                 })
                 
             })

@@ -180,8 +180,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     func getMandateTokenApi(params:JSON){
         let utils = Utils()
         let hostUrl = utils.hostURL
-        print(hostUrl+"/mandate/getMandateToken")
-        print(params)
+        
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
@@ -199,6 +198,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                     
             }, to:hostUrl+"/mandate/getMandateToken",headers: ["accessToken":token!])
             { (result) in
+                
                 switch result {
                 case .success(let upload,_,_ ):
                     upload.uploadProgress(closure: { (progress) in
@@ -233,19 +233,27 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                         
                                         
                                     } catch {
-                                        print("something worng POST mandate",response.result.value as Any)
+                                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                                        self.present(alert, animated: true, completion: nil)
                                         
                                     }
                                     
                                 }
                                 
+                            }else{
+                                alertController.dismiss(animated: true, completion: {
+                                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                                    self.present(alert, animated: true, completion: nil)
+                                })
                             }
                     }
                 case .failure(let encodingError):
                     
                     print("encodingError",encodingError)
                     alertController.dismiss(animated: true, completion: {
-                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                         
                     })
                     break
@@ -406,7 +414,10 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                 
                             }
                     }else if(response.containsIgnoringCase(find: "fail")){
-                        utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                        
+                        //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     }
                     
                     
@@ -415,7 +426,9 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             }, failure: { error in
                 print(error.localizedDescription)
                 alertController.dismiss(animated: true, completion: {
-                    Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                    //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
                 })
                 
             })
@@ -440,11 +453,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func showAutoPayCompletedDailog(mandateResponse:JSON){
-        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
             self.dismiss(animated: true, completion: {
                 self.handleDncFlag(mandateResponse: mandateResponse)
             })
@@ -505,11 +518,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
 
 extension AutoPayViewController: EMandateResponseDelegate {
     func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String, statusCode: String) {
-        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
             self.dismiss(animated: true, completion: {
                 for controller in self.navigationController!.viewControllers as Array {
                     if controller.isKind(of: KhataViewController.self) {
@@ -530,11 +543,11 @@ extension AutoPayViewController: EMandateResponseDelegate {
     }
     
     func gotoAgreeVC() {
-        let alert = UIAlertController(title: "Auto pay has been successfully set up", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
             self.dismiss(animated: true, completion: {
                 self.openAgreeVC()
             })

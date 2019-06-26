@@ -319,16 +319,24 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                         DispatchQueue.main.async {
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                         }
-                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 110)){
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["returnCode"].intValue == 110)){
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         DispatchQueue.main.async {
                             self.openMismatchPopupVC(titleDesceription: "There is a mismatch between your ID type and uploaded document")
                         }
-
-                        
-                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["status"].intValue == 103)){
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && (res["returnCode"].intValue == 103)){
                         DispatchQueue.main.async {
                             self.openMismatchPopupVC(titleDesceription: "Dear customer,you have uploaded an expired document")
+                        }
+                        
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && ( (res["returnCode"].intValue == 411) || (res["returnCode"].intValue == 504))){
+                        DispatchQueue.main.async {
+                            
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                self.resetDocument()
+                            }))
+                            self.present(alert, animated: true, completion: nil)
                         }
                         
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
@@ -345,6 +353,27 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                         }
                         
                         
+                    }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
+                        //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
+                        if(res["status"].stringValue.containsIgnoringCase(find: "DocumentNumberMismatch")){
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                self.resetDocument()
+                            }))
+                            self.present(alert, animated: true, completion: nil)
+                        }else{
+                            DispatchQueue.main.async {
+                                
+                                if(self.clicked == "front"){
+                                    self.openRetakeVC(croppedImage: UIImage(named: "front")!, commingFrom: "api")
+                                }else{
+                                    self.openRetakeVC(croppedImage: UIImage(named: "sdk_back")!, commingFrom: "api")
+                                }
+                            }
+                        }
+                        
+                        
+                        
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "success")){
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         
@@ -354,7 +383,12 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
             }, failure: {error in
                 print(error)
                 alertController.dismiss(animated: true, completion: {
-                    utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
+                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                        self.resetDocument()
+                    }))
+                    self.present(alert, animated: true, completion: nil)
                 })
             })
             
@@ -383,7 +417,15 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
 extension UploadDocumentViewController: QRScannerCodeDelegate {
     func qrScanner(_ controller: UIViewController, scanDidComplete result: String) {
         
-        
+        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+            let alert = UIAlertController(title: "Please upload Front and Back of Aadhar Card", message: "", preferredStyle: .alert)
+            
+            self.present(alert, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+                self.dismiss(animated: true, completion: nil)
+            })
+        })
+    
         QRCodeResult = result
         print(result)
         let xml = SWXMLHash.parse(result)
@@ -470,11 +512,27 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
     func qrScannerDidFail(_ controller: UIViewController, error: String) {
         print("error:\(error)")
         isAadharDataFetchedFromQRCode = false
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Please upload Front and Back of Aadhar Card", message: "", preferredStyle: .alert)
+            
+            self.present(alert, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
     }
     
     func qrScannerDidCancel(_ controller: UIViewController) {
         print("SwiftQRScanner did cancel")
         isAadharDataFetchedFromQRCode = false
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Please upload Front and Back of Aadhar Card", message: "", preferredStyle: .alert)
+            
+            self.present(alert, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+                self.dismiss(animated: true, completion: nil)
+            })
+        }
     }
 }
 

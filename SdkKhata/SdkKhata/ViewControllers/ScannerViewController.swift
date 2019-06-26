@@ -46,8 +46,10 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
     var devicePosition: AVCaptureDevice.Position = .back
     var delCnt: Int = 0
     
+    
     ///This is for adding delay so user will get sufficient time for align QR within frame
-    let delayCount: Int = 15
+    let delayCount: Int = 10
+    var isQrResultFind = false
     
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -75,6 +77,15 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
         delCnt = 0
         prepareQRScannerView(self.view)
         startScanningQRCode()
+        self.isQrResultFind = false
+        DispatchQueue.main.asyncAfter(deadline: .now()+10, execute: {
+            if(!self.isQrResultFind){
+                self.dismiss(animated: true, completion: {
+                    self.delegate?.qrScannerDidCancel(self)
+                })
+            }
+            
+        })
     }
     
     override public func didReceiveMemoryWarning() {
@@ -370,7 +381,16 @@ public class ScannerViewController: UIViewController, AVCaptureMetadataOutputObj
                             delegate?.qrScannerDidFail(self, error: "Empty string found")
                         }
                         captureSession.stopRunning()
-                        self.dismiss(animated: true, completion: nil)
+                        self.isQrResultFind = true
+                        let alert = UIAlertController(title: "QR code scanned successfully", message: "", preferredStyle: .alert)
+                        
+                        self.present(alert, animated: true, completion: nil)
+                        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
+                            self.dismiss(animated: true, completion: {
+                                self.dismiss(animated: true, completion: nil)
+                            })
+                        })
+                        
                     }
                 }
             }

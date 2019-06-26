@@ -15,12 +15,12 @@ private var __maxLengths = [UITextField: Int]()
 class Utils {
 
     //UAT Server
-    let hostIP = "https://appuat.expanduscapital.com"
-    let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
+    //let hostIP = "https://appuat.expanduscapital.com"
+    //let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
     
     //SIT Server
-    //let hostIP = "https://sdkuat.expanduscapital.com"
-    //let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
+    let hostIP = "https://sdkuat.expanduscapital.com"
+    let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
 
 
     
@@ -210,6 +210,13 @@ class Utils {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        return alert
+    }
+    
+    func showAlert(title:String,message:String,actionBtnTitle:String) -> UIAlertController{
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: actionBtnTitle, style: UIAlertActionStyle.default, handler: nil))
         return alert
     }
     

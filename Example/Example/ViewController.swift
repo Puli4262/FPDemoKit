@@ -23,8 +23,8 @@ class ViewController: UIViewController,SendFPSDKResponseDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.mobileNumberTextFeild.text = "9001110010"
-        self.constantTokenTextFeild.text = "U71DVfHqUU9i2khMpO8XGw=="
+        self.mobileNumberTextFeild.text = "8800880084"
+        self.constantTokenTextFeild.text = "TGqAw7XAioybH44zLsFhEg=="
         
         textField.placeholder = "Email"
         textField.title = "Email address"

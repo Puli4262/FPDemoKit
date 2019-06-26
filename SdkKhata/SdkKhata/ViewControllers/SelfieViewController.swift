@@ -107,7 +107,7 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                     
                     alertController.dismiss(animated: true, completion: {
                         let refreshToken = res["token"].stringValue
-                        let status = res["status"].stringValue
+                        let status = res["returnCode"].stringValue
                         print("new \(refreshToken)")
                         if(refreshToken == "InvalidToken"){
                             DispatchQueue.main.async {
@@ -119,6 +119,9 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             self.openCustomerDetailsVC()
                             
                             
+                        }else if(res["response"].stringValue.containsIgnoringCase(find: "fail") && (status.containsIgnoringCase(find: "411") || (status.containsIgnoringCase(find: "504")))){
+                            
+                            self.showPopupAndResetSelfie()
                         }else if(res["response"].stringValue.containsIgnoringCase(find: "fail") && status.containsIgnoringCase(find: "102")){
                             DispatchQueue.main.async {
                                 self.openPanMismatchPopupVC()
@@ -129,13 +132,15 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             }
                             
                         }else{
-                            Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                            //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                            self.showPopupAndResetSelfie()
                         }
                     })
                 }, failure: {error in
                     print(error)
                     alertController.dismiss(animated: true, completion: {
-                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        self.showPopupAndResetSelfie()
 
                     })
                 })
@@ -148,6 +153,14 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             
             
         }
+    }
+    
+    func showPopupAndResetSelfie(){
+        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+            self.resetDocument()
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func openPanMismatchPopupVC(){
@@ -264,7 +277,7 @@ extension SelfieViewController: MismatcPopupDelegate,PancardPopupDelegate {
         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
         self.continueBtn.isUserInteractionEnabled = false
         
-        Utils().openCamera(imagePicker: imagePicker, viewController: self, isFront: true)
+        //Utils().openCamera(imagePicker: imagePicker, viewController: self, isFront: true)
     }
     
     

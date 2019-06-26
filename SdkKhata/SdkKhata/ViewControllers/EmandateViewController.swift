@@ -113,20 +113,26 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
     func webViewDidStartLoad(_ webView: UIWebView){
         let requestURL = self.webView.request?.url
         let requestString:String = (requestURL?.absoluteString)!
+        print("loading url")
         print(requestString)
         self.activityIndicator.isHidden = false
         
         if(requestString.containsIgnoringCase(find: "https://www.tpsl-india.in/PaymentGateway/PaymentGatewayReturnTestBank.jsp")){
-            DispatchQueue.main.asyncAfter(deadline: .now()+30, execute: {
-                print(self.isGettingSuccessResponse)
+            DispatchQueue.main.asyncAfter(deadline: .now()+20, execute: {
+                
                 if(!self.isGettingSuccessResponse){
-                    Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                    DispatchQueue.main.asyncAfter(deadline: .now()+2.0, execute: {
-                        self.dismiss(animated: true, completion: nil)
-                    })
+
+                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                        
+                    }))
+                    self.present(alert, animated: true, completion: nil)
                 }
             })
-            
+
         }
     }
     
@@ -148,10 +154,15 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 self.handleEmandateCreation(mandateRef: mandateRef)
                 //self.handleEmandateVerification(mandateRef: mandateRef)
             }else{
-                Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                DispatchQueue.main.asyncAfter(deadline: .now()+2.0, execute: {
-                    self.dismiss(animated: true, completion: nil)
-                })
+                
+                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                }))
+                self.present(alert, animated: true, completion: nil)
+
                 
             }
         }
@@ -234,86 +245,37 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                                 
                             }
                         }else{
-                            print("calling error")
-                            Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                self.dismiss(animated: true, completion: nil)
-                            })
                             
-                            
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                    self.dismiss(animated: true, completion: nil)
+                                })
+                            }))
+                            self.present(alert, animated: true, completion: nil)
                         }
                         
                     })
                     
                     break
                 case .failure(let error):
-                    print("calling failure")
+                    
                     alertController.dismiss(animated: true, completion: {
-                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                            self.dismiss(animated: true, completion: nil)
-                        })
+                        
+                        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                self.dismiss(animated: true, completion: nil)
+                            })
+                        }))
+                        self.present(alert, animated: true, completion: nil)
                         
                     })
                     print(error.localizedDescription)
                 }
                 
             }
-            
-
-            
-            
-//            utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
-//
-//                alertController.dismiss(animated: true, completion: {
-//                    print(res)
-//                    let refreshToken = res["token"].stringValue
-//                    let response = res["response"].stringValue
-//                    if(refreshToken == "InvalidToken"){
-//                        DispatchQueue.main.async {
-//                            utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
-//                        }
-//                    }else if(response.containsIgnoringCase(find: "success")){
-//
-//                        let status = UserDefaults.standard.string(forKey: "khaata_status")!
-//                        print(status)
-//                        if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
-//
-//                            self.dismiss(animated: true, completion: {
-//                                let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-//                                print(dncFlag)
-//                                if(dncFlag){
-//                                    self.eMandateResponseDelegate?.gotoAgreeVC()
-//                                }else{
-//                                    self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
-//                                }
-//
-//                            })
-//                        }else{
-//
-//
-//                            self.dismiss(animated: true, completion: {
-//                                self.eMandateResponseDelegate?.sendResponse(sanctionAmount: res["amount"].intValue, LAN: res["lan"].stringValue, status: "MandateCompleted", CIF: res["cif"].stringValue, mandateId: mandateRef)
-//                            })
-//
-//                        }
-//                    }else{
-//                        Utils().showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-//                            self.dismiss(animated: true, completion: nil)
-//                        })
-//
-//
-//                    }
-//
-//                })
-//
-//            }, failure: { error in
-//                alertController.dismiss(animated: true, completion: {
-//                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-//
-//                })
-//            })
+        
             
             
         }else{
@@ -351,10 +313,16 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                         let statusCode = res["paymentMethod"]["paymentTransaction"]["statusCode"].stringValue
                         print(statusCode)
                         if(!statusCode.containsIgnoringCase(find: "0300")){
-                             Utils().showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                self.dismiss(animated: true, completion: nil)
-                            })
+                            
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                                    self.dismiss(animated: true, completion: nil)
+                                })
+                            }))
+                            self.present(alert, animated: true, completion: nil)
+                             
+                            
                             
                             
                         }else if(statusCode.containsIgnoringCase(find: "0300")){
@@ -365,8 +333,10 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                     break
                 case .failure(let error):
                     alertController.dismiss(animated: true, completion: {
-                        print(error)
-                        Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        
+                        //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     })
                     
                 }

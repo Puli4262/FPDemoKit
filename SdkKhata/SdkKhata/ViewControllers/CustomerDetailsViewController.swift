@@ -227,11 +227,16 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
             }
         }else if(textField == firstNameTextField || textField == lastNameTextField || textField == fatherNameTextField || textField == motherNameTextField ){
-            textField.text = textField.text?.capitalizingFirstLetter()
+            if(textField.text?.count == 1){
+                textField.text = textField.text?.capitalizingFirstLetter()
+            }
             textField.text = textField.text?.filter({ "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ".contains($0) })
-        }else if(textField == firstNameTextField || textField == lastNameTextField || textField == fatherNameTextField || textField == motherNameTextField || textField == permanentAddressLine1TextField || textField == permanentAddressLine2TextField || textField == communicationAddressLine1TextField || textField == communicationAddLine2TextField || textField == permanentAddCityTextField || textField == communicationAddCityTextField || textField == permanentAddStateTextField || textField == communicationAddCityTextField ){
+        }else if(textField == permanentAddressLine1TextField || textField == permanentAddressLine2TextField || textField == communicationAddressLine1TextField || textField == communicationAddLine2TextField || textField == permanentAddCityTextField || textField == communicationAddCityTextField || textField == permanentAddStateTextField || textField == communicationAddCityTextField ){
+            if(textField.text?.count == 1){
+                textField.text = textField.text?.capitalizingFirstLetter()
+            }
             
-            textField.text = textField.text?.capitalizingFirstLetter()
+            
         }else if(textField == permanentAddPincodeTextField || textField == communicationAddPincodeTextField){
             if(textField.text?.count == 6){
                 if(textField == permanentAddPincodeTextField){
@@ -370,6 +375,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.pancardBtnConstraint.constant = 0
             
         }
+        
+        
         
         
     }
@@ -622,6 +629,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             DispatchQueue.main.async {
                                 utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                             }
+                        }else if(res["response"].stringValue == "Fail"){
+                            let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                            self.present(alert, animated: true, completion: nil)
                         }else if(res["response"].stringValue == "success"){
                             
                             let corAddressFlag = true
@@ -634,7 +644,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 self.openPanMismatchPopupVC()
                             }else if(res["panNumber"].stringValue == "absent"){
                                 UserDefaults.standard.set("Pan valided", forKey: "khaata_status")
-                                print("handle absent pin")
+                                
                                 KhataViewController.panStatus = "Absent"
                                 
                                 self.pancardTextField.text = ""
@@ -737,7 +747,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 }, failure: {error in
                     
                     alertController.dismiss(animated: true, completion: {
-                        Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                        //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     })
                 })
                 
@@ -856,9 +868,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                         let cif = UserDefaults.standard.string(forKey: "khaata_cif") 
                         
                         if(cif == ""){
-                            DispatchQueue.main.async {
-                                utils.showToast(context: self, msg: "Please try again", showToastFrom: 20)
-                            }
+                            
                             self.handlePancardUIVisibility(visibility:true)
                             self.handlePersonalDetailsUIVisibility(visibility: true)
                             self.handleAddressDetailsUIVisibility(visibility:false)
@@ -904,18 +914,19 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             
                             
                         }
-                        
-                        
-                        
-                        
                     }
                     
+                    
+                    
                 })
+                
             }, failure: {error in
                 print(error.localizedDescription)
                 
                 alertController.dismiss(animated: true, completion: {
-                    Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
                     
                 })
 
@@ -985,16 +996,16 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             UserDefaults.standard.set(customerPostData["lastName"].stringValue, forKey: "khaata_lastName")
             print("Params \(customerPostData)")
             utils.requestPOSTURL("/customer/createCutomer", parameters: customerPostData.dictionaryObject!, headers: ["accessToken":token!,"Content-Type": "application/json"], viewCotroller: self, success: { res in
-                print(res)
+                
                 alertController.dismiss(animated: true, completion: {
                     let refreshToken = res["token"].stringValue
                     if(refreshToken != "InvalidToken"){
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         let resPonseStatus = res["status"].stringValue
                         let returnCode = res["returnCode"].stringValue
-                        if(resPonseStatus.containsIgnoringCase(find: "Customer dedup found")){
-                            self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document", statusCode: returnCode)
-                        }else if(resPonseStatus.containsIgnoringCase(find: "CustomerDedup")){
+                        if(returnCode == "412"){
+                            self.openPopupVC(titleDescription: "This customer has been blacklisted", statusCode: returnCode)
+                        }else if(resPonseStatus.containsIgnoringCase(find: "Customer dedup found") || resPonseStatus.containsIgnoringCase(find: "CustomerDedup")){
                             self.openPopupVC(titleDescription: "Dear customer, Khaata already exists for the uploaded KYC document", statusCode: returnCode)
                         }else if(res["response"].stringValue == "success"){
                             
@@ -1029,10 +1040,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 }
                             }
                         }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
-                            utils.showToast(context: self, msg: "Please try again", showToastFrom: 30.0)
+                            //utils.showToast(context: self, msg: "Please try again", showToastFrom: 30.0)
+                            let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                            self.present(alert, animated: true, completion: nil)
                         }
-                    }
-                    else if(refreshToken == "InvalidToken"){
+                    }else if(refreshToken == "InvalidToken"){
 
                         DispatchQueue.main.async {
                             utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
@@ -1043,7 +1055,10 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             }, failure: {error in
                 print(error.localizedDescription)
                 alertController.dismiss(animated: true, completion: {
-                    Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                    //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    self.present(alert, animated: true, completion: nil)
+                    
                 })
             })
             
@@ -1184,7 +1199,9 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
 
                 }else if(response == "Fail"){
                     DispatchQueue.main.async {
-                        utils.showToast(context: self, msg: "Please try again",showToastFrom:20)
+                        //utils.showToast(context: self, msg: "Please try again",showToastFrom:20)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
                     }
                     
                 }else if(from == "permanent"){
@@ -1217,7 +1234,11 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
                 
             }, failure: { error in
-                Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
+                
+                let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                self.present(alert, animated: true, completion: nil)
+                
             })
             
             
@@ -1316,17 +1337,37 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
         
         let status = UserDefaults.standard.string(forKey: "khaata_status")
         
+        
+        
         if(status! != "Pan valided" || status! != "personaldetail" || status! != "customercreated"){
             self.pancardTextField.text = ""
-            if(self.checkboxImg.image == UIImage(named:"check_box_outline_blank")){
-                self.checkboxImg.image = UIImage(named:"check_box")
-                self.pancardBtn.isUserInteractionEnabled = true
-                self.pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
-            }else{
-                self.checkboxImg.image = UIImage(named:"check_box_outline_blank")
-                self.pancardBtn.isUserInteractionEnabled = false
-                self.pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
-            }
+            
+            
+            let alert = UIAlertController(title: "Please apply when PAN available", message: "", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Exit", style: UIAlertAction.Style.default, handler: {action in
+                for controller in self.navigationController!.viewControllers as Array {
+                    if controller.isKind(of: KhataViewController.self) {
+                        KhataViewController.comingFrom = "back"
+                        self.navigationController!.popToViewController(controller, animated: true)
+                        break
+                    }
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Enter PAN", style: UIAlertAction.Style.default, handler: { action in
+                self.pancardTextField.text = ""
+                self.pancardTextField.becomeFirstResponder()
+            }))
+            self.present(alert, animated: true, completion: nil)
+            
+//            if(self.checkboxImg.image == UIImage(named:"check_box_outline_blank")){
+//                self.checkboxImg.image = UIImage(named:"check_box")
+//                self.pancardBtn.isUserInteractionEnabled = true
+//                self.pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#0F5BA5")
+//            }else{
+//                self.checkboxImg.image = UIImage(named:"check_box_outline_blank")
+//                self.pancardBtn.isUserInteractionEnabled = false
+//                self.pancardBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
+//            }
             
         }
         

@@ -233,7 +233,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                         
                                         
                                     } catch {
-                                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                                         self.present(alert, animated: true, completion: nil)
                                         
                                     }
@@ -242,7 +242,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                                 
                             }else{
                                 alertController.dismiss(animated: true, completion: {
-                                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                                     self.present(alert, animated: true, completion: nil)
                                 })
                             }
@@ -252,7 +252,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                     print("encodingError",encodingError)
                     alertController.dismiss(animated: true, completion: {
                         //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                         
                     })
@@ -416,7 +416,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                     }else if(response.containsIgnoringCase(find: "fail")){
                         
                         //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     }
                     
@@ -427,7 +427,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                 print(error.localizedDescription)
                 alertController.dismiss(animated: true, completion: {
                     //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                 })
                 
@@ -453,7 +453,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func showAutoPayCompletedDailog(mandateResponse:JSON){
-        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle.", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         
@@ -518,7 +518,7 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
 
 extension AutoPayViewController: EMandateResponseDelegate {
     func sendResponse(sanctionAmount: Int, LAN: String, status: String, CIF: String, mandateId: String, statusCode: String) {
-        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle.", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         
@@ -543,7 +543,7 @@ extension AutoPayViewController: EMandateResponseDelegate {
     }
     
     func gotoAgreeVC() {
-        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Auto Pay has been Successfully Setup. Any Mandate after 7th will reflect in the next payment cycle.", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
         self.present(alert, animated: true, completion: nil)
         

@@ -150,16 +150,19 @@ public protocol RepaymentDelegate {
 
 extension RepaymentViewController : PayUResponseDelegate {
     func payUresponse(status: Bool, txnId: String, amount: String, name: String, productInfo: String) {
+        
+        KhataViewController.payUTxnid = txnId
+        KhataViewController.payUStatus = status
+        KhataViewController.payUName = name
+        KhataViewController.payUAmount = amount
+        KhataViewController.payUProductInfo = productInfo
+        KhataViewController.comingFrom = "payU"
+        
         if(status){
             
-            KhataViewController.payUTxnid = txnId
-            KhataViewController.payUStatus = status
-            KhataViewController.payUName = name
-            KhataViewController.payUAmount = amount
-            KhataViewController.payUProductInfo = productInfo
-            KhataViewController.comingFrom = "payU"
+            
             DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
-                let alert = UIAlertController(title: "", message: "Your Payment for Rs. \(amount) is successful", preferredStyle: .alert)
+                let alert = UIAlertController(title: "", message: "Your Payment for Rs. \(amount) is successful.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                     self.navigationController?.popViewController(animated: true)
                 }))
@@ -169,7 +172,7 @@ extension RepaymentViewController : PayUResponseDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
                 let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed. Please try after some time.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-                    self.popnav()
+                    self.navigationController?.popViewController(animated: true)
                 }))
                 self.present(alert, animated: true, completion: nil)
             })

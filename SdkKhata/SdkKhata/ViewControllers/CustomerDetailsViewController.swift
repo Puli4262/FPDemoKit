@@ -630,7 +630,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                                 utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
                             }
                         }else if(res["response"].stringValue == "Fail"){
-                            let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                            let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                             self.present(alert, animated: true, completion: nil)
                         }else if(res["response"].stringValue == "success"){
                             
@@ -748,7 +748,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     
                     alertController.dismiss(animated: true, completion: {
                         //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     })
                 })
@@ -925,7 +925,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 
                 alertController.dismiss(animated: true, completion: {
                     //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                     
                 })
@@ -1041,7 +1041,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                             }
                         }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
                             //utils.showToast(context: self, msg: "Please try again", showToastFrom: 30.0)
-                            let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                            let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                             self.present(alert, animated: true, completion: nil)
                         }
                     }else if(refreshToken == "InvalidToken"){
@@ -1056,7 +1056,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 print(error.localizedDescription)
                 alertController.dismiss(animated: true, completion: {
                     //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                     
                 })
@@ -1200,7 +1200,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                 }else if(response == "Fail"){
                     DispatchQueue.main.async {
                         //utils.showToast(context: self, msg: "Please try again",showToastFrom:20)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     }
                     
@@ -1236,7 +1236,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             }, failure: { error in
                 //Utils().showToast(context: self, msg: error.localizedDescription, showToastFrom: 30.0)
                 
-                let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                 self.present(alert, animated: true, completion: nil)
                 
             })

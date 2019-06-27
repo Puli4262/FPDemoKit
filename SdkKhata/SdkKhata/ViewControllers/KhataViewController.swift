@@ -135,7 +135,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     }else if(return_code == "401"){
                         self.handnleGoBackPopup(titleDescription: "Authorization Failed", btnTitle: "Ok", statusCode: return_code, status: "InvalidToken")
                     }else if(return_code == "411"){
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     }
                     
@@ -428,7 +428,7 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     print(error.localizedDescription)
                     //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
                     
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                     
                 })

@@ -117,23 +117,23 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
         print(requestString)
         self.activityIndicator.isHidden = false
         
-        if(requestString.containsIgnoringCase(find: "https://www.tpsl-india.in/PaymentGateway/PaymentGatewayReturnTestBank.jsp")){
-            DispatchQueue.main.asyncAfter(deadline: .now()+20, execute: {
-                
-                if(!self.isGettingSuccessResponse){
-
-                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
-                        DispatchQueue.main.async {
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                        
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
-            })
-
-        }
+//        if(requestString.containsIgnoringCase(find: "https://www.tpsl-india.in/PaymentGateway/PaymentGatewayReturnTestBank.jsp")){
+//            DispatchQueue.main.asyncAfter(deadline: .now()+20, execute: {
+//
+//                if(!self.isGettingSuccessResponse){
+//
+//                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
+//                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+//                        DispatchQueue.main.async {
+//                            self.dismiss(animated: true, completion: nil)
+//                        }
+//                        
+//                    }))
+//                    self.present(alert, animated: true, completion: nil)
+//                }
+//            })
+//
+//        }
     }
     
     func webViewDidFinishLoad(_ webView: UIWebView) {
@@ -335,7 +335,7 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                     alertController.dismiss(animated: true, completion: {
                         
                         //Utils().showToast(context: self, msg: "Please Try Again!", showToastFrom: 20.0)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     })
                     

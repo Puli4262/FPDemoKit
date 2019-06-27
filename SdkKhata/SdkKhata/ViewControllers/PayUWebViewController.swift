@@ -67,7 +67,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             }, failure: { error in
                 alertController.dismiss(animated: true, completion: {
                     //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                 })
             })
@@ -189,9 +189,23 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             }
             
             
-        }else if(requestString.containsIgnoringCase(find: "failure")){
+        }else if(requestString.containsIgnoringCase(find: "khata_files/t_c.html?data=failure")){
             status = false
-            self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+            //self.sendResponse(status: status, txnId: txnId, amount: amount, name: name, productInfo: productInfo)
+            requestString = requestString.replacingOccurrences(of: "%7C", with: "|")
+            print(requestString.split(separator: "|"))
+            let dataArray = requestString.split(separator: "|")
+            if(dataArray.count > 2){
+                let payUStatus = String(dataArray[0].split(separator: "=")[1])
+                txnId = String(dataArray[1])
+                amount = String(dataArray[2])
+                name = String(dataArray[3])
+                productInfo = String(dataArray[4])
+                self.updatePaymentDetails(mobileNumber: mobileNumber, txnId: txnId, amount: amount, name: name, productInfo: productInfo, mihpayid: "", payUStatus: "failure")
+                
+            }
+            
+            
         }
         
         self.activityIndicatior.isHidden = true
@@ -222,19 +236,22 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let params = ["mobileNumber":mobileNumber,"txnId":txnId,"mihpayid":mihpayid,"status":payUStatus]
+            let params = ["mobileNumber":mobileNumber,"txnId":txnId,"mihpayid":mihpayid.replacingOccurrences(of: "/", with: ""),"status":payUStatus]
             
             utils.requestPOSTURL("/payU/updatePaymentDetails", parameters: params, headers: ["accessToken":self.accessToken], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
                     print(res)
-                    let status = res["status"].stringValue
+                    let status = payUStatus
                     if(status.containsIgnoringCase(find: "success")){
                         self.payUResponseDelegate!.payUresponse(status:true,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
                         self.navigationController?.popViewController(animated: true)
+                    }else if(status.containsIgnoringCase(find: "failure")){
+                        self.payUResponseDelegate!.payUresponse(status:false,txnId:txnId,amount:amount,name:name,productInfo:productInfo)
+                        self.navigationController?.popViewController(animated: true)
                     }else{
                         //Utils().showToast(context: self, msg: "Please try again later", showToastFrom: 20.0)
-                        let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     }
                 })
@@ -242,7 +259,7 @@ class PayUWebViewController: UIViewController,UIWebViewDelegate {
             }, failure: { error in
                 alertController.dismiss(animated: true, completion: {
                     //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                    let alert = utils.showAlert(title:"",message:"Please try again after sometime", actionBtnTitle: "Ok")
+                    let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                     self.present(alert, animated: true, completion: nil)
                 })
             })

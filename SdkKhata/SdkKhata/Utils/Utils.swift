@@ -15,12 +15,12 @@ private var __maxLengths = [UITextField: Int]()
 class Utils {
 
     //UAT Server
-    //let hostIP = "https://appuat.expanduscapital.com"
-    //let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
+    let hostIP = "https://appuat.expanduscapital.com"
+    let hostURL = "https://appuat.expanduscapital.com/KhataBackEnd"
     
     //SIT Server
-    let hostIP = "https://sdkuat.expanduscapital.com"
-    let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
+    //let hostIP = "https://sdkuat.expanduscapital.com"
+    //let hostURL = "https://sdkuat.expanduscapital.com/KhataBackEnd"
 
 
     
@@ -70,18 +70,11 @@ class Utils {
     
     func requestGETURL(_ strURL: String,headers:[String:String], viewCotroller:UIViewController, success:@escaping (JSON) -> Void, failure:@escaping (Error) -> Void) {
         
-        
-        
-        print("URL:",self.hostURL+strURL)
-        
-        
-        
-        
+    
         var request = URLRequest(url: URL(string: self.hostURL+strURL)! )
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
         request.timeoutInterval = 120
-        
         
         DispatchQueue.main.async {
             

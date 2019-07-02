@@ -156,8 +156,8 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func showPopupAndResetSelfie(){
-        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
             self.resetDocument()
         }))
         self.present(alert, animated: true, completion: nil)

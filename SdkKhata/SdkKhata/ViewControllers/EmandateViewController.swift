@@ -139,11 +139,12 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
     func webViewDidFinishLoad(_ webView: UIWebView) {
         let requestURL = self.webView.request?.url
         let requestString:String = (requestURL?.absoluteString)!
-        print(requestString)
+        
         
         
         if(requestString.containsIgnoringCase(find: "khata_files/t_c.html?data=")){
             //self.handleEmandateCreation()
+            print(requestString)
             let dataString =  requestString.split(separator: "=")
             let mandateResponse = String(dataString[1]).replacingOccurrences(of: "%7C", with: "|")
             let madateResArray = mandateResponse.split(separator: "|")
@@ -155,10 +156,12 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                 //self.handleEmandateVerification(mandateRef: mandateRef)
             }else{
                 
-                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                        self.dismiss(animated: true, completion: nil)
+                        self.dismiss(animated: true, completion: {
+                            self.dismiss(animated: true, completion: nil)
+                        })
                     })
                 }))
                 self.present(alert, animated: true, completion: nil)
@@ -246,8 +249,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                             }
                         }else{
                             
-                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                                     self.dismiss(animated: true, completion: nil)
                                 })
@@ -262,8 +265,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                     
                     alertController.dismiss(animated: true, completion: {
                         
-                        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                        let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                                 self.dismiss(animated: true, completion: nil)
                             })
@@ -314,8 +317,8 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                         print(statusCode)
                         if(!statusCode.containsIgnoringCase(find: "0300")){
                             
-                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                                     self.dismiss(animated: true, completion: nil)
                                 })

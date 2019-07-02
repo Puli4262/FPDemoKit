@@ -92,9 +92,11 @@ PODS:
     - Firebase/MLVision
     - IGRPhotoTweaks (~> 1.0.0)
     - SkyFloatingLabelTextField (~> 3.0)
+    - SwiftKeychainWrapper
     - SwiftyJSON (~> 4.2)
     - SWXMLHash (~> 4.7.0)
   - SkyFloatingLabelTextField (3.6.0)
+  - SwiftKeychainWrapper (3.2.0)
   - SwiftyJSON (4.2.0)
   - SWXMLHash (4.7.5)
 
@@ -123,6 +125,7 @@ SPEC REPOS:
     - nanopb
     - Protobuf
     - SkyFloatingLabelTextField
+    - SwiftKeychainWrapper
     - SwiftyJSON
     - SWXMLHash
 
@@ -149,8 +152,9 @@ SPEC CHECKSUMS:
   IGRPhotoTweaks: 8fe6b62c6599238d860b19b46a85a454e202f502
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
-  SdkKhata: 69ba48d87d27b84fdb6a586f3b42fea38bd2eb3f
+  SdkKhata: d4d5a61b5ded87aef7615ce2166682021f10d8c3
   SkyFloatingLabelTextField: 38164979b79512f9ff9288ad8acfc4bbf5d843e3
+  SwiftKeychainWrapper: 82c4c02cdc36f9a24f7edfcaab3e336401caa1a1
   SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f
 

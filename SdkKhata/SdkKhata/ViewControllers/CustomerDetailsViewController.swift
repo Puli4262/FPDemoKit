@@ -1343,8 +1343,8 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
             self.pancardTextField.text = ""
             
             
-            let alert = UIAlertController(title: "Please apply when PAN available", message: "", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Exit", style: UIAlertAction.Style.default, handler: {action in
+            let alert = UIAlertController(title: "Please apply when PAN available", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Exit", style:.default, handler: {action in
                 for controller in self.navigationController!.viewControllers as Array {
                     if controller.isKind(of: KhataViewController.self) {
                         KhataViewController.comingFrom = "back"
@@ -1353,7 +1353,7 @@ class CustomerDetailsViewController: UIViewController,UITextFieldDelegate {
                     }
                 }
             }))
-            alert.addAction(UIAlertAction(title: "Enter PAN", style: UIAlertAction.Style.default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Enter PAN", style: .default, handler: { action in
                 self.pancardTextField.text = ""
                 self.pancardTextField.becomeFirstResponder()
             }))

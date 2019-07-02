@@ -8,6 +8,8 @@
 import UIKit
 import FirebaseCore
 import SwiftyJSON
+import Security
+import SwiftKeychainWrapper
 
 open class KhataViewController: UIViewController,UIApplicationDelegate {
     
@@ -70,6 +72,11 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         print("productinfo \(productinfo)")
         print("firstname \(firstname)")
         
+        
+        
+        
+        
+        
         UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
         if(self.requestFrom == "Call Payu"){
             
@@ -96,6 +103,37 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     @objc func popnav() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func isJailBroken() -> Bool {
+        if TARGET_IPHONE_SIMULATOR != 1
+        {
+            // Check 1 : existence of files that are common for jailbroken devices
+            if FileManager.default.fileExists(atPath: "/Applications/Cydia.app")
+                || FileManager.default.fileExists(atPath: "/Library/MobileSubstrate/MobileSubstrate.dylib")
+                || FileManager.default.fileExists(atPath: "/bin/bash")
+                || FileManager.default.fileExists(atPath: "/usr/sbin/sshd")
+                || FileManager.default.fileExists(atPath: "/etc/apt")
+                || FileManager.default.fileExists(atPath: "/private/var/lib/apt/")
+                || UIApplication.shared.canOpenURL(URL(string:"cydia://package/com.example.package")!)
+                    {
+                    return true
+            }
+            // Check 2 : Reading and writing in system directories (sandbox violation)
+            let stringToWrite = "Jailbreak Test"
+            do
+            {
+                try stringToWrite.write(toFile:"/private/JailbreakTest.txt", atomically:true, encoding:String.Encoding.utf8)
+                //Device is jailbroken
+                return true
+            }catch
+            {
+                return false
+            }
+        }else
+        {
+            return false
+        }
     }
     
     func addBackButton(){
@@ -175,8 +213,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             }, failure: {error in
                 
                 
-                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                     self.navigationController?.popViewController(animated: true)
                 }))
                 self.present(alert, animated: true, completion: nil)
@@ -290,8 +328,12 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
     
     func handleMandateCreate(leadResponse:JSON){
         if(leadResponse["dncFlag"].boolValue ){
-            let cif = leadResponse["cif"].stringValue
-            if(cif != "" && leadResponse["mandateRefId"].stringValue == "0" && (leadResponse["mandateId"].intValue == 0)){
+            print(leadResponse)
+            let lan = leadResponse["lan"].stringValue
+            print(leadResponse["mandateRefId"].stringValue)
+            print(leadResponse["mandateId"].intValue)
+            print(lan)
+            if(lan != "" && leadResponse["mandateRefId"].stringValue == "0" ){
                 self.openAutopayVC()
             }else{
                 self.openAgreeVC()

@@ -332,8 +332,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail") && ( (res["returnCode"].intValue == 411) || (res["returnCode"].intValue == 504))){
                         DispatchQueue.main.async {
                             
-                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                                 self.resetDocument()
                             }))
                             self.present(alert, animated: true, completion: nil)
@@ -356,8 +356,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "Fail")){
                         //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
                         if(res["status"].stringValue.containsIgnoringCase(find: "DocumentNumberMismatch")){
-                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                                 self.resetDocument()
                             }))
                             self.present(alert, animated: true, completion: nil)
@@ -384,8 +384,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
                 print(error)
                 alertController.dismiss(animated: true, completion: {
                     //utils.showToast(context: self, msg: "Please try again", showToastFrom: 20.0)
-                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {action in
+                    let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {action in
                         self.resetDocument()
                     }))
                     self.present(alert, animated: true, completion: nil)

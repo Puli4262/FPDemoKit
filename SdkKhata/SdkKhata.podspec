@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
  s.dependency 'SWXMLHash', '~> 4.7.0'
  s.dependency 'DropDown', '2.3.2'
  s.dependency 'CropViewController'
+ s.dependency 'SwiftKeychainWrapper'
  
  
 end

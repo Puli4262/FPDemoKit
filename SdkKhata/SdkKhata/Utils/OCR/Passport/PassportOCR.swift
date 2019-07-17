@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftyJSON
-
+import SwiftKeychainWrapper
 
 class PassportOCR {
     var passportOcrData = JSON(["isPassportExpired":false,"isValidPassportFront":false,"isValidPassportBack":false,"docType":"Passport","doc_number":"","dob":"","lastname":"","firstname":"","midelName":"","motherName":"","pincode":"","address1":"","address2":"","gender":"","docIssueDate":"","docExpDate":""])
@@ -214,7 +214,8 @@ class PassportOCR {
         passportOcrData["address2"].stringValue = address2
         print(address1)
         print(address2)
-        UserDefaults.standard.set("Passport", forKey: "khaata_docType")
+        KeychainWrapper.standard.set("Passport", forKey: "khaata_docType")
+        //UserDefaults.standard.set("Passport", forKey: "khaata_docType")
         
     }
     
@@ -238,7 +239,7 @@ class PassportOCR {
     func dateValidator(date:String,lastLineString:String){
         print(lastLineString)
         
-        let data = lastLineString
+        //let data = lastLineString
         
         
 //        print(data[21 ..< 23])

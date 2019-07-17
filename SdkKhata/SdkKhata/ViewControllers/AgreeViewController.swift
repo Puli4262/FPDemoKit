@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 class AgreeViewController: UIViewController {
     
@@ -36,7 +37,9 @@ class AgreeViewController: UIViewController {
     
     func setkhaataAcountLabel(){
         
-        let preApprovedLimit = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
+        
+        //let preApprovedLimit = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
+        let preApprovedLimit = KeychainWrapper.standard.string(forKey: "khaata_preApprovedLimit")
         print(preApprovedLimit!)
         let dataString = "Your ₹ \(preApprovedLimit!) Khaata"
         
@@ -52,8 +55,9 @@ class AgreeViewController: UIViewController {
     }
     
     func setCarryIdView(){
-        let docType = UserDefaults.standard.string(forKey: "khaata_docType") ?? "Aadhaar"
         
+        //let docType = UserDefaults.standard.string(forKey: "khaata_docType") ?? "Aadhaar"
+        let docType = KeychainWrapper.standard.string(forKey: "khaata_docType") ?? "Aadhaar"
         let attrs1 = [NSAttributedStringKey.foregroundColor : UIColor.black]
         
         let attrs2 = [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 15), NSAttributedStringKey.foregroundColor : UIColor.black]
@@ -92,8 +96,10 @@ class AgreeViewController: UIViewController {
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        if(!dncFlag){
+        
+        //let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+        let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
+        if(!dncFlag!){
             self.autoPayView.isHidden = true
             self.shareDetailsLabel.backgroundColor = UIColor.lightGray
         }else{
@@ -144,8 +150,11 @@ class AgreeViewController: UIViewController {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
-            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+            //let token = UserDefaults.standard.string(forKey: "khaata_token")
+            let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
+            let token = KeychainWrapper.standard.string(forKey: "khaata_token")
+            
             print(token!)
             utils.requestPOSTURL("/lead/createLoan?mobilenumber=\(mobileNumber!)", parameters: [:], headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
                 
@@ -175,6 +184,9 @@ class AgreeViewController: UIViewController {
                         }
                     }else if(res["response"].stringValue.containsIgnoringCase(find: "fail")){
                         //utils.showToast(context: self, msg: "Please try again.", showToastFrom: 20.0)
+                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
+                        self.present(alert, animated: true, completion: nil)
+                    }else{
                         let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
                         self.present(alert, animated: true, completion: nil)
                     }

@@ -7,6 +7,7 @@
 
 import UIKit
 import SkyFloatingLabelTextField
+import SwiftKeychainWrapper
 
 class RepaymentViewController: UIViewController {
 
@@ -31,7 +32,8 @@ class RepaymentViewController: UIViewController {
         self.amountTextField.addDoneCancelToolbar()
         self.amountTextField.delegate = self
         self.amountTextField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         self.dueAmountLabel.text = "₹ \(dueAmount)"
         
         let backImage = UIImage(named: "backarrow")?.withRenderingMode(.alwaysOriginal)
@@ -39,7 +41,7 @@ class RepaymentViewController: UIViewController {
         
         if(!getTotalDueAmountStatus){
             self.payNowBtn.isHidden = true
-            let alert = UIAlertController(title: "Alert", message: "Your Transaction has been Failed. Please try after some time.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "", message: "Please try again after sometime.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.popnav()
             }))

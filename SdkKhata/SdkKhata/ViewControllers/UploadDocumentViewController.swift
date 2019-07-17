@@ -14,7 +14,7 @@ import SwiftyJSON
 import DropDown
 import CropViewController
 import AVFoundation
-
+import SwiftKeychainWrapper
 class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RetakeDelegate {
     
     
@@ -59,12 +59,26 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
         Utils().setupTopBar(viewController: self)
         self.setDelegates()
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         ocrPostData["mobileNumber"].stringValue = mobileNumber!
         self.setAndHandleDropdown()
         self.setStepperIcon()
+        self.askCameraPermission()
+
         
         
+    }
+    
+    func askCameraPermission(){
+        //Camera
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
+            if response {
+                //access granted
+            } else {
+                
+            }
+        }
     }
     
     func setDelegates(){
@@ -89,8 +103,9 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        if(!dncFlag){
+        //let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+        let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
+        if(!dncFlag!){
             self.autoPayView.isHidden = true
         }else{
             self.submitIdTextLabel.text = "Submit\nID"
@@ -120,7 +135,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         self.showDocumnetPlaceholderImages()
         self.selectDoumemtTextFeild.text = documentType
         AgreeViewController.docType = documentType
-        UserDefaults.standard.set(documentType, forKey: "khaata_docType")
+        //UserDefaults.standard.set(documentType, forKey: "khaata_docType")
+        KeychainWrapper.standard.set(documentType, forKey: "khaata_docType")
         
         
         if(self.ocrPostData["docType"].stringValue != "" && self.ocrPostData["docType"].stringValue != documentType){
@@ -184,7 +200,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
     
     func resetOcrData(documentType:String){
         
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         self.ocrPostData = JSON(["doc_number": "", "docType": documentType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
     }
     
@@ -298,7 +315,8 @@ class UploadDocumentViewController: UIViewController,UITextFieldDelegate,UIImage
         
        
         let utils = Utils()
-        let token = UserDefaults.standard.string(forKey: "khaata_token")
+        //let token = UserDefaults.standard.string(forKey: "khaata_token")
+        let token = KeychainWrapper.standard.string(forKey: "khaata_token")
         let headers = ["accessToken":token!]
         print("headers \(headers)")
         let postData = JSON(["ocrdocument":ocrPostData])
@@ -438,7 +456,8 @@ extension UploadDocumentViewController: QRScannerCodeDelegate {
             self.ocrPostData["doc_number"].stringValue = uid.text
             isAadharDataFetchedFromQRCode = true
             self.ocrPostData["docType"].stringValue = "Aadhaar Card"
-            UserDefaults.standard.set("Aadhaar Card", forKey: "khaata_docType")
+            //UserDefaults.standard.set("Aadhaar Card", forKey: "khaata_docType")
+            KeychainWrapper.standard.set("Aadhaar Card", forKey: "khaata_docType")
             self.ocrPostData["raw_front"].stringValue = result
         }
         if let name = xml["PrintLetterBarcodeData"].element?.attribute(by:"name"){
@@ -1057,7 +1076,8 @@ extension UploadDocumentViewController: MismatcPopupDelegate {
         self.continueBtn.backgroundColor = Utils().hexStringToUIColor(hex: "#BFC1C1")
         self.continueBtn.isUserInteractionEnabled = false
         let docType = self.ocrPostData["docType"].stringValue
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         self.ocrPostData = JSON(["doc_number": "", "docType": docType, "firstname": "", "lastname": "", "midelName":"", "motherName": "", "address1": "", "address2": "", "pincode": "", "mobileNumber": mobileNumber!, "docFrontImg": "", "docBackImg": "", "rawBack": "", "raw_front": "", "selfie": "","dob":"","gender":"","docIssueDate":"","docExpDate":""])
         //Utils().openCamera(imagePicker: self.imagePicker, viewController: self, isFront: false)
         self.selectDoumemtTextFeild.text = ""

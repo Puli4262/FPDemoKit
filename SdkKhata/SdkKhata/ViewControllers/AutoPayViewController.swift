@@ -9,6 +9,8 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import SkyFloatingLabelTextField
+import SwiftKeychainWrapper
+
 
 class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
@@ -68,13 +70,15 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     func setupTopBar(viewController: UIViewController){
         
-        let status = UserDefaults.standard.string(forKey: "khaata_status")
+        //let status = UserDefaults.standard.string(forKey: "khaata_status")
+        let status = KeychainWrapper.standard.string(forKey: "khaata_status")
         viewController.navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
         viewController.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         viewController.navigationController?.navigationBar.layer.shadowRadius = 4.0
         viewController.navigationController?.navigationBar.layer.shadowOpacity = 1.0
         viewController.navigationController?.navigationBar.layer.masksToBounds = false
-        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
+        //let mandateRefId = UserDefaults.standard.string(forKey: "khaata_preApprovedLimit")
+        let mandateRefId = KeychainWrapper.standard.string(forKey: "khaata_preApprovedLimit")
         print(status!)
         print(mandateRefId!)
         if(status == "editMandate"){
@@ -97,9 +101,11 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        let lan = UserDefaults.standard.string(forKey: "khaata_lan")
-        if( JSON(lan!) != JSON.null || lan! != "" || lan! != "0" || !dncFlag ){
+        //let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+        //let lan = UserDefaults.standard.string(forKey: "khaata_lan")
+        let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
+        let lan = KeychainWrapper.standard.string(forKey: "khaata_lan")
+        if( JSON(lan!) != JSON.null || lan! != "" || lan! != "0" || !dncFlag! ){
             self.stackViewHeightConstraint.constant = 0
             self.submitIDView.isHidden = true
             self.shareDetailView.isHidden = true
@@ -146,7 +152,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     @IBAction func handleAutopayBtn(_ sender: Any) {
         
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         let utils = Utils()
         let hostUrl = utils.hostURL
         let featuresDict = ["showPGResponseMsg":true,"enableNewWindowFlow":false,"enableExpressPay":false,"siDetailsAtMerchantEnd":false,"enableSI":true]
@@ -154,7 +161,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         
         
         
-        let mandateRefId = UserDefaults.standard.string(forKey: "khaata_mandateRefId")
+        //let mandateRefId = UserDefaults.standard.string(forKey: "khaata_mandateRefId")
+        let mandateRefId = KeychainWrapper.standard.string(forKey: "khaata_mandateRefId")
         if(mandateRefId! != "" && mandateRefId! != "0"){
             self.handleEmandateCreationApi(mandateRef: mandateRefId!)
 //            var mandateDict : JSON = ["mandate":["tarCall":false,"features":featuresDict,"consumerData":consumerDataDict]]
@@ -163,7 +171,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
             self.handleEmandateCreationApi(mandateRef: "None of the above")
         }else{
                 print(selectedBankIndex)
-                let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
+                //let emailID = UserDefaults.standard.string(forKey: "khaata_emailID")
+                let emailID = KeychainWrapper.standard.string(forKey: "khaata_emailID")
                 consumerDataDict["consumerEmailId"].stringValue = emailID!
                 consumerDataDict["accountNo"].stringValue = self.accountNumberArray[selectedBankIndex]
                 consumerDataDict["accountHolderName"].stringValue = ""
@@ -184,7 +193,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //let token = UserDefaults.standard.string(forKey: "khaata_token")
+            let token = KeychainWrapper.standard.string(forKey: "khaata_token")
             print(token!)
             Alamofire.upload(multipartFormData:
                 {
@@ -209,36 +219,38 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                             
                             if response.result.isSuccess
                             {
-                                alertController.dismiss(animated: true, completion: nil)
-                                
-                                if let dataFromString = response.result.value?.data(using: .utf8, allowLossyConversion: false) {
-                                    
-                                    do {
+                                alertController.dismiss(animated: true, completion: {
+                                    if let dataFromString = response.result.value?.data(using: .utf8, allowLossyConversion: false) {
                                         
-                                        let resJson = try JSON(data: dataFromString)
-                                        print(resJson)
-                                        
-                                        let refreshToken = resJson["returnStatus"]["token"].stringValue
-                                        if(refreshToken.containsIgnoringCase(find: "InvalidToken")){
-                                            DispatchQueue.main.async {
-                                                utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                                        do {
+                                            
+                                            let resJson = try JSON(data: dataFromString)
+                                            print(resJson)
+                                            
+                                            let refreshToken = resJson["returnStatus"]["token"].stringValue
+                                            if(refreshToken.containsIgnoringCase(find: "InvalidToken")){
+                                                DispatchQueue.main.async {
+                                                    utils.handleAurizationFail(title: "Authorization Failed", message: "", viewController: self)
+                                                }
+                                            }else{
+                                                //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
+                                                let response = resJson["returnStatus"]["response"].stringValue
+                                                if(response.containsIgnoringCase(find: "success")){
+                                                    self.openEmandateWebView(madateTokenResponse: resJson)
+                                                }
                                             }
-                                        }else{
-                                            //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
-                                            let response = resJson["returnStatus"]["response"].stringValue
-                                            if(response.containsIgnoringCase(find: "success")){
-                                                self.openEmandateWebView(madateTokenResponse: resJson)
-                                            }
+                                            
+                                            
+                                        } catch {
+                                            let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
+                                            self.present(alert, animated: true, completion: nil)
+                                            
                                         }
                                         
-                                        
-                                    } catch {
-                                        let alert = utils.showAlert(title:"",message:"Please try again after sometime.", actionBtnTitle: "Ok")
-                                        self.present(alert, animated: true, completion: nil)
-                                        
                                     }
-                                    
-                                }
+                                })
+                                
+                                
                                 
                             }else{
                                 alertController.dismiss(animated: true, completion: {
@@ -382,14 +394,18 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
-            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
-            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
+//            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
+//            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
+//            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
+            let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")!
+            let firstName = KeychainWrapper.standard.string(forKey: "khaata_firstName") ?? ""
+            let lastName = KeychainWrapper.standard.string(forKey: "khaata_lastName") ?? ""
             print(self.selectedBankIndex)
             let poastData = ["mandateRef":mandateRef,"ifsc":"","accType":"10","accNumber":"","accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
             
             print(JSON(poastData))
-            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //let token = UserDefaults.standard.string(forKey: "khaata_token")
+            let token = KeychainWrapper.standard.string(forKey: "khaata_token")
             print(token!)
             utils.requestPOSTURL("/mandate/createMandate", parameters: poastData, headers: ["accessToken":token!,"Content-Type":"application/json"], viewCotroller: self, success: { res in
                 
@@ -403,7 +419,8 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
                         }
                     }else if(response.containsIgnoringCase(find: "success")){
                             
-                            let status = UserDefaults.standard.string(forKey: "khaata_status")!
+                            //let status = UserDefaults.standard.string(forKey: "khaata_status")!
+                            let status = KeychainWrapper.standard.string(forKey: "khaata_status")!
                         
                             if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                                 
@@ -467,10 +484,12 @@ class AutoPayViewController: UIViewController,UITextFieldDelegate {
     
     
     func handleDncFlag(mandateResponse:JSON){
-        let lan = UserDefaults.standard.string(forKey: "khaata_lan")
-        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+//        let lan = UserDefaults.standard.string(forKey: "khaata_lan")
+//        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+        let lan = KeychainWrapper.standard.string(forKey: "khaata_lan")
+        let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
         print(lan!)
-        if(dncFlag){
+        if(dncFlag)!{
             if(JSON(lan!) == JSON.null || lan! == "" || lan! == "0"){
                 self.openAgreeVC()
             }else{

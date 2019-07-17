@@ -77,7 +77,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
         
         
         
-        UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
+        //UserDefaults.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
+        KeychainWrapper.standard.set(self.mobileNumber, forKey: "khaata_mobileNumber")
         if(self.requestFrom == "Call Payu"){
             
 //            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
@@ -88,14 +89,17 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
             
         }else if(self.requestFrom != "failure"){
             
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
-            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
-            UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
-            
+//            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+//            UserDefaults.standard.set(emailID, forKey: "khaata_emailID")
+//            UserDefaults.standard.set(DOB, forKey: "khaata_DOB")
+            let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
+            KeychainWrapper.standard.set(emailID, forKey: "khaata_emailID")
+            KeychainWrapper.standard.set(DOB, forKey: "khaata_DOB")
+
             self.getLeadApi(mobileNumber: mobileNumber!)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                //self.openCustomerDetailsVC()
+                //self.openAutopayVC()
             })
         }
     
@@ -162,7 +166,8 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                 let status = res["status"].stringValue
                 let return_code = res["return_code"].stringValue
                 if(emaiId != ""){
-                    UserDefaults.standard.set(emaiId, forKey: "khaata_emailID")
+                    //UserDefaults.standard.set(emaiId, forKey: "khaata_emailID")
+                    KeychainWrapper.standard.set(emaiId, forKey: "khaata_emailID")
                 }
                 
                 if(return_code != "200"){
@@ -178,30 +183,45 @@ open class KhataViewController: UIViewController,UIApplicationDelegate {
                     }
                     
                 }else{
-                    UserDefaults.standard.set(token, forKey: "khaata_token")
+                    //UserDefaults.standard.set(token, forKey: "khaata_token")
+                    KeychainWrapper.standard.set(token, forKey: "khaata_token")
                     var status = res["status"].stringValue
                     KhataViewController.panStatus = res["docType"].stringValue
-                    UserDefaults.standard.set(res["docType"].stringValue, forKey: "khaata_docType")
-                    UserDefaults.standard.set(status,forKey: "khaata_status")
+                    //UserDefaults.standard.set(res["docType"].stringValue, forKey: "khaata_docType")
+                    //UserDefaults.standard.set(status,forKey: "khaata_status")
+                    KeychainWrapper.standard.set(res["docType"].stringValue, forKey: "khaata_docType")
+                    KeychainWrapper.standard.set(status,forKey: "khaata_status")
                     let dncFlag = res["dncFlag"].boolValue
-                    UserDefaults.standard.set(dncFlag, forKey: "khaata_dncFlag")
-                    UserDefaults.standard.set(res["firstName"].stringValue, forKey: "khaata_firstName")
-                    UserDefaults.standard.set(res["lastName"].stringValue, forKey: "khaata_lastName")
-                    UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
-                    UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
-                    UserDefaults.standard.set(res["lan"].stringValue, forKey: "khaata_lan")
-                    UserDefaults.standard.set(res["cif"].stringValue, forKey: "khaata_cif")
+                    //UserDefaults.standard.set(dncFlag, forKey: "khaata_dncFlag")
+                    //UserDefaults.standard.set(res["firstName"].stringValue, forKey: "khaata_firstName")
+                    //UserDefaults.standard.set(res["lastName"].stringValue, forKey: "khaata_lastName")
+                    //UserDefaults.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
+                    //UserDefaults.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
+                    //UserDefaults.standard.set(res["lan"].stringValue, forKey: "khaata_lan")
+                    //UserDefaults.standard.set(res["cif"].stringValue, forKey: "khaata_cif")
+                    
+                    KeychainWrapper.standard.set(dncFlag, forKey: "khaata_dncFlag")
+                    KeychainWrapper.standard.set(res["firstName"].stringValue, forKey: "khaata_firstName")
+                    KeychainWrapper.standard.set(res["lastName"].stringValue, forKey: "khaata_lastName")
+                    KeychainWrapper.standard.set(res["preApprovedLimit"].stringValue, forKey: "khaata_preApprovedLimit")
+                    KeychainWrapper.standard.set(res["mandateRefId"].stringValue, forKey: "khaata_mandateRefId")
+                    KeychainWrapper.standard.set(res["lan"].stringValue, forKey: "khaata_lan")
+                    KeychainWrapper.standard.set(res["cif"].stringValue, forKey: "khaata_cif")
+
                     print("status \(status)")
                     if(status == "kycPending"){
                         if(!dncFlag){
-                            UserDefaults.standard.set("kycPending",forKey: "khaata_status")
+                            //UserDefaults.standard.set("kycPending",forKey: "khaata_status")
+                            KeychainWrapper.standard.set("kycPending",forKey: "khaata_status")
                             status = "kycPending"
                         }else{
                             if(res["mandateRefId"].stringValue == "0"){
-                                UserDefaults.standard.set("kycPending",forKey: "khaata_status")
+                                //UserDefaults.standard.set("kycPending",forKey: "khaata_status")
+                                KeychainWrapper.standard.set("kycPending",forKey: "khaata_status")
                                 status = "kycPending"
                             }else{
-                                UserDefaults.standard.set("nonMandatory",forKey: "khaata_status")
+                                //UserDefaults.standard.set("nonMandatory",forKey: "khaata_status")
+                                KeychainWrapper.standard.set("nonMandatory",forKey: "khaata_status")
                                 status = "nonMandatory"
                             }
                         }

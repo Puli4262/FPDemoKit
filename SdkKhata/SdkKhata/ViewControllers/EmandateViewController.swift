@@ -8,6 +8,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import SwiftKeychainWrapper
 
 class EmandateViewController: UIViewController,UIWebViewDelegate {
     
@@ -29,8 +30,9 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
     
     
     func loadHTMLString() -> Void {
-        print("Emandate data \(mandateTokenResponse)")
         let hostUrl = Utils().hostURL
+        print("Emandate data \(mandateTokenResponse)")
+        
         let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
         let htmlString = "<!doctype html>" +
             "<html>" +
@@ -181,12 +183,18 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: nil)
             let consumerData = self.mandateTokenResponse["mandate"]["consumerData"]
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
-            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
-            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
+//            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")!
+//            let firstName = UserDefaults.standard.string(forKey: "khaata_firstName") ?? ""
+//            let lastName = UserDefaults.standard.string(forKey: "khaata_lastName") ?? ""
+            
+            let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")!
+            let firstName = KeychainWrapper.standard.string(forKey: "khaata_firstName") ?? ""
+            let lastName = KeychainWrapper.standard.string(forKey: "khaata_lastName") ?? ""
+            
             let poastData = ["mandateRef":mandateRef,"ifsc":consumerData["ifscCode"].stringValue,"accType":"10","accNumber":consumerData["accountNo"].stringValue,"accHolderName":"\(firstName) \(lastName)","mobileNumber":mobileNumber]
         
-            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //let token = UserDefaults.standard.string(forKey: "khaata_token")
+            let token = KeychainWrapper.standard.string(forKey: "khaata_token")
             
             
             let urlString = utils.hostURL+"/mandate/createMandate"
@@ -219,15 +227,19 @@ class EmandateViewController: UIViewController,UIWebViewDelegate {
                             }
                         }else if(response.containsIgnoringCase(find: "success")){
                             
-                            let status = UserDefaults.standard.string(forKey: "khaata_status")!
+                            //let status = UserDefaults.standard.string(forKey: "khaata_status")!
+                            let status = KeychainWrapper.standard.string(forKey: "khaata_status")!
                             print(status)
                             if(status.containsIgnoringCase(find: "customercreated") || status.containsIgnoringCase(find: "MandateCreated")){
                                 
                                 self.dismiss(animated: true, completion: {
-                                    let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-                                    print(dncFlag)
-                                    let lan = UserDefaults.standard.string(forKey: "khaata_lan")
-                                    if(dncFlag){
+                                    //let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+                                    //let lan = UserDefaults.standard.string(forKey: "khaata_lan")
+                                    let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
+                                    let lan = KeychainWrapper.standard.string(forKey: "khaata_lan")
+                                    
+                                    
+                                    if(dncFlag)!{
                                         if(JSON(lan!) == JSON.null || lan! == "" || lan! == "0"){
                                             self.eMandateResponseDelegate?.gotoAgreeVC()
                                         }else{

@@ -10,6 +10,7 @@ import IGRPhotoTweaks
 import SwiftyJSON
 import Alamofire
 import CropViewController
+import SwiftKeychainWrapper
 
 class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
@@ -47,8 +48,9 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     func setStepperIcon(){
-        let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
-        if(!dncFlag){
+        //let dncFlag = UserDefaults.standard.bool(forKey: "khaata_dncFlag")
+        let dncFlag = KeychainWrapper.standard.bool(forKey: "khaata_dncFlag")
+        if(!dncFlag!){
             self.autoPayView.isHidden = true
         }else{
             self.submitIdTextLabel.text = "Submit\nID"
@@ -94,14 +96,15 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         
         let utils = Utils()
-        let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+        let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
         let postData = JSON(["mobilenumber":mobileNumber])
         
         if(utils.isConnectedToNetwork()){
             let alertController = utils.loadingAlert(viewController: self)
             self.present(alertController, animated: false, completion: {
-                let token = UserDefaults.standard.string(forKey: "khaata_token")
-                
+                //let token = UserDefaults.standard.string(forKey: "khaata_token")
+                let token = KeychainWrapper.standard.string(forKey: "khaata_token")
                 utils.postWithImageApi(strURL: "/upload/upLoadSelfie", headers: ["accessToken":token!], params: postData, forntImage: self.selfieImageView.image!,backImage: self.selfieImageView.image!, viewController: self, isFromDocument: false, success: { res in
                     
                     
@@ -115,7 +118,8 @@ class SelfieViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                             }
                         }else if(res["response"].stringValue == "success"){
                             //UserDefaults.standard.set(refreshToken, forKey: "khaata_token")
-                            UserDefaults.standard.set("SalfieUploaded",forKey: "khaata_status")
+                            //UserDefaults.standard.set("SalfieUploaded",forKey: "khaata_status")
+                            KeychainWrapper.standard.set("SalfieUploaded",forKey: "khaata_status")
                             self.openCustomerDetailsVC()
                             
                             

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 
 class PanDataMismatchPopupViewController: UIViewController {
@@ -48,8 +49,10 @@ class PanDataMismatchPopupViewController: UIViewController {
             let alertController = utils.loadingAlert(viewController: self)
             
             self.present(alertController, animated: false, completion: nil)
-            let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
-            let token = UserDefaults.standard.string(forKey: "khaata_token")
+            //let mobileNumber = UserDefaults.standard.string(forKey: "khaata_mobileNumber")
+            //let token = UserDefaults.standard.string(forKey: "khaata_token")
+            let mobileNumber = KeychainWrapper.standard.string(forKey: "khaata_mobileNumber")
+            let token = KeychainWrapper.standard.string(forKey: "khaata_token")
             utils.requestPOSTURL("/customer/updateOCR?mobileNumber=\(mobileNumber!)", parameters: [:], headers: ["accessToken":token!], viewCotroller: self, success: { res in
                 
                 alertController.dismiss(animated: true, completion: {
